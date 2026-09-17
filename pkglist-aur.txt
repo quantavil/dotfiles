@@ -1,0 +1,5 @@
+android-apktool-bin
+dsearch-bin
+icu69-bin
+qt6ct-kde
+visual-studio-code-bin

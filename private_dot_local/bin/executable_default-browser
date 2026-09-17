@@ -1,0 +1,31 @@
+#!/bin/sh
+# Dynamic browser launcher that respects system default web browser.
+BROWSER_DESKTOP="$(xdg-settings get default-web-browser 2>/dev/null)"
+
+case "$BROWSER_DESKTOP" in
+    vivaldi*)
+        exec /usr/bin/vivaldi-stable "$@"
+        ;;
+    zen*)
+        exec /usr/bin/zen-browser "$@"
+        ;;
+    firefox*)
+        exec /usr/bin/firefox "$@"
+        ;;
+    google-chrome*|chrome*)
+        exec /usr/bin/google-chrome-stable "$@"
+        ;;
+    chromium*)
+        exec /usr/bin/chromium "$@"
+        ;;
+    brave*)
+        exec /usr/bin/brave "$@"
+        ;;
+    *)
+        if [ -n "$BROWSER_DESKTOP" ]; then
+            exec /usr/bin/gtk-launch "$BROWSER_DESKTOP" "$@"
+        else
+            exec /usr/bin/vivaldi-stable "$@"
+        fi
+        ;;
+esac

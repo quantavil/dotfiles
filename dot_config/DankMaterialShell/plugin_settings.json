@@ -1,0 +1,61 @@
+{
+  "dankKDEConnect": {
+    "enabled": true
+  },
+  "dankLauncherKeys": {
+    "enabled": true
+  },
+  "wallpaperCarousel": {
+    "enabled": true
+  },
+  "calculator": {
+    "enabled": true,
+    "trigger": "="
+  },
+  "quickCapture": {
+    "enabled": true,
+    "micDevice": "default_input",
+    "systemAudioDevice": "default_output",
+    "recordingBackend": "auto",
+    "recordingCodec": "auto",
+    "recordingQuality": "medium",
+    "recordingScreenTarget": "screen",
+    "menuRightClickAction": "copy",
+    "rightClickAction": "clipboard",
+    "middleClickAction": "region",
+    "color_palette_preset": "adaptive",
+    "modalDisplayTarget": "focused",
+    "stampFontFamily": "system",
+    "textFontFamily": "system",
+    "defaultTool": "pen",
+    "defaultPresetIndex": "0",
+    "backgroundDefaultAlignment": "center",
+    "backgroundDefaultAspectRatio": "auto",
+    "backgroundDefaultMode": "solid",
+    "watermarkPosition": "bottom_right",
+    "spawnPosition": "bottom-left",
+    "borderColor": "outlineVariant"
+  },
+  "aiOverviewControl": {
+    "enabled": true,
+    "providerSelection": "antigravity,codex",
+    "pillProviders": "antigravity",
+    "densityMode": "compact"
+  },
+  "bongoCat": {
+    "enabled": true,
+    "catSizePercent": 100
+  },
+  "stopwatch": {
+    "enabled": true
+  },
+  "clockwork": {
+    "enabled": true,
+    "countdownMinutes": 0,
+    "countdownSeconds": 30
+  },
+  "nightModeControl": {
+    "enabled": true,
+    "stepK": 500
+  }
+}

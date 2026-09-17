@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Temporary file for screen capture
+TMP_DIR="/tmp"
+FILE_NAME="ocr_capture_$$.png"
+IMG_PATH="$TMP_DIR/$FILE_NAME"
+
+trap 'rm -f "$IMG_PATH"' EXIT
+
+# Capture selected region via DMS screenshot tool (suppress file save/clipboard/notifications)
+OUT=$(dms screenshot region --no-clipboard --no-notify --json --dir "$TMP_DIR" --filename "$FILE_NAME" 2>/dev/null || true)
+
+if [ -z "$OUT" ]; then
+    exit 0
+fi
+
+# Check capture status
+STATUS=$(echo "$OUT" | jq -r '.status // empty' 2>/dev/null || true)
+if [ "$STATUS" != "success" ] || [ ! -s "$IMG_PATH" ]; then
+    exit 0
+fi
+
+# Run OCR using Tesseract (English)
+TEXT=$(tesseract "$IMG_PATH" stdout -l eng 2>/dev/null | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' || true)
+
+if [ -n "$TEXT" ]; then
+    printf "%s" "$TEXT" | wl-copy
+    # Build notification preview
+    PREVIEW="${TEXT:0:120}"
+    if [ "${#TEXT}" -gt 120 ]; then
+        PREVIEW="${PREVIEW}..."
+    fi
+    dms notify "OCR Text Copied" "$PREVIEW" --icon edit-copy
+else
+    dms notify "OCR Scanner" "No text detected in selected region." --icon dialog-warning
+fi

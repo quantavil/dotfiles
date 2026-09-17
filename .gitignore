@@ -1,0 +1,20 @@
+# Security & Credentials
+*secret*
+*token*
+*.key
+*.pem
+id_rsa*
+id_ed25519*
+.env
+.env.*
+
+# Logs & Caches
+*.log
+*.cache
+*.swp
+*.bak
+*~
+
+# Session & Runtime States
+session.json
+*.sock

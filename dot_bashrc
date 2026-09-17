@@ -1,0 +1,49 @@
+# ~/.bashrc
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Shell Prompt & PATH
+PS1='[\u@\h \W]\$ '
+export PATH="$HOME/.local/bin:$PATH"
+
+# ------------------------------------------------------------------------------
+# 1. Interactive Tool Hooks
+# ------------------------------------------------------------------------------
+command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+[ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
+command -v navi &>/dev/null && eval "$(navi widget bash)"
+
+# ------------------------------------------------------------------------------
+# 2. Modern CLI Replacements
+# ------------------------------------------------------------------------------
+if command -v eza &>/dev/null; then
+    alias ls="eza --icons --group-directories-first"
+    alias ll="eza -l --icons --group-directories-first"
+    alias la="eza -la --icons --group-directories-first"
+fi
+
+command -v bat &>/dev/null && alias cat="bat"
+
+# ------------------------------------------------------------------------------
+# 3. Essential Shortcuts
+# ------------------------------------------------------------------------------
+alias ..="cd .."
+alias ...="cd ../.."
+
+# Daily system maintenance (Shelly)
+if command -v shelly &>/dev/null; then
+    alias update="shelly upgrade all"
+    alias cleanup="shelly purify standard -o"
+fi
+
+# Yazi directory sync (with signal trap for Ctrl+C cleanup)
+function y() {
+    local tmp="$(mktemp "${TMPDIR:-/tmp}/yazi-cwd.XXXXXX")"
+    trap 'rm -f -- "$tmp"' RETURN INT TERM EXIT
+    command yazi "$@" --cwd-file="$tmp"
+    if [ -f "$tmp" ]; then
+        local cwd="$(cat -- "$tmp")"
+        [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    fi
+}

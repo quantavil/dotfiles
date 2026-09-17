@@ -1,0 +1,3 @@
+#!/bin/sh
+# GUI editor shim so CLI tools (git, sudoedit, etc.) open Zed and wait.
+exec /usr/bin/zeditor --wait "$@"
