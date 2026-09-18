@@ -201,6 +201,7 @@ window-rule {
 window-rule {
     match app-id=r#"^gnome-control-center$"#
     match app-id=r#"^pavucontrol$"#
+    match app-id=r#"^org\.pulseaudio\.pavucontrol$"#
     match app-id=r#"^nm-connection-editor$"#
     default-column-width { proportion 0.5; }
     open-floating false
@@ -212,6 +213,7 @@ window-rule {
     match app-id=r#"^blueman-manager$"#
     match app-id=r#"^org\.gnome\.Nautilus$"#
     match app-id=r#"^xdg-desktop-portal$"#
+    match app-id=r#"^xdg-desktop-portal-gtk$"#
     open-floating true
 }
 window-rule {
@@ -236,6 +238,16 @@ window-rule {
     match app-id="vivaldi"
     match app-id="zen"
     match app-id="Code"
+    match app-id="ONLYOFFICE"
+    match app-id="okular"
+    match app-id="kate"
+    match app-id="kwrite"
+    match app-id=r#"^org\.gnome\.Meld$"#
+    match app-id="md.obsidian.Obsidian"
+    match app-id="gcr-prompter"
+    match app-id="signon-ui"
+    match app-id=r#"^org\.gnupg\.pinentry-qt$"#
+    match app-id="xdg-desktop-portal-gtk"
     match title="^Picture-in-Picture$"
     match title="^Picture in picture$"
     opacity 1.0
