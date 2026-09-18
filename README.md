@@ -58,11 +58,12 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 
 ## What's Included
 
-- **Compositor:** Niri (`~/.config/niri/config.kdl`)
-- **Shells & Terminals:** Ghostty, Alacritty, Fish, Zsh, Bash
+- **Compositor:** Niri (`~/.config/niri/config.kdl`) — catch-all glass (`opacity 0.88` + minimal blur) with opaque exclusions for media/PiP/browsers/focus apps/auth dialogs
+- **Default terminal:** Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity delegated to Niri); Alacritty config also tracked
+- **Shells:** Fish, Zsh, Bash
 - **Shell Extensions & Themes:** DankMaterialShell settings & plugins
-- **Desktop & Theme Integration:** Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs
+- **Desktop & Theme Integration:** BeautyLine icons (KDE + Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs, `environment.d`, `xdg-terminals.list`
 - **Shims & Utilities:** `~/.local/bin/` (`default-browser`, `zedit`, `dms-ocr`)
-- **App Defaults:** Zed editor settings, MIME associations (`mimeapps.list`), MPV
+- **App Defaults:** Zed editor settings, MIME associations (`mimeapps.list`), MPV, Navi, Shelly
 - **Documentation & Rules:** `AGENTS.md`
 - **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (auto-synced)
