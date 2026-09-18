@@ -182,6 +182,13 @@ animations {
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+// Very light global blur (subtle frost, xray default = wallpaper-only, cheap).
+blur {
+    passes 1
+    offset 1.0
+    noise 0.02
+    saturation 1.0
+}
 // Work around WezTerm's initial configure bug
 // by setting an empty default-column-width.
 window-rule {
@@ -227,9 +234,15 @@ window-rule {
     match app-id="kitty"
     draw-border-with-background false
 }
+// Overall: increased translucency + very light blur for all apps (KDE + GNOME + others).
 window-rule {
-    match app-id="rio"
-    opacity 0.90
+    draw-border-with-background false
+    opacity 0.88
+    geometry-corner-radius 12
+    clip-to-geometry true
+    background-effect {
+        blur true
+    }
 }
 window-rule {
     match title="^Picture-in-Picture$"
