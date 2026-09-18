@@ -221,11 +221,15 @@ window-rule {
 window-rule {
     match app-id=r#"^org\.wezfurlong\.wezterm$"#
     match app-id="Alacritty"
+    match app-id="rio"
     match app-id="zen"
     match app-id="vivaldi-stable"
-    match app-id="com.mitchellh.ghostty"
     match app-id="kitty"
     draw-border-with-background false
+}
+window-rule {
+    match app-id="rio"
+    opacity 0.90
 }
 window-rule {
     match title="^Picture-in-Picture$"
@@ -260,6 +264,7 @@ include optional=true "dms/windowrules.kdl"
 
 // Custom User Binds & Overrides (evaluated after DMS binds)
 binds {
+    Mod+T hotkey-overlay-title="Open Terminal" { spawn "rio"; }
     Mod+B hotkey-overlay-title="Open Browser" { spawn "default-browser"; }
     Mod+E hotkey-overlay-title="Open File Manager" { spawn "dolphin"; }
     Mod+Z hotkey-overlay-title="Open VS Code" { spawn "code"; }

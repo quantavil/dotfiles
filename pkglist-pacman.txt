@@ -71,10 +71,10 @@ fastfetch
 ffmpegthumbnailer
 ffmpegthumbs
 flatpak
+fooyin
 fsarchiver
 fuse2
 ghidra
-ghostty
 git
 github-cli
 glances
@@ -83,6 +83,7 @@ gst-plugin-pipewire
 gst-plugin-va
 gst-plugins-bad
 gst-plugins-ugly
+gwenview
 hdparm
 hwdetect
 hwinfo
@@ -177,6 +178,7 @@ rclone
 realtime-privileges
 rebuild-detector
 reflector
+rio
 ripgrep
 rsync
 rust

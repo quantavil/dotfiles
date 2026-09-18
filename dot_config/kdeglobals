@@ -133,8 +133,8 @@ ForegroundVisited=205,208,254
 [General]
 ColorScheme=DankMatugen
 Name=Dank Shell (matugen)
-TerminalApplication=ghostty
-TerminalService=com.mitchellh.ghostty.desktop
+TerminalApplication=rio
+TerminalService=rio.desktop
 
 [Icons]
 Theme=breeze-dark
