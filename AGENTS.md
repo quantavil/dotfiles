@@ -25,6 +25,9 @@ Guidance for work in this home directory.
 ## Themes and environment
 
 - Qt uses `qt6ct`; DMS manages the dynamic Qt, GTK, and terminal palettes.
+- Icons are `Papirus-Dark` (`extra/papirus-icon-theme`) via `~/.config/kdeglobals [Icons]` + `~/.config/qt6ct/qt6ct.conf icon_theme`.
+- Qt fonts are `MesloLGS Nerd Font` via `~/.config/qt6ct/qt6ct.conf [Fonts]` (matches Ghostty). GTK/GNOME fonts are the same via `gsettings org.gnome.desktop.interface font-name/document-font-name/monospace-font-name`.
+- Niri translucency/blur for all apps lives in `~/.config/niri/config.kdl`: catch-all `window-rule { opacity 0.88 + background-effect { blur true } }` with minimal `blur { passes 1 offset 1.0 }`. Rio is set to `opacity 1.0` + `unfocused-split-opacity 1.0` in `~/.config/rio/config.toml` so Niri alone controls translucency uniformly.
 - Session variables belong in `~/.config/environment.d/90-dms.conf` and Niri's environment block when compositor-launched applications also need them.
 - Do not overwrite generated theme files. Apply theme integration through DMS, then reopen affected applications.
 - A new login session is required after changing session-wide environment variables.
