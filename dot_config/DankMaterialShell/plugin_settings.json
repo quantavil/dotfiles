@@ -57,5 +57,8 @@
   "nightModeControl": {
     "enabled": true,
     "stepK": 500
+  },
+  "screenTime": {
+    "enabled": true
   }
 }

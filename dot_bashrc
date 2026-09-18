@@ -10,20 +10,20 @@ export PATH="$HOME/.local/bin:$PATH"
 # ------------------------------------------------------------------------------
 # 1. Interactive Tool Hooks
 # ------------------------------------------------------------------------------
-command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
 [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
-command -v navi &>/dev/null && eval "$(navi widget bash)"
+command -v navi >/dev/null 2>&1 && eval "$(navi widget bash)"
 
 # ------------------------------------------------------------------------------
 # 2. Modern CLI Replacements
 # ------------------------------------------------------------------------------
-if command -v eza &>/dev/null; then
+if command -v eza >/dev/null 2>&1; then
     alias ls="eza --icons --group-directories-first"
     alias ll="eza -l --icons --group-directories-first"
     alias la="eza -la --icons --group-directories-first"
 fi
 
-command -v bat &>/dev/null && alias cat="bat"
+command -v bat >/dev/null 2>&1 && alias cat="bat"
 
 # ------------------------------------------------------------------------------
 # 3. Essential Shortcuts
@@ -32,7 +32,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 
 # Daily system maintenance (Shelly)
-if command -v shelly &>/dev/null; then
+if command -v shelly >/dev/null 2>&1; then
     alias update="shelly upgrade all"
     alias cleanup="shelly purify standard -o"
 fi

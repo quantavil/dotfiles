@@ -24,10 +24,12 @@
   },
   "useSystemSoundTheme": true,
   "soundLogin": true,
-  "acLockTimeout": 600,
+  "acMonitorTimeout": 300,
+  "acLockTimeout": 900,
   "acSuspendTimeout": 3600,
   "acPostLockMonitorTimeout": 30,
-  "batteryLockTimeout": 300,
+  "batteryMonitorTimeout": 300,
+  "batteryLockTimeout": 900,
   "batterySuspendTimeout": 1200,
   "batteryPostLockMonitorTimeout": 30,
   "lockBeforeSuspend": true,
@@ -48,7 +50,10 @@
       "leftWidgets": [
         "launcherButton",
         "workspaceSwitcher",
-        "focusedWindow"
+        {
+          "id": "focusedWindow",
+          "enabled": true
+        }
       ],
       "centerWidgets": [
         "music",
@@ -57,27 +62,33 @@
         {
           "id": "bongoCat",
           "enabled": true
-        }
-      ],
-      "rightWidgets": [
+        },
         {
           "id": "clockwork",
           "enabled": true
         },
         {
+          "id": "screenTime",
+          "enabled": true
+        }
+      ],
+      "rightWidgets": [
+        {
           "id": "quickCapture",
           "enabled": true
         },
-        "clipboard",
-        "cpuUsage",
         {
           "id": "nightModeControl",
           "enabled": true
         },
+        {
+          "id": "cpuUsage",
+          "enabled": true
+        },
         "memUsage",
+        "systemTray",
         "notificationButton",
         "battery",
-        "systemTray",
         "controlCenterButton"
       ],
       "spacing": 4,
