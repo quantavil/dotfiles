@@ -182,6 +182,10 @@ animations {
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Window-Rules
+// Rules apply top to bottom; later rules win on conflict.
+// Order below: specific layout rules first, overall glass effect,
+// then opaque exclusions last.
+
 // Very light global blur (subtle frost, xray default = wallpaper-only, cheap).
 blur {
     passes 1
@@ -231,10 +235,12 @@ window-rule {
         blur true
     }
 }
-// Fidelity/readability exclusions: video, photos, PiP, browsers and focus apps stay opaque.
+// Fidelity/readability exclusions: these stay opaque (no glass).
 window-rule {
+    // Media: translucency washes out video and distorts photos.
     match app-id="mpv"
     match app-id=r#"^org\.kde\.gwenview$"#
+    // Browsers and focus apps: reading and typing need full contrast.
     match app-id="vivaldi"
     match app-id="zen"
     match app-id="Code"
@@ -244,10 +250,12 @@ window-rule {
     match app-id="kwrite"
     match app-id=r#"^org\.gnome\.Meld$"#
     match app-id="md.obsidian.Obsidian"
+    // Auth prompts and system dialogs: tiny surfaces, must stay legible.
     match app-id="gcr-prompter"
     match app-id="signon-ui"
     match app-id=r#"^org\.gnupg\.pinentry-qt$"#
     match app-id="xdg-desktop-portal-gtk"
+    // Floating video overlays.
     match title="^Picture-in-Picture$"
     match title="^Picture in picture$"
     opacity 1.0
@@ -255,6 +263,7 @@ window-rule {
         blur false
     }
 }
+// PiP and calls float above tiling (companions to the opaque rule above).
 window-rule {
     match title="^Picture-in-Picture$"
     match title="^Picture in picture$"
