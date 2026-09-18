@@ -56,6 +56,12 @@ image/jpeg=org.kde.gwenview.desktop
 image/png=org.kde.gwenview.desktop
 image/svg+xml=org.kde.gwenview.desktop
 image/webp=org.kde.gwenview.desktop
+audio/aac=org.fooyin.fooyin.desktop
+audio/mpeg=org.fooyin.fooyin.desktop
+audio/ogg=org.fooyin.fooyin.desktop
+audio/wav=org.fooyin.fooyin.desktop
+audio/webm=org.fooyin.fooyin.desktop
+audio/x-flac=org.fooyin.fooyin.desktop
 
 [Added Associations]
 application/xhtml+xml=vivaldi-stable.desktop;zen.desktop;
@@ -70,3 +76,9 @@ image/jpeg=org.kde.gwenview.desktop;
 image/png=org.kde.gwenview.desktop;
 image/svg+xml=org.kde.gwenview.desktop;
 image/webp=org.kde.gwenview.desktop;
+audio/aac=org.fooyin.fooyin.desktop;
+audio/mpeg=org.fooyin.fooyin.desktop;
+audio/ogg=org.fooyin.fooyin.desktop;
+audio/wav=org.fooyin.fooyin.desktop;
+audio/webm=org.fooyin.fooyin.desktop;
+audio/x-flac=org.fooyin.fooyin.desktop;
