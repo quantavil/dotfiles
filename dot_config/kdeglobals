@@ -137,7 +137,7 @@ TerminalApplication=rio
 TerminalService=rio.desktop
 
 [Icons]
-Theme=Papirus-Dark
+Theme=BeautyLine
 
 [KDE]
 ShowDeleteCommand=false

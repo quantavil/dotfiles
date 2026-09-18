@@ -13,6 +13,7 @@ ayugram-desktop
 base
 base-devel
 bash-completion
+beautyline
 bind
 bluez
 bluez-hid2hci

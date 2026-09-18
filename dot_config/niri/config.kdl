@@ -199,12 +199,6 @@ window-rule {
     default-column-width {}
 }
 window-rule {
-    match app-id=r#"^org\.gnome\."#
-    draw-border-with-background false
-    geometry-corner-radius 12
-    clip-to-geometry true
-}
-window-rule {
     match app-id=r#"^gnome-control-center$"#
     match app-id=r#"^pavucontrol$"#
     match app-id=r#"^nm-connection-editor$"#
@@ -224,15 +218,6 @@ window-rule {
     match app-id=r#"^steam$"# title=r#"^notificationtoasts_\d+_desktop$"#
     default-floating-position x=10 y=10 relative-to="bottom-right"
     open-focused false
-}
-window-rule {
-    match app-id=r#"^org\.wezfurlong\.wezterm$"#
-    match app-id="Alacritty"
-    match app-id="rio"
-    match app-id="zen"
-    match app-id="vivaldi-stable"
-    match app-id="kitty"
-    draw-border-with-background false
 }
 // Overall: increased translucency + very light blur for all apps (KDE + GNOME + others).
 window-rule {
