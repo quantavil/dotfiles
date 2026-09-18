@@ -229,6 +229,17 @@ window-rule {
         blur true
     }
 }
+// Fidelity/readability exclusions: video, photos and PiP stay opaque.
+window-rule {
+    match app-id="mpv"
+    match app-id=r#"^org\.kde\.gwenview$"#
+    match title="^Picture-in-Picture$"
+    match title="^Picture in picture$"
+    opacity 1.0
+    background-effect {
+        blur false
+    }
+}
 window-rule {
     match title="^Picture-in-Picture$"
     match title="^Picture in picture$"
