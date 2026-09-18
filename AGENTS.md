@@ -27,7 +27,7 @@ Guidance for work in this home directory.
 - Qt uses `qt6ct`; DMS manages the dynamic Qt, GTK, and terminal palettes.
 - Icons are `BeautyLine` (`cachyos/beautyline`) via `~/.config/kdeglobals [Icons]` + `~/.config/qt6ct/qt6ct.conf icon_theme` + `gsettings org.gnome.desktop.interface icon-theme` (same pack both sides; Zen/Rio app icons fall back to brand).
 - Qt fonts are `MesloLGS Nerd Font` via `~/.config/qt6ct/qt6ct.conf [Fonts]` (matches Ghostty). GTK/GNOME fonts are the same via `gsettings org.gnome.desktop.interface font-name/document-font-name/monospace-font-name`.
-- Niri translucency/blur for all apps lives in `~/.config/niri/config.kdl`: catch-all `window-rule { opacity 0.88 + background-effect { blur true } }` with minimal `blur { passes 1 offset 1.0 }`, except mpv/gwenview/PiP which stay opaque (`opacity 1.0` + `blur false`). Rio is set to `opacity 1.0` + `unfocused-split-opacity 1.0` in `~/.config/rio/config.toml` so Niri alone controls translucency uniformly.
+- Niri translucency/blur for all apps lives in `~/.config/niri/config.kdl`: catch-all `window-rule { opacity 0.88 + background-effect { blur true } }` with minimal `blur { passes 1 offset 1.0 }`, except mpv/gwenview/PiP/browsers/VS Code which stay opaque (`opacity 1.0` + `blur false`). Rio is set to `opacity 1.0` + `unfocused-split-opacity 1.0` in `~/.config/rio/config.toml` so Niri alone controls translucency uniformly.
 - Session variables belong in `~/.config/environment.d/90-dms.conf` and Niri's environment block when compositor-launched applications also need them.
 - Do not overwrite generated theme files. Apply theme integration through DMS, then reopen affected applications.
 - A new login session is required after changing session-wide environment variables.
