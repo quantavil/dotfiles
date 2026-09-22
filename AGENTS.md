@@ -40,6 +40,8 @@ Guidance for work in this home directory.
 - DankSearch is the DMS filesystem-search backend. Check it with `dsearch index status` and `systemctl --user status dsearch.service`.
 - UFW manages the host firewall. Add narrowly scoped rules only for features that are actually in use.
 - KDE Connect uses its standard firewall application profile and `kdeconnectd`; diagnose discovery before changing firewall policy.
+- Centralized MCP configuration is managed in `~/Documents/my-mcps`, deploying to Antigravity CLI (`~/.gemini/config/mcp_config.json` with symlink at `~/.gemini/antigravity-cli/mcp_config.json`), OpenCode (`~/.config/opencode/opencode.json`), Codex (`~/.codex/config.toml`), Cursor (`~/.cursor/mcp.json`), Claude Desktop (`~/.config/Claude/claude_desktop_config.json`), and Claude Code (`~/.claude.json`).
+- Mobile MCP (`mobile-mcp` entry, `@mobilenext/mobile-mcp@latest` via `bunx`) is deployed through `~/Documents/my-mcps` for Android/iOS device and emulator automation (accessibility snapshots, screenshots, taps, swipes, app lifecycle, logcat). Anonymous telemetry is disabled (`MOBILEMCP_DISABLE_TELEMETRY=1`) in all deployed configs; it uses the system `adb` and becomes available to an agent only after a fresh session start.
 
 ## Privileged operations
 
@@ -54,6 +56,7 @@ Guidance for work in this home directory.
 ### Installed development tooling
 
 - Rust/Cargo is installed from the CachyOS `rust` package for building `/home/quantavil/Documents/linux-setup/agy-switch`.
+- vtracer `1.0.0-alpha.4` manually installed to `/usr/local/bin/vtracer` from the official `vtracer-x86_64-unknown-linux-musl.tar.gz` release tarball (SHA256 `2058f611b48ed49497f78883bde47435531e9e17e3a79428432d1528bdb12e2a` verified before install).
 
 ## Storage and recovery
 
@@ -71,3 +74,12 @@ Guidance for work in this home directory.
 - Inspect DMS with `dms doctor -j` and its IPC status commands.
 - Use `journalctl --user -u <service>` for user-service failures and `journalctl -k` for device, filesystem, and firewall issues.
 - After changes, confirm both configuration validity and the actual runtime state.
+
+### Ditto laptop parity workflow (2026-09-20)
+
+- Ditto is maintained at `~/Documents/my-skills/skills/ditto`; deployment uses
+  `bun run deploy` in that repository to sync configured AI-agent discovery.
+- Local AVD `floww_parity` is available on `emulator-5554` (Android 14,
+  1080×2400, 420 dpi). Use the Ditto `scripts/emulator_manager.sh` to reuse
+  it and explicitly target the serial. Do not compare its captures directly
+  with historical 400-dpi phone evidence; collect paired emulator baselines.
