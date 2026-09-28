@@ -57,10 +57,13 @@ Guidance for work in this home directory.
 
 - Rust/Cargo is installed from the CachyOS `rust` package for building `/home/quantavil/Documents/linux-setup/agy-switch`.
 - vtracer `1.0.0-alpha.4` manually installed to `/usr/local/bin/vtracer` from the official `vtracer-x86_64-unknown-linux-musl.tar.gz` release tarball (SHA256 `2058f611b48ed49497f78883bde47435531e9e17e3a79428432d1528bdb12e2a` verified before install).
+- Maestro CLI is installed to `~/.maestro/bin/maestro` for mobile end-to-end testing, exported to PATH via `~/.bashrc` and `~/.zshrc`.
 
 ## Storage and recovery
 
 - Dotfiles and system configuration backup are managed via `chezmoi` backed by the private GitHub repository `quantavil/dotfiles` (repo source at `~/.local/share/chezmoi`). Use `chezmoi status`, `chezmoi diff`, and `chezmoi add` to maintain dotfile versions.
+- Package manifests (`pkglist-pacman.txt` and `pkglist-aur.txt`) are automatically updated via pre-commit git hooks in the dotfiles repository to allow 1:1 system replication.
+- Replicating the environment on a new machine or dual-boot install: install CachyOS with Niri, authenticate GitHub (`gh auth login`), run `chezmoi init --apply quantavil`, and reinstall packages via `sudo pacman -S --needed - < ~/.local/share/chezmoi/pkglist-pacman.txt`.
 - Identify the filesystem and inspect kernel logs before attempting a repair.
 - Prefer a read-only mount first when filesystem consistency is uncertain.
 - Confirm the exact unmounted block device before running a repair tool; never format as a repair step.
@@ -80,6 +83,56 @@ Guidance for work in this home directory.
 - Ditto is maintained at `~/Documents/my-skills/skills/ditto`; deployment uses
   `bun run deploy` in that repository to sync configured AI-agent discovery.
 - Local AVD `floww_parity` is available on `emulator-5554` (Android 14,
-  1080×2400, 420 dpi). Use the Ditto `scripts/emulator_manager.sh` to reuse
+  1080×2400, 420 dpi). Use the Ditto mobile MCP `manage_emulator` tool to reuse
   it and explicitly target the serial. Do not compare its captures directly
   with historical 400-dpi phone evidence; collect paired emulator baselines.
+
+### Ditto MCP portability update (2026-09-23)
+
+- Ditto MCP configuration was redeployed from `~/Documents/my-mcps` with
+  `bun run deploy`. Required wrappers: JADX, Apktool, r2Flutter, mobile-control;
+  Dart supplements them. FlutterDec was removed after failed APK probes. Restart the client
+  to load the revised configuration. GitHub MCP was omitted because its token is absent.
+- Standalone config generation: `uv run --project servers/ditto-bridge --locked python
+  servers/ditto-bridge/configure.py --dart --output ditto-mcp.json` from that checkout. SDK/tool paths support explicit
+  `DITTO_*_BIN` overrides; the Python emulator manager accepts `DITTO_GPU` and
+  `DITTO_ACCEL`. Windows execution is not yet verified.
+- Analyzer calls and cache reuse passed on the tested ARM64 release APK. Its
+  mobile probe failed loading ARM64 Flutter on the local x86_64 AVD; use a
+  compatible APK/AVD before claiming complete parity capability.
+
+### Ditto dependency cleanup (2026-09-23)
+
+- The skill uses a locked uv environment with Pillow, NumPy, Pydantic and Typer; the MCP bridge
+  uses FastMCP and filelock. Dependencies install as binary wheels, not source builds.
+- Phase, Flutter, setup and maintenance commands are consolidated in
+  `~/Documents/my-skills/skills/ditto/references/commands.md`. The verification
+  reference was folded into the main workflow; the shell launcher was removed.
+- SDK discovery and emulator launch code live only in
+  `~/Documents/my-mcps/servers/ditto-bridge`; the mobile MCP exposes `manage_emulator`.
+  Mobile Next remains separate for exploration. Do not use both controllers on the
+  same device during a Ditto capture. Native Windows testing remains pending.
+
+### Ditto MCP pruning (2026-09-23)
+
+- Removed managed legacy `jadx`, `apktool`, and `ditto-flutterdec` entries from
+  all six client configurations. Dedicated Ditto JADX/Apktool wrappers remain;
+  installed analyzer CLIs and source checkouts were retained.
+- Removed FlutterDec adapter, generator option, and optional skill contract.
+- Kept Mobile Next after a real device-list call found the online `floww_parity`
+  emulator. Other unrelated MCP entries were not audited or removed in this cleanup.
+- Ditto skill tests live in `skills/ditto/tests`; bridge tests live in
+  `servers/ditto-bridge/tests`. The `mobile-mcp` entry runs the local open-source
+  Mobile Next package; Mobile Next Cloud is optional and is not configured.
+
+### Ditto2 evidence tooling (2026-09-28)
+
+- Independent skill: `~/Documents/my-skills/skills/ditto2`; MCP:
+  `~/Documents/my-mcps/servers/ditto2`. The MCP uses Python 3.13 and locked
+  FastMCP 4 dependencies; sync with `uv sync --project servers/ditto2 --locked`.
+- DroidBot is a separate `uv tool` at `~/.local/bin/droidbot`, installed from an
+  existing wheel for upstream revision `cc4cc93cc53941ccc188c59ef45ab173e2347113`,
+  with `setuptools<81` and `standard-telnetlib`. No source build was performed.
+- Evidence stays in `analysis/` and `exploration/`, with `review.json` as an index.
+  Exploration explicitly reinstalls the supplied APK and keeps it installed.
+  APK/device execution is needed only for live evidence collection, not skill tests.

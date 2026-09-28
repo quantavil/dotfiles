@@ -1,13 +1,12 @@
-
 [Default Applications]
-text/html=vivaldi-stable.desktop
-x-scheme-handler/http=vivaldi-stable.desktop
-x-scheme-handler/https=vivaldi-stable.desktop
+text/html=zen.desktop
+x-scheme-handler/http=zen.desktop
+x-scheme-handler/https=zen.desktop
 x-scheme-handler/about=vivaldi-stable.desktop
 x-scheme-handler/unknown=vivaldi-stable.desktop
 inode/directory=org.kde.dolphin.desktop
 application/pdf=org.kde.okular.desktop
-application/xhtml+xml=vivaldi-stable.desktop
+application/xhtml+xml=zen.desktop
 x-scheme-handler/geo=google-maps-geo-handler.desktop
 application/x-shellscript=dev.zed.Zed.desktop
 text/x-makefile=dev.zed.Zed.desktop
@@ -62,6 +61,8 @@ audio/ogg=org.fooyin.fooyin.desktop
 audio/wav=org.fooyin.fooyin.desktop
 audio/webm=org.fooyin.fooyin.desktop
 audio/x-flac=org.fooyin.fooyin.desktop
+x-scheme-handler/tg=userapp-AyuGram Desktop-6JXKV3.desktop
+x-scheme-handler/tonsite=userapp-AyuGram Desktop-QT4KV3.desktop
 
 [Added Associations]
 application/xhtml+xml=vivaldi-stable.desktop;zen.desktop;
@@ -82,3 +83,5 @@ audio/ogg=org.fooyin.fooyin.desktop;
 audio/wav=org.fooyin.fooyin.desktop;
 audio/webm=org.fooyin.fooyin.desktop;
 audio/x-flac=org.fooyin.fooyin.desktop;
+x-scheme-handler/tg=userapp-AyuGram Desktop-6JXKV3.desktop;
+x-scheme-handler/tonsite=userapp-AyuGram Desktop-QT4KV3.desktop;

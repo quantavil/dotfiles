@@ -44,6 +44,7 @@ cachyos-wallpapers
 cachyos-zsh-config
 cantarell-fonts
 cava
+ccid
 chezmoi
 chwd
 cmake
@@ -154,11 +155,13 @@ okular
 onlyoffice-bin
 opencl-mesa
 opencode
+opensc
 openssh
 os-prober
 pacman-contrib
 papirus-icon-theme
 pavucontrol
+pcsc-tools
 perl
 pipewire-alsa
 pipewire-pulse

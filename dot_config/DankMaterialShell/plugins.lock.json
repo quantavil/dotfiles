@@ -1,0 +1,40 @@
+{
+  "lockfileVersion": 1,
+  "plugins": {
+    "bongoCat": {
+      "repo": "https://github.com/hthienloc/dms-bongo-cat",
+      "commit": "237b1a34b2fb8d90e4f4c8656af758c3d7dab638"
+    },
+    "calculator": {
+      "repo": "https://github.com/rochacbruno/DankCalculator",
+      "commit": "1db5865419a40a33171a475855a59e0b8bf7187f"
+    },
+    "dankActions": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankActions",
+      "commit": "6b781a0ce9839dbdb65bb811c7a33d93e4772a56"
+    },
+    "dankKDEConnect": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankKDEConnect",
+      "commit": "6b781a0ce9839dbdb65bb811c7a33d93e4772a56"
+    },
+    "dankLauncherKeys": {
+      "repo": "https://github.com/AvengeMedia/dms-plugins",
+      "path": "DankLauncherKeys",
+      "commit": "6b781a0ce9839dbdb65bb811c7a33d93e4772a56"
+    },
+    "nightModeControl": {
+      "repo": "https://github.com/nfrastack/dms-nightModeControl",
+      "commit": "7622613d5a908ebdeee156517df3c6641d574e0c"
+    },
+    "quickCapture": {
+      "repo": "https://github.com/hthienloc/dms-quick-capture",
+      "commit": "d84703fb9b1ae20c3870130fca4dae9a6b57b5c0"
+    },
+    "wallpaperCarousel": {
+      "repo": "https://github.com/motor-dev/wallpaperCarousel",
+      "commit": "761ecd1b7f347beee9f17909f8334d987c935a1a"
+    }
+  }
+}

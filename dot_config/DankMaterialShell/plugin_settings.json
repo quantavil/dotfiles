@@ -1,6 +1,6 @@
 {
   "dankKDEConnect": {
-    "enabled": true
+    "enabled": false
   },
   "dankLauncherKeys": {
     "enabled": true
@@ -43,14 +43,14 @@
     "densityMode": "compact"
   },
   "bongoCat": {
-    "enabled": true,
+    "enabled": false,
     "catSizePercent": 100
   },
   "stopwatch": {
     "enabled": true
   },
   "clockwork": {
-    "enabled": true,
+    "enabled": false,
     "countdownMinutes": 0,
     "countdownSeconds": 30
   },
@@ -59,6 +59,13 @@
     "stepK": 500
   },
   "screenTime": {
-    "enabled": true
+    "enabled": false,
+    "hideDailyInsights": false,
+    "hideYearInsights": false,
+    "hideEasterEggs": false,
+    "recordColor": "#FFD700",
+    "dailyGoalHours": 2,
+    "hideRecordTrophy": false,
+    "weekTotalAsPct": false
   }
 }

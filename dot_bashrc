@@ -47,3 +47,4 @@ function y() {
         [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
     fi
 }
+export PATH=$PATH:$HOME/.maestro/bin
