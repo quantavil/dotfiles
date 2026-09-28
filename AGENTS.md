@@ -61,9 +61,9 @@ Guidance for work in this home directory.
 
 ## Storage and recovery
 
-- Dotfiles and system configuration backup are managed via `chezmoi` backed by the private GitHub repository `quantavil/dotfiles` (repo source at `~/.local/share/chezmoi`). Use `chezmoi status`, `chezmoi diff`, and `chezmoi add` to maintain dotfile versions.
+- Dotfiles and system configuration backup are managed via `chezmoi` backed by the GitHub repository `quantavil/dotfiles` (repo source at `~/.local/share/chezmoi`). Use `chezmoi status`, `chezmoi diff`, and `chezmoi add` to maintain dotfile versions.
 - Package manifests (`pkglist-pacman.txt` and `pkglist-aur.txt`) are automatically updated via pre-commit git hooks in the dotfiles repository to allow 1:1 system replication.
-- Replicating the environment on a new machine or dual-boot install: install CachyOS with Niri, authenticate GitHub (`gh auth login`), run `chezmoi init --apply quantavil`, and reinstall packages via `sudo pacman -S --needed - < ~/.local/share/chezmoi/pkglist-pacman.txt`.
+- Replicating the environment on a new machine or dual-boot install: install CachyOS with Niri, run `chezmoi init --apply quantavil`, and reinstall packages via `sudo pacman -S --needed - < ~/.local/share/chezmoi/pkglist-pacman.txt`.
 - Identify the filesystem and inspect kernel logs before attempting a repair.
 - Prefer a read-only mount first when filesystem consistency is uncertain.
 - Confirm the exact unmounted block device before running a repair tool; never format as a repair step.

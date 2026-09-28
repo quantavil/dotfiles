@@ -4,20 +4,17 @@ Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/).
 
 ## Quick Restore (Fresh Install / Distro Hop)
 
-Since this is a **private repository**, authenticate GitHub first, then let chezmoi clone and apply your environment:
+Since this is a **public repository**, you can immediately initialize and apply your environment on any machine without authenticating first:
 
-### Method 1: Using GitHub CLI (`gh`) - Recommended
+### Method 1: Using Chezmoi (Recommended)
 ```bash
-# 1. Authenticate with GitHub
-gh auth login
-
-# 2. Initialize and apply dotfiles in one command
+sudo pacman -S --needed chezmoi
 chezmoi init --apply quantavil
 ```
 
-### Method 2: Using SSH
+### Method 2: Single-line curl installer (No pacman needed first)
 ```bash
-chezmoi init --apply git@github.com:quantavil/dotfiles.git
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply quantavil
 ```
 
 ### Reinstalling System Packages (Arch / CachyOS)
