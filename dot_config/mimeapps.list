@@ -61,8 +61,15 @@ audio/ogg=org.fooyin.fooyin.desktop
 audio/wav=org.fooyin.fooyin.desktop
 audio/webm=org.fooyin.fooyin.desktop
 audio/x-flac=org.fooyin.fooyin.desktop
-x-scheme-handler/tg=userapp-AyuGram Desktop-6JXKV3.desktop
-x-scheme-handler/tonsite=userapp-AyuGram Desktop-QT4KV3.desktop
+x-scheme-handler/tg=userapp-AyuGram Desktop-XZEJW3.desktop
+x-scheme-handler/tonsite=userapp-AyuGram Desktop-MXVIW3.desktop
+x-scheme-handler/codex=chatgpt.desktop
+application/vnd.ms-excel=onlyoffice-desktopeditors.desktop
+application/vnd.ms-excel.sheet.macroEnabled.12=onlyoffice-desktopeditors.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=onlyoffice-desktopeditors.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=onlyoffice-desktopeditors.desktop
+application/vnd.openxmlformats-officedocument.presentationml.presentation=onlyoffice-desktopeditors.desktop
+text/tab-separated-values=dev.zed.Zed.desktop
 
 [Added Associations]
 application/xhtml+xml=vivaldi-stable.desktop;zen.desktop;
@@ -83,5 +90,5 @@ audio/ogg=org.fooyin.fooyin.desktop;
 audio/wav=org.fooyin.fooyin.desktop;
 audio/webm=org.fooyin.fooyin.desktop;
 audio/x-flac=org.fooyin.fooyin.desktop;
-x-scheme-handler/tg=userapp-AyuGram Desktop-6JXKV3.desktop;
-x-scheme-handler/tonsite=userapp-AyuGram Desktop-QT4KV3.desktop;
+x-scheme-handler/tg=userapp-AyuGram Desktop-6JXKV3.desktop;userapp-AyuGram Desktop-XZEJW3.desktop;
+x-scheme-handler/tonsite=userapp-AyuGram Desktop-QT4KV3.desktop;userapp-AyuGram Desktop-MXVIW3.desktop;
