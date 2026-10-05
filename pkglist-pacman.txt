@@ -45,9 +45,12 @@ cachyos-zsh-config
 cantarell-fonts
 cava
 ccid
+chatgpt-desktop-bin
 chezmoi
+chromium
 chwd
 cmake
+copyparty
 cpupower
 cryptsetup
 cups-pk-helper
@@ -80,6 +83,7 @@ ghidra
 git
 github-cli
 glances
+gpu-screen-recorder
 gst-libav
 gst-plugin-pipewire
 gst-plugin-va
@@ -193,6 +197,7 @@ sg3_utils
 shelly
 shelly-flatpak-backend
 smartmontools
+smb4k
 snapper
 sof-firmware
 sudo

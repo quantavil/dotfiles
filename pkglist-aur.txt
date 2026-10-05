@@ -1,4 +1,5 @@
 android-apktool-bin
+dms-shell-niri
 dsearch-bin
 icu69-bin
 qt6ct-kde

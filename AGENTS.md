@@ -22,7 +22,7 @@ Guidance for work in this home directory.
 - DMS keyboard auto-detection requires the official `libinput-tools` package.
 - Keep obsolete or competing shell and lock-screen commands out of the active configuration. The lock shortcut must invoke the DMS lock interface.
 - Rio is the default terminal; config is in `~/.config/rio/config.toml` (uses `family = "MesloLGS Nerd Font Mono"`, `opacity = 1.0` + `unfocused-split-opacity = 1.0` so Niri alone controls translucency uniformly).
-- File/terminal defaults are Rio + Zed (no konsole/vim): KDE terminal = 2 keys in `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list` (`rio.desktop`); GUI editor = Zed lines in `~/.config/mimeapps.list [Default Applications]` covering ~35 code/text types (incl. `text/csv` kept in Zed by choice); NOT Zed: `text/html` + URLs → Vivaldi browser (`vivaldi-stable.desktop`), xls/xlsx/ods → OnlyOffice, `.ipynb` notebooks + `.code-workspace` + `text/markdown` → VS Code (`code.desktop`, for Jupyter/notes preview/debug/remote work), binaries → no default. `vim.desktop` masked in `~/.local/share/applications/` (source: `private_dot_local/private_share/applications/vim.desktop` in dotfiles repo); CLI editor = `EDITOR`/`VISUAL` in `~/.config/environment.d/90-dms.conf` + Niri `environment` block pointing at the `~/.local/bin/zedit` shim (`zeditor --wait`). To switch editor later: `sed -i 's/dev.zed.Zed.desktop/<new-id>/g' ~/.config/mimeapps.list` + point `zedit` at the new binary. To switch terminal: `kwriteconfig6 --file kdeglobals --group General --key TerminalApplication <cmd>` + `--key TerminalService <id>.desktop` + update `~/.config/xdg-terminals.list`. Find a file's type with `gio info <file> | grep content-type`, its default with `xdg-mime query default <type>`.
+- File/terminal defaults are Rio + Zed (no konsole/vim): KDE terminal = 2 keys in `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list` (`rio.desktop`); GUI editor = Zed lines in `~/.config/mimeapps.list [Default Applications]` covering ~35 code/text types (incl. `text/csv` kept in Zed by choice); NOT Zed: `text/html` + URLs → Vivaldi browser (`vivaldi-stable.desktop`), xls/xlsx/ods → OnlyOffice, `.ipynb` notebooks + `.code-workspace` + `text/markdown` → VS Code (`com.microsoft.VSCode.desktop`, for Jupyter/notes preview/debug/remote work; also pins `text/x-markdown` + `application/x-code-workspace`), binaries → no default. `vim.desktop` masked in `~/.local/share/applications/` (source: `private_dot_local/private_share/applications/vim.desktop` in dotfiles repo); CLI editor = `EDITOR`/`VISUAL` in `~/.config/environment.d/90-dms.conf` + Niri `environment` block pointing at the `~/.local/bin/zedit` shim (`zeditor --wait`). To switch editor later: `sed -i 's/dev.zed.Zed.desktop/<new-id>/g' ~/.config/mimeapps.list` + point `zedit` at the new binary. To switch terminal: `kwriteconfig6 --file kdeglobals --group General --key TerminalApplication <cmd>` + `--key TerminalService <id>.desktop` + update `~/.config/xdg-terminals.list`. Find a file's type with `gio info <file> | grep content-type`, its default with `xdg-mime query default <type>`.
 
 ## Themes and environment
 
@@ -45,6 +45,8 @@ Guidance for work in this home directory.
 - Centralized MCP configuration is managed in `~/Documents/my-mcps` (CLI symlinked at `~/.local/bin/my-mcps`), deploying to Antigravity CLI (`~/.gemini/config/mcp_config.json` with symlink at `~/.gemini/antigravity-cli/mcp_config.json`), OpenCode (`~/.config/opencode/opencode.json`), Codex (`~/.codex/config.toml`), Cursor (`~/.cursor/mcp.json`), Claude Desktop (`~/.config/Claude/claude_desktop_config.json`), and Claude Code (`~/.claude.json`).
 - Agent skills collection is managed in `~/Documents/my-skills` (CLI symlinked at `~/.local/bin/my-skills`), deploying vendor and custom skills across Antigravity, OpenCode, Codex, Cursor, Claude Code, and universal `~/.agents/skills` targets.
 - Mobile MCP (`mobile-mcp` entry, `@mobilenext/mobile-mcp@latest` via `bunx`) is deployed through `~/Documents/my-mcps` for Android/iOS device and emulator automation (accessibility snapshots, screenshots, taps, swipes, app lifecycle, logcat). Anonymous telemetry is disabled (`MOBILEMCP_DISABLE_TELEMETRY=1`) in all deployed configs; it uses the system `adb` and becomes available to an agent only after a fresh session start.
+- Local Windows PC (`desktop-cnrksbm` / `DESKTOP-CNRKSBM`, user `HP`) is mapped to `192.168.1.5` in `/etc/hosts` for SMB file sharing via Dolphin (`smb://desktop-cnrksbm/Users/HP`). Drive E (`\\desktop-cnrksbm\e`) is configured for persistent passwordless automount via `/etc/fstab` (cifs with root-only `/etc/samba/credentials-win_e`, `x-systemd.automount`, `nofail`, `_netdev`) at `/mnt/win_e` and symlinked to `~/Windows-E`.
+
 
 ## Privileged operations
 
@@ -202,3 +204,35 @@ Guidance for work in this home directory.
   `20115030` sets for Ditto2 static/runtime work. gplaydl's display header
   misleadingly showed `2.0.1` during the older-version download; `aapt`
   verified the actual APK manifest as `1.15.3` / `20115030`.
+
+### ChatGPT desktop installation (2026-09-30)
+
+- Installed CachyOS `chatgpt-desktop-bin` version `26.917.71314-1` with pacman;
+  launcher is `/usr/bin/chatgpt`, desktop entry is `chatgpt.desktop`.
+- Shelly failed handing off the prepared download. After its Chromium process
+  exited and released the database lock, pacman encountered a mirror 404 for
+  the detached signature. Recovered `%PGPSIG%` from the local CachyOS sync
+  database, verified a fully trusted CachyOS signature against the cached
+  package, and placed the signature beside it in `/var/cache/pacman/pkg/`.
+  Repository SHA-256 and size matched; pacman integrity checks passed and
+  `pacman -Qk chatgpt-desktop-bin` reported zero missing files. Optional
+  AppArmor was not installed. No mirror or signature-policy changes were made.
+
+### Markdown VS Code pin + laptop pull (2026-10-06)
+
+- Pulled dotfiles `cc43a7f..91e4077` (`fix(mime): pin xls/xlsx/docx/pptx to
+  OnlyOffice, tsv to Zed`); local `AGENTS.md` Windows-E + ChatGPT notes were
+  stashed, fast-forwarded, then restored (still uncommitted).
+- This machine is the laptop (`chassis_type=10`, `BAT0` present, Intel UHD, no
+  Nvidia); created missing `~/.config/chezmoi/chezmoi.toml` with
+  `[data] role = "laptop"`. Repo has no `*.tmpl` files yet, so desktop/laptop
+  share one config; machine-only drift (AyuGram `tg`/`tonsite` handler suffixes,
+  DMS/shelly/kdeglobals live edits) still shows in `chezmoi diff`.
+- Fixed markdown opening in Okular/Zed: `mimeapps.list` used non-existent
+  `code.desktop` (VS Code ships `com.microsoft.VSCode.desktop`), so `xdg-mime`
+  fell back to `okularApplication_md.desktop`. Pinned `text/markdown`,
+  `text/x-markdown`, `application/x-code-workspace`, `application/x-ipynb+json`,
+  `application/x-jupyter-notebook` to `com.microsoft.VSCode.desktop` in both
+  `dot_config/mimeapps.list` and live `~/.config/mimeapps.list` (kept laptop
+  AyuGram IDs; full `chezmoi apply` would overwrite them with desktop IDs).
+  Verified with `xdg-mime query default` + `gio mime text/markdown`.
