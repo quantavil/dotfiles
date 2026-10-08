@@ -6,7 +6,7 @@
   "cornerRadius": 12,
   "controlCenterShowMicPercent": true,
   "appIdSubstitutions": [],
-  "networkPreference": "wifi",
+  "networkPreference": "{{ if eq .role "desktop" }}wired{{ else }}wifi{{ end }}",
   "cursorSettings": {
     "theme": "System Default",
     "size": 24,
@@ -89,7 +89,9 @@
         "memUsage",
         "systemTray",
         "notificationButton",
+{{- if ne .role "desktop" }}
         "battery",
+{{- end }}
         "controlCenterButton"
       ],
       "spacing": 4,

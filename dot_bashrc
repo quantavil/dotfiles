@@ -48,3 +48,4 @@ function y() {
     fi
 }
 export PATH=$PATH:$HOME/.maestro/bin
+export DITTO_GPU=host

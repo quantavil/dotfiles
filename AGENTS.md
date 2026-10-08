@@ -22,7 +22,7 @@ Guidance for work in this home directory.
 - DMS keyboard auto-detection requires the official `libinput-tools` package.
 - Keep obsolete or competing shell and lock-screen commands out of the active configuration. The lock shortcut must invoke the DMS lock interface.
 - Rio is the default terminal; config is in `~/.config/rio/config.toml` (uses `family = "MesloLGS Nerd Font Mono"`, `opacity = 1.0` + `unfocused-split-opacity = 1.0` so Niri alone controls translucency uniformly).
-- File/terminal defaults are Rio + Zed (no konsole/vim): KDE terminal = 2 keys in `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list` (`rio.desktop`); GUI editor = Zed lines in `~/.config/mimeapps.list [Default Applications]` covering ~35 code/text types (incl. `text/csv` kept in Zed by choice); NOT Zed: `text/html` + URLs → Vivaldi browser (`vivaldi-stable.desktop`), xls/xlsx/ods → OnlyOffice, `.ipynb` notebooks + `.code-workspace` + `text/markdown` → VS Code (`com.microsoft.VSCode.desktop`, for Jupyter/notes preview/debug/remote work; also pins `text/x-markdown` + `application/x-code-workspace`), binaries → no default. `vim.desktop` masked in `~/.local/share/applications/` (source: `private_dot_local/private_share/applications/vim.desktop` in dotfiles repo); CLI editor = `EDITOR`/`VISUAL` in `~/.config/environment.d/90-dms.conf` + Niri `environment` block pointing at the `~/.local/bin/zedit` shim (`zeditor --wait`). To switch editor later: `sed -i 's/dev.zed.Zed.desktop/<new-id>/g' ~/.config/mimeapps.list` + point `zedit` at the new binary. To switch terminal: `kwriteconfig6 --file kdeglobals --group General --key TerminalApplication <cmd>` + `--key TerminalService <id>.desktop` + update `~/.config/xdg-terminals.list`. Find a file's type with `gio info <file> | grep content-type`, its default with `xdg-mime query default <type>`.
+- File/terminal defaults are Rio + Zed (no konsole/vim): KDE terminal = 2 keys in `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list` (`rio.desktop`); GUI editor = Zed lines in `~/.config/mimeapps.list [Default Applications]` covering ~35 code/text types (incl. `text/csv` kept in Zed by choice); NOT Zed: `text/html` + URLs → Vivaldi browser (`vivaldi-stable.desktop`), xls/xlsx/ods → OnlyOffice, `.ipynb` notebooks + `.code-workspace` + `text/markdown` → VS Code (`code.desktop`, for Jupyter/notes preview/debug/remote work), binaries → no default. `vim.desktop` masked in `~/.local/share/applications/` (source: `private_dot_local/private_share/applications/vim.desktop` in dotfiles repo); CLI editor = `EDITOR`/`VISUAL` in `~/.config/environment.d/90-dms.conf` + Niri `environment` block pointing at the `~/.local/bin/zedit` shim (`zeditor --wait`). To switch editor later: `sed -i 's/dev.zed.Zed.desktop/<new-id>/g' ~/.config/mimeapps.list` + point `zedit` at the new binary. To switch terminal: `kwriteconfig6 --file kdeglobals --group General --key TerminalApplication <cmd>` + `--key TerminalService <id>.desktop` + update `~/.config/xdg-terminals.list`. Find a file's type with `gio info <file> | grep content-type`, its default with `xdg-mime query default <type>`.
 
 ## Themes and environment
 
@@ -45,8 +45,6 @@ Guidance for work in this home directory.
 - Centralized MCP configuration is managed in `~/Documents/my-mcps` (CLI symlinked at `~/.local/bin/my-mcps`), deploying to Antigravity CLI (`~/.gemini/config/mcp_config.json` with symlink at `~/.gemini/antigravity-cli/mcp_config.json`), OpenCode (`~/.config/opencode/opencode.json`), Codex (`~/.codex/config.toml`), Cursor (`~/.cursor/mcp.json`), Claude Desktop (`~/.config/Claude/claude_desktop_config.json`), and Claude Code (`~/.claude.json`).
 - Agent skills collection is managed in `~/Documents/my-skills` (CLI symlinked at `~/.local/bin/my-skills`), deploying vendor and custom skills across Antigravity, OpenCode, Codex, Cursor, Claude Code, and universal `~/.agents/skills` targets.
 - Mobile MCP (`mobile-mcp` entry, `@mobilenext/mobile-mcp@latest` via `bunx`) is deployed through `~/Documents/my-mcps` for Android/iOS device and emulator automation (accessibility snapshots, screenshots, taps, swipes, app lifecycle, logcat). Anonymous telemetry is disabled (`MOBILEMCP_DISABLE_TELEMETRY=1`) in all deployed configs; it uses the system `adb` and becomes available to an agent only after a fresh session start.
-- Local Windows PC (`desktop-cnrksbm` / `DESKTOP-CNRKSBM`, user `HP`) is mapped to `192.168.1.5` in `/etc/hosts` for SMB file sharing via Dolphin (`smb://desktop-cnrksbm/Users/HP`). Drive E (`\\desktop-cnrksbm\e`) is configured for persistent passwordless automount via `/etc/fstab` (cifs with root-only `/etc/samba/credentials-win_e`, `x-systemd.automount`, `nofail`, `_netdev`) at `/mnt/win_e` and symlinked to `~/Windows-E`.
-
 
 ## Privileged operations
 
@@ -60,6 +58,7 @@ Guidance for work in this home directory.
 
 ### Installed development tooling
 
+- Paperclip CLI is `paperclipai`; run the cached local instance with `npx --offline --yes paperclipai run`. The default instance uses loopback port 3100 and bundled PostgreSQL 18.1 on port 54329. On 2026-10-01, `postgresql` 18.6 was installed while diagnosing startup; Paperclip does not use the system PostgreSQL service. The cached npm layout hoisted `@embedded-postgres` above `@paperclipai/db`, while Paperclip's native-library helper expected it nested, so embedded `initdb` exited 127 because `libicuuc.so.60` aliases were not set up. For the active `~/.npm/_npx/<cache>/node_modules` tree, link `@paperclipai/db/node_modules/@embedded-postgres` to the tree's `@embedded-postgres`; the helper then sets the bundled library path and creates aliases. Repeat after clearing npm's cache or changing the cached Paperclip release.
 - Ditto's `r2flutter` 0.3.6 prebuilt Linux binary is available through `~/.local/bin/r2flutter`; its wrapper loads the prebuilt radare2 6.2.2 libraries from `~/.local/share/ditto-toolchain/`. Both were extracted from upstream release archives for the LocalSend Ditto test, without a source build or system package change.
 - LocalSend Ditto testing uses a user-owned Android SDK at `~/Android/Sdk` with command-line tools, platform-tools 37.0.1, emulator 37.1.11, build-tools 34.0.0, and the Android 14/API 34 `default/x86_64` AOSP system image (no Google Play services or Play Store). AVD `floww_parity` is Pixel 7, 1080×2400 at 420 dpi, 2 GiB RAM; use the Ditto mobile-control MCP to start it. The test workspace and original APK are in `~/Documents/ditto-localsend-test`.
 - Rust/Cargo is installed from the CachyOS `rust` package for building `/home/quantavil/Documents/linux-setup/agy-switch`.
@@ -205,6 +204,45 @@ Guidance for work in this home directory.
   misleadingly showed `2.0.1` during the older-version download; `aapt`
   verified the actual APK manifest as `1.15.3` / `20115030`.
 
+### Ditto2 emulator benchmark (2026-09-30)
+
+- Both AVDs are Android 14 x86_64, four vCPUs, native 1080×2400 at 420 dpi,
+  benchmarked one at a time using host GPU and a temporary 720×1600 display
+  override at 420 dpi. The override was reset afterward. `floww_parity` is AOSP
+  x86_64 with no native bridge; `ditto2_play_x86_64` is Play x86_64 with
+  `libndk_translation.so` and ARM64 guest compatibility.
+- Single cold boot from emulator process start to `sys.boot_completed`:
+  AOSP 14.67 s, Play 17.27 s. Android OS reboot while process stayed running:
+  AOSP 14.19 s, Play 17.31 s. These are single runs, not distribution estimates.
+- Android `am start -W` WaitTime, medians of three launches after 10 s settling:
+  Settings cold AOSP 270 ms versus Play 319 ms; Settings warm from Home AOSP
+  62 ms versus Play 32 ms. The same Daily Diary 1.15.3 x86_64 split set was
+  installed on AOSP and launched successfully: cold AOSP 673 ms versus Play
+  765 ms; warm AOSP 72 ms versus Play 78 ms (three runs each). Warm launches
+  can reuse the existing Android task. The small samples do not establish a
+  stable warm-start ranking. Daily Diary remains installed on both AVDs.
+- Emulator process-tree resident memory after activity runs and return Home:
+  AOSP 2871 MB; Play 3745 MB. This includes virtualized guest and graphics
+  memory residency and is workload dependent. Named Quick Boot snapshot save
+  was disabled in the initial headless probe, so Quick Boot is not timed.
+  Flutter hot reload cannot be used on the release APK. Play AVD was reopened
+  visibly at native resolution with Daily Diary installed and running.
+
+### Ditto2 single-emulator setup (2026-09-30)
+
+- User chose to keep only `ditto2_play_x86_64`. Deleted the `floww_parity` AVD
+  and uninstalled the Android 34 `default/x86_64` AOSP system image with the
+  supported Android SDK tools. Earlier AOSP notes above are historical.
+- The retained Play AVD is signed in and runs the x86_64 Daily Diary 1.15.3
+  build. Ditto2 `download-play-apks.sh` now pulls the installed Play delivery
+  from this x86_64 AVD, rejects ARM and x86 32-bit native APKs, and no longer
+  uses anonymous gplaydl. The app must first be installed through Play. The
+  x86_64 split set includes base, language, ABI and density APKs.
+- Ditto2's current static r2Flutter stage still requires an ARM64 `libapp.so`,
+  and the MCP takes a single APK path rather than a Play split set. The
+  x86_64-only acquisition instruction deliberately does not fetch ARM64; do
+  not claim that it completes the static evidence pipeline.
+
 ### ChatGPT desktop installation (2026-09-30)
 
 - Installed CachyOS `chatgpt-desktop-bin` version `26.917.71314-1` with pacman;
@@ -217,6 +255,102 @@ Guidance for work in this home directory.
   Repository SHA-256 and size matched; pacman integrity checks passed and
   `pacman -Qk chatgpt-desktop-bin` reported zero missing files. Optional
   AppArmor was not installed. No mirror or signature-policy changes were made.
+
+### 2026-10-01 — Ditto2 dual-ABI deployment
+- Updated my-mcps/servers/ditto2 and my-skills/skills/ditto2; synced and deployed agent configurations/skill symlinks. Explicit split_paths describe complete delivery sets; ARM64 static and x86_64 runtime are linked by validated release/signers/content descriptors. Reuse checks installed APK bytes.
+- Seven MCP tools include semantic extraction and optional graph grouping. Finalized partial analyzer output is usable; .incomplete means interrupted collection.
+- Verification: 63 Ditto2 tests and 22 MCP CLI tests passed. Live baby-tracker x86_64 reuse captured two screens/transitions and 11 keys; matching ARM64 unavailable, JADX heap failure recorded. Evidence: ~/Documents/ditto2-dual-abi-validation/live/review.json. Reconnect MCP clients after deployment.
+
+### 2026-10-01 — Baby Tracker expanded Ditto2 validation
+- Evidence/report: ~/Documents/baby-tracker-clone/evidence/original-analysis/REPORT.md. Verified 2.9.0 / 20209000 x86_64 split delivery; two installed-byte reuse runs, 18/6 raw graph nodes and 31/10 edges, 37/9 reviewed actions retained separately. Main semantic extraction found 30 keys.
+- Task-local bounded JADX wrapper (-Xmx4g, two workers) produced partial Java plus successful fallback; no system launcher changed. Matching ARM64 remains absent. x86_64 ELF strings expose app Dart paths but not recovered implementations.
+- DroidBot state IDs can conflate Flutter screens because its signature omits content descriptions: Nap/Night waking and Date/Start-time wheels shared IDs. Keep run namespaces and screenshot/context; collect colliding journeys separately. Historical baby-tracker 34-node graph is curated, with IDs that do not match its retained raw states.
+- Persisted session retained; no records/settings committed or purchases made. Test-started headless emulator stopped after collection. Rebuilt Flutter source, entitled journeys, fresh onboarding and backend/native behavior remain unverified.
+
+### Baby Tracker Flutter reconstruction (2026-10-01)
+
+- User authorized building Baby Tracker now. Official prebuilt Flutter 3.47.5 / Dart 3.13.4 SDK installed at `~/.local/share/baby-tracker-sdk/flutter`, archive SHA256 `2132e990f236f8d22e7c6314b29a191a95b10d7cbcfec9b4e2e303d996652cbb` verified. No system package/source build or shell PATH changes. SDK analytics disabled.
+- New independent project `~/Documents/baby-tracker-clone`, branch `rebuild/core`, Android application ID `dev.quantavil.babytracker`. Local persistence only; original Play app/session untouched. Source/tests milestone first; browser/Android parity remains a later check.
+- Initial core source/tests complete: 19 tests pass, Flutter analysis clean, web bundle compiled at `baby-tracker-clone/build/web`. Four review findings fixed (overlap totals, paused edits, failed dropdown saves, paused dial); no browser/emulator launch or Android APK build yet. Evidence and limits in project `docs/verification.md`. New repository has local commits and no remote.
+
+### Baby Tracker live browser audit (2026-10-01)
+
+- Temporary loopback previews: current web bundle on `127.0.0.1:8765`, side-by-side audit on `127.0.0.1:8766`, both Python HTTP servers. No public hosting or system service installed.
+- User requires all features free; current four premium tracking gates and static Stats do not satisfy the target. Policy recorded in clone `docs/free-feature-policy.md`; no product code changed during this audit.
+- Qualitative live audit captured 10 clone views and 9 original/clone pairs, mapped all 18 main review nodes, verified 240 copied/original hashes and 43 potential resource paths. Visual parity fails; no numerical score or matched-data acceptance. Current 19 tests/analyzer remain green, including obsolete gate expectations. Current browser state/viewport and stored user data preserved. Report in clone `docs/parity-audit/2026-10-01/REPORT.md`.
+
+### Baby Tracker free reconstruction update (2026-10-02)
+
+- Clone now has all eight free local trackers, computed seven-day Stats, quantity conversion and web PNG export; 29 tests and analysis pass, real/fixture web builds succeed. Full parity remains open (predictions, onboarding/cloud, native widgets/notifications/share, Android device checks). Report: `~/Documents/baby-tracker-clone/docs/parity-audit/2026-10-02/REPORT.md`. Earlier gate/static-Stats notes are historical.
+- Temporary detached Python loopback servers restarted: port 8765 serves `build/web` plus `/parity/` symlink to `build/parity`; port 8766 serves October 1 audit with `/updated/` symlink to October 2. PID/log files: `/tmp/baby-tracker-8765.pid` and `/tmp/baby-tracker-8766.pid` (corresponding `.log` files). No system service or public hosting. Fixture uses memory only and leaves user's stored profile unchanged. Repository still has no remote; no Android platform SDK installed.
+
+### Baby Tracker preview recovery (2026-10-02)
+
+- Detached localhost server stopped; restarted port 8765 as transient user service `baby-tracker-preview.service` with `systemd-run --user --collect`, serving `~/Documents/baby-tracker-clone/build/web` using Python bound to 127.0.0.1. Verified active and HTTP 200. Inspect with `systemctl --user status baby-tracker-preview.service`; stop with `systemctl --user stop baby-tracker-preview.service`. No persistent boot enablement or public exposure. Earlier temporary PID/log notes are historical.
+
+### Baby Tracker live parity checks (2026-10-02)
+
+- Restarted retained `ditto2_play_x86_64` visibly on port 5556 using mobile-control; installed Baby Tracker 2.9.0 / 20209000 x86_64 base and both splits match archived APK hashes. No app data reset or tracking records saved/deleted; temporary custom-nap toggle restored off.
+- Supplementary manual runtime captures are in `~/Documents/baby-tracker-clone/evidence/live-runtime/manual`; these are preview screenshots, not fabricated Ditto2 graph checkpoints.
+- Interactive Flutter Web debug sessions use ports 8770 (real local storage) and 8771 (memory fixture), controlled by `flutter run` terminal sessions. Hot reload verified with an open editor preserved. These are temporary development sessions; stable port 8765 remains the transient `baby-tracker-preview.service` serving the release web bundle. No Android SDK/platform package installed in this pass; clone Android hot reload is unverified.
+
+- Final live-check pass: 48 clone tests, clean Flutter analysis and release web build passed; latest bundle/gallery served on 8765 (HTTP 200). Memory fixture debug session on 8771 stopped after screenshots; real debug session on 8770 retained. Original mobile preview ownership released, emulator remains running. Full native/prediction parity is not established.
+
+### Baby Tracker faithful reconstruction checkpoint (2026-10-02)
+
+- Supplementary direct r2Flutter 0.3.6 extraction from the archived x86_64 libapp.so succeeds for header, function/class metadata and selected object-pool standards despite Ditto2's ARM64 guard. ARM64 and full prediction parity remain unverified. Receipts/helpers: clone `docs/faithful-reconstruction/`, `tool/recovery/`.
+- Exact initial sleep-age standards/nap-count thresholds replaced provisional arrays; prediction summaries and past-day dial received further corrections. 59 tests, clean analysis, release and memory-fixture web builds passed. Stable transient service remains on 8765; `/faithful/` symlinks to `build/faithful` for the isolated comparison fixture. Debug 8770 and 8771 remain active and hot reload was verified. No public deployment or Android SDK platform installed.
+- Temporary original experiments included fresh onboarding and October 2 wake/five nap entries. Local snapshot rollback did not undo cloud-synced records. The exact six test-created October 2 records were deleted through the original app, and the temporary October 1 sixth-nap end time was reverted via Not finished. Restart verification: Today Start day; October 1 6 h 20 min / 5 completed naps. Original data was not globally reset as a final state. Snapshot `faithful-original-clean` is the final cleaned checkpoint; earlier `faithful-before-tests` and `faithful-original-restored` are not reliable cloud rollback points. Emulator-5556 stays running; mobile ownership released. Future tests must use disposable isolated or offline fixtures.
+
+### Baby Tracker / Ditto2 follow-up (2026-10-03)
+
+- Updated Ditto2 evidence-to-code workflow is installed through the existing my-skills symlink and pushed to my-skills `main` at `b325efe`. APK-reverse methodology was selectively incorporated; no external APK patching scripts were installed.
+- The transient loopback `baby-tracker-preview.service` was absent after the session transition and recreated, serving `~/Documents/baby-tracker-clone/build/web` on 127.0.0.1:8765. No boot enablement or public exposure. ADB daemon started on port 5037 for device inventory; no devices were connected, so earlier emulator/debug-session notes are historical rather than current availability.
+- Project reconstruction status is tracked in `baby-tracker-clone/docs/evidence-to-code.md`. Matching ARM64 input is still unavailable; existing x86 supplementary recovery does not establish full prediction parity. Original account data was not changed in this pass. Baby Tracker repository still has no remote.
+
+### Baby Tracker overlap repair preview (2026-10-03)
+
+- Temporary Flutter web-server debug session on 127.0.0.1:8771 runs `tool/parity_preview.dart` with `OVERLAP_CASE=true`, using disposable in-memory records. Browser verified the conflict repair, end-time confirmation and editor preservation through hot reload. Stable preview remains the transient user service on 8765; real and comparison release bundles rebuilt. No original account data mutation or public exposure. Full parity remains incomplete; project still has no remote.
+
+### Baby Tracker GitHub ARM64 releases (2026-10-05)
+
+- Public repository: `https://github.com/quantavil/baby-tracker-clone`; `main` is a clean source snapshot, with earlier local history preserved on `rebuild/core` and `archive/local-main`. Raw `evidence/` is ignored and not published.
+- Pushes to main run a cached Flutter/Gradle ARM64-only APK release workflow. Stable private signing material is backed up in `~/.local/share/baby-tracker-signing/` (restricted permissions) and stored in GitHub Actions secrets; do not publish it. No host package or preview-service changes.
+
+### OBS Studio installation and Niri configuration (2026-10-05)
+
+- Packages installed: `obs-studio` (32.2.2), `obs-studio-plugin-browser` (CEF browser source), and `v4l2loopback-dkms` (virtual camera kernel module).
+- Niri window rule: Added `match app-id=r#"^com\.obsproject\.Studio$"#` to opaque exclusions in `~/.config/niri/config.kdl` so OBS canvas, preview, and feeds remain 100% opaque without compositor blur.
+- Wayland capture & encoding: PipeWire screen and window capture are handled via `xdg-desktop-portal-gnome`. Hardware encoding is supported via the desktop RTX 4060 NVENC (`av1_nvenc`, `h264_nvenc`, `hevc_nvenc`).
+- Virtual camera: `v4l2loopback` DKMS module built for running kernel (`7.2.8-1-cachyos`) and LTS (`6.18.52-1-cachyos-lts`). Module loads on demand (`sudo modprobe v4l2loopback`) or via `/etc/modules-load.d/v4l2loopback.conf` for boot autoload.
+
+
+### Baby Tracker forecast preview (2026-10-05)
+
+- Recreated the inactive transient `baby-tracker-preview.service` on loopback 8765, serving clone `build/web`; no boot enablement. `/prediction/` is a disposable frozen-clock October 5 forecast fixture, separate from persisted records at `/`. Null-birthday prediction now follows original age-zero rule.
+
+### Manhwa Studio Phase 1 workspace (2026-10-05)
+
+- Project `~/Documents/Manhawa-yt` uses uv-managed CPython 3.13.15 and a local `.venv`; binary-wheel dependencies include gallery-dl 1.32.15, FastAPI, Pydantic v2, Pillow and test tools. No sudo or host package installation.
+- Transient user service `manhwa-recap-preview.service` serves the single-process local workspace at `127.0.0.1:8780`; not enabled at boot. Stop it before launching another server on the port.
+- Data under project `data/imports/` is ignored by Git. Public WEBTOON sample Episode 1 imported with 205 validated original image segments; human review pending. No TTS/video phase implemented or public deployment.
+
+### Home interaction audit (2026-10-05)
+
+- Original retained AVD `ditto2_play_x86_64` used read-only for Overview/wake-summary review. Headless host GPU failed without DISPLAY; terminated only that failed test instance, then used `gpu=software`. No tracking records/settings saved or deleted. Preview ownership released and test-started emulator stopped after capture. ADB daemon started for the inventory. Audit: clone `docs/home-interaction-audit-2026-10-05.md`.
+
+- Install audit: retained Android14 Google Play AVD advertises `x86_64,arm64-v8a`; published ARM64 builds 2, 4, and 5 installed/updated normally and Home rendered through ARM64 translation. Build 5 (versionCode 2005, commit 9dff605) SHA256 `914669fc62467555153bfa7a5a856da56652eb30862f15d8b3ae6779bc6b7701`; screenshot `baby-tracker-clone/build/release-install-audit/build-5/home.png`. Clone package only; original app data untouched. AVD stopped after test. Physical-phone `File unsupported` remains unreplicated and unconfirmed.
+
+### Manhwa Phase 2A detector spike (2026-10-05)
+
+- Isolated wheel-only environment at `~/Documents/Manhawa-yt/data/probes/phase2-env` contains LiteRT, CPU PyTorch/Ultralytics, OpenCV and Pillow for exploratory first-16-strip comparisons. Production `.venv`, lockfile and loopback preview service unchanged; no sudo/host package installs.
+- Probe artifacts/models stay Git ignored in `data/probes/phase2`; Ultralytics settings contained there (initial fallback `/tmp/Ultralytics`). YOLO26 nano weights pinned with AGPL-3.0 provenance. INT8/FP32 discrepancy unresolved; production detector not selected. pyvips 2.1.0 import failed, so no libvips benchmark claimed.
+
+### Fact-check skill relocation (2026-10-05)
+
+- User requested a simple skill maintained in `~/Documents/my-skills/skills/fact-check`: supplied transcript/subtitles first, audio STT fallback, then host-native fact-checking. Tools are in `references/tools.md`; no separate translation or backend application.
+- Registered the local skill with the existing `my-skills` manager, which added managed discovery symlinks for its configured agents, including Codex and Claude Code. Existing host configurations were already up to date. No packages or model weights installed.
+- Obsolete `~/Documents/Fact-checker` workspace was moved to desktop Trash at the user’s request; old project-local video-factcheck discovery links are no longer active. Git history remains recoverable in Trash.
 
 ### Markdown VS Code pin + laptop pull (2026-10-06)
 
@@ -236,3 +370,19 @@ Guidance for work in this home directory.
   `dot_config/mimeapps.list` and live `~/.config/mimeapps.list` (kept laptop
   AyuGram IDs; full `chezmoi apply` would overwrite them with desktop IDs).
   Verified with `xdg-mime query default` + `gio mime text/markdown`.
+
+### MicYou and android-tools installation (2026-10-08)
+
+- Installed `micyou-bin` (v2.1.0-1, packaged from official upstream GitHub release `MicYou-Dev/MicYou` v2.1.0 Debian binary archive without source compiling, with pinned LICENSE and verified SHA-256 sums).
+- Installed `android-tools` (37.0.0-5.1 from CachyOS repo) for USB connectivity support.
+- Packaging files and PKGBUILD preserved in `~/.local/src/micyou-bin/`.
+- Future update mechanism: Package is registered as an AUR package in ALPM/pacman and Shelly (`shelly upgrade`). Created `~/.local/bin/update-micyou` script to automatically check, fetch, and package newer upstream releases from GitHub (`MicYou-Dev/MicYou`) even if the AUR package maintainer has not yet updated the AUR.
+
+### Firewall rules for KDE Connect and MicYou (2026-10-08)
+
+- UFW input policy drops unsolicited incoming packets by default.
+- Added narrowly scoped UFW rules:
+  - `KDE Connect` profile (`1714:1764/tcp`, `1714:1764/udp`) for local device pairing and discovery.
+  - `8554/tcp` (MicYou control protocol), `8555/udp` (MicYou audio stream), and `8443/tcp` (MicYou web interface).
+- Verified discovery: KDE Connect detects LAN devices; phone TCP SYN packets on 8554 are no longer dropped.
+- Machine IP & port notes: Host firewall rules open destination ports across all interfaces (0.0.0.0/0). Client devices (e.g. Android phone connecting to MicYou or KDE Connect) must target whichever local IP is assigned by DHCP to the respective host machine (e.g. desktop on 192.168.1.4:8554, laptop on its assigned IP/port). Do not hardcode host IPs in client profiles or dotfiles.

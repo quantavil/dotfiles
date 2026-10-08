@@ -240,6 +240,7 @@ window-rule {
     // Media: translucency washes out video and distorts photos.
     match app-id="mpv"
     match app-id=r#"^org\.kde\.gwenview$"#
+    match app-id=r#"^com\.obsproject\.Studio$"#
     // Browsers and focus apps: reading and typing need full contrast.
     match app-id="vivaldi"
     match app-id="zen"
