@@ -24,6 +24,7 @@ btop
 btrfs-assistant
 btrfs-progs
 bun
+cachy-update
 cachyos-fish-config
 cachyos-hello
 cachyos-hooks
@@ -41,7 +42,6 @@ cachyos-v3-mirrorlist
 cachyos-v4-mirrorlist
 cachyos-wallpapers
 cachyos-zsh-config
-cachy-update
 cantarell-fonts
 cava
 ccid
@@ -86,9 +86,9 @@ github-cli
 glances
 gst-libav
 gst-plugin-pipewire
+gst-plugin-va
 gst-plugins-bad
 gst-plugins-ugly
-gst-plugin-va
 gwenview
 hdparm
 hwdetect
@@ -158,8 +158,8 @@ ntfs-3g
 ntfsprogs
 nvidia-settings
 nvidia-utils
-obsidian
 obs-studio
+obsidian
 okular
 onlyoffice-bin
 openai-codex
@@ -197,12 +197,12 @@ rio
 ripgrep
 rsync
 rust
+s-nail
 sddm
 sg3_utils
 shelly
 shelly-flatpak-backend
 smartmontools
-s-nail
 snapper
 sof-firmware
 sudo

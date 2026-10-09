@@ -1,0 +1,91 @@
+#!/usr/bin/python3
+"""Link the Craft apps already installed by mise; never download or run releases."""
+import argparse
+import json
+import os
+from pathlib import Path
+import sys
+import uuid
+
+APPS = ('gridcraft', 'pdfcraft', 'wordcraft', 'photocraft')
+
+
+def planned_links(home, data, installs):
+    links = {}
+    for app in APPS:
+        root = installs / f'github-storytold-{app}' / 'latest'
+        for name in (app, f'{app}-cli'):
+            source = root / 'bin' / name
+            if not source.is_file() or not os.access(source, os.X_OK):
+                raise RuntimeError(f'Required executable missing: {source}')
+            links[home / '.local/bin' / name] = source
+        for folder, suffix in (('applications', 'desktop'), ('metainfo', 'metainfo.xml'), ('mime/packages', 'xml')):
+            relative = Path('share') / folder / f'ai.storyteller.{app}.{suffix}'
+            source = root / relative
+            if not source.is_file():
+                raise RuntimeError(f'Required desktop file missing: {source}')
+            links[data / folder / source.name] = source
+        icons = root / 'share/icons'
+        app_icons = [p for p in icons.rglob(f'ai.storyteller.{app}.*') if p.is_file()]
+        if not app_icons:
+            raise RuntimeError(f'No desktop icons found for {app}')
+        for source in app_icons:
+            links[data / 'icons' / source.relative_to(icons)] = source
+        docs = root / 'share/doc' / app
+        for source in docs.rglob('*'):
+            if source.is_file():
+                links[data / 'doc' / app / source.relative_to(docs)] = source
+    for dest in links:
+        if dest.is_dir() and not dest.is_symlink():
+            raise RuntimeError(f'Cannot replace a directory with a file: {dest}')
+    return links
+
+
+def atomic_link(dest, source):
+    if dest.is_symlink() and os.readlink(dest) == str(source):
+        return
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    temporary = dest.with_name(f'.{dest.name}.mise-{uuid.uuid4().hex}')
+    try:
+        temporary.symlink_to(source)
+        temporary.replace(dest)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--check', action='store_true', help='Validate installs without modifying desktop integration')
+    args = parser.parse_args()
+    home = Path.home()
+    data = Path(os.environ.get('XDG_DATA_HOME', home / '.local/share'))
+    installs = Path(os.environ.get('MISE_DATA_DIR', data / 'mise')) / 'installs'
+    links = planned_links(home, data, installs)
+    if args.check:
+        print(f'Validated four mise installs and {len(links)} desktop/file links.')
+        return
+    state = Path(os.environ.get('XDG_STATE_HOME', home / '.local/state')) / 'mise-craft/links.json'
+    previous = json.loads(state.read_text()) if state.exists() else {}
+    current = {str(dest): str(source) for dest, source in links.items()}
+    for dest, source in links.items():
+        atomic_link(dest, source)
+    for name, target in previous.items():
+        dest = Path(name)
+        if name not in current and dest.is_symlink() and os.readlink(dest) == target:
+            dest.unlink()
+    state.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    temporary = state.with_name(f'.links-{uuid.uuid4().hex}.json')
+    try:
+        temporary.write_text(json.dumps(current, indent=2) + '\n')
+        temporary.replace(state)
+    finally:
+        temporary.unlink(missing_ok=True)
+    print(f'Integrated four mise-managed Craft apps ({len(links)} links).')
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, RuntimeError, ValueError) as exc:
+        print(f'mise-craft-integrate: {exc}', file=sys.stderr)
+        sys.exit(1)

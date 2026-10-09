@@ -64,3 +64,31 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 - **App Defaults:** Zed editor settings, MIME associations (`mimeapps.list`), MPV, Navi, Shelly
 - **Documentation & Rules:** `AGENTS.md`
 - **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (auto-synced)
+
+## Mise release tools
+
+`~/.config/mise/config.toml` is the single tool inventory. Add a GitHub release
+with `mise use -g github:OWNER/REPO@latest` (some repositories need asset/layout
+options). Run `mise upgrade` to upgrade all configured tools, or
+`mise upgrade --dry-run` to check. Version ranges and exact pins are respected.
+
+The enabled `mise-upgrade.timer` runs the same unfiltered upgrade command daily
+from the home directory. Future globally configured tools are included;
+project-only configuration elsewhere is outside this timer's scope.
+The desktop helper refreshes the four existing Craft apps' menu/icon integration;
+it does not download or choose updates. Other GUI apps may need separate desktop
+integration.
+
+After applying these dotfiles and installing the system package manifest:
+
+```bash
+mise -C "$HOME" install
+systemctl --user daemon-reload
+systemctl --user start mise-upgrade.service
+systemctl --user enable --now mise-upgrade.timer
+```
+
+Only configuration, units and the integration helper are tracked. Mise downloads,
+extracted binaries, generated desktop links/caches and integration state are not
+copied into the repository. The previous tar updater and app-specific update
+tasks/wrappers are retired.

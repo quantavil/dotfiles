@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily upgrades for all configured mise tools
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=30min
+Unit=mise-upgrade.service
+
+[Install]
+WantedBy=timers.target

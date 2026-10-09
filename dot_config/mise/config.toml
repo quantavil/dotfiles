@@ -1,0 +1,9 @@
+[tools]
+"github:storytold/gridcraft" = { version = "latest", asset_pattern = "gridcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
+"github:storytold/pdfcraft" = { version = "latest", asset_pattern = "pdfcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
+"github:storytold/photocraft" = { version = "latest", asset_pattern = "photocraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
+"github:storytold/wordcraft" = { version = "latest", asset_pattern = "wordcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
+
+[settings]
+# Track fresh stable releases for these desktop apps.
+minimum_release_age_excludes = ["github:storytold/gridcraft", "github:storytold/pdfcraft", "github:storytold/wordcraft", "github:storytold/photocraft"]

@@ -1,0 +1,18 @@
+[Unit]
+Description=Upgrade all configured mise tools
+StartLimitIntervalSec=1h
+StartLimitBurst=3
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h
+ExecStart=/usr/bin/mise -C %h -y upgrade
+ExecStartPost=%h/.local/libexec/mise-craft-integrate
+ExecStartPost=/usr/bin/update-desktop-database %h/.local/share/applications
+ExecStartPost=/usr/bin/update-mime-database %h/.local/share/mime
+ExecStartPost=/usr/bin/gtk-update-icon-cache -f -t %h/.local/share/icons/hicolor
+Restart=on-failure
+RestartSec=5min
+TimeoutStartSec=30min
+NoNewPrivileges=true
+UMask=0077
