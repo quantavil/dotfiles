@@ -137,8 +137,8 @@ overview {
 environment {
   XDG_CURRENT_DESKTOP "niri"
   XDG_MENU_PREFIX "arch-"
-  QT_QPA_PLATFORMTHEME "qt6ct"
-  QT_QPA_PLATFORMTHEME_QT6 "qt6ct"
+  QT_QPA_PLATFORMTHEME "xdgdesktopportal"
+  QT_QPA_PLATFORMTHEME_QT6 "xdgdesktopportal"
   EDITOR "zedit"
   VISUAL "zedit"
 }

@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import uuid
 
-APPS = ('gridcraft', 'pdfcraft', 'wordcraft', 'photocraft')
+APPS = ('gridcraft', 'pdfcraft', 'wordcraft', 'photocraft', 'deckcraft')
 
 
 def planned_links(home, data, installs):
@@ -62,7 +62,7 @@ def main():
     installs = Path(os.environ.get('MISE_DATA_DIR', data / 'mise')) / 'installs'
     links = planned_links(home, data, installs)
     if args.check:
-        print(f'Validated four mise installs and {len(links)} desktop/file links.')
+        print(f'Validated five mise installs and {len(links)} desktop/file links.')
         return
     state = Path(os.environ.get('XDG_STATE_HOME', home / '.local/state')) / 'mise-craft/links.json'
     previous = json.loads(state.read_text()) if state.exists() else {}
@@ -80,7 +80,7 @@ def main():
         temporary.replace(state)
     finally:
         temporary.unlink(missing_ok=True)
-    print(f'Integrated four mise-managed Craft apps ({len(links)} links).')
+    print(f'Integrated five mise-managed Craft apps ({len(links)} links).')
 
 
 if __name__ == '__main__':

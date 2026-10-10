@@ -66,12 +66,18 @@ audio/x-flac=org.fooyin.fooyin.desktop
 x-scheme-handler/tg=userapp-AyuGram Desktop-XZEJW3.desktop
 x-scheme-handler/tonsite=userapp-AyuGram Desktop-MXVIW3.desktop
 x-scheme-handler/codex=chatgpt.desktop
-application/vnd.ms-excel=onlyoffice-desktopeditors.desktop
-application/vnd.ms-excel.sheet.macroEnabled.12=onlyoffice-desktopeditors.desktop
-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=onlyoffice-desktopeditors.desktop
-application/vnd.openxmlformats-officedocument.wordprocessingml.document=onlyoffice-desktopeditors.desktop
-application/vnd.openxmlformats-officedocument.presentationml.presentation=onlyoffice-desktopeditors.desktop
+application/vnd.ms-excel=ai.storyteller.gridcraft.desktop
+application/vnd.ms-excel.sheet.macroEnabled.12=ai.storyteller.gridcraft.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=ai.storyteller.gridcraft.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=ai.storyteller.wordcraft.desktop
 text/tab-separated-values=dev.zed.Zed.desktop
+application/msword=ai.storyteller.wordcraft.desktop
+application/vnd.oasis.opendocument.spreadsheet=ai.storyteller.gridcraft.desktop
+application/vnd.openxmlformats-officedocument.presentationml.presentation=ai.storyteller.deckcraft.desktop
+application/vnd.openxmlformats-officedocument.presentationml.template=ai.storyteller.deckcraft.desktop
+application/vnd.openxmlformats-officedocument.presentationml.slideshow=ai.storyteller.deckcraft.desktop
+application/vnd.ms-powerpoint=ai.storyteller.deckcraft.desktop
+application/vnd.oasis.opendocument.presentation=ai.storyteller.deckcraft.desktop
 
 [Added Associations]
 application/xhtml+xml=vivaldi-stable.desktop;zen.desktop;
