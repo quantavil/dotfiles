@@ -45,13 +45,14 @@ cachy-update
 cantarell-fonts
 cava
 ccid
-chatgpt-desktop-bin
 chezmoi
 chromium
 chwd
 cmake
 cpupower
 cryptsetup
+cups
+cups-filters
 cups-pk-helper
 dart
 device-mapper
@@ -90,6 +91,7 @@ gst-plugins-ugly
 gst-plugin-va
 gwenview
 hdparm
+hplip
 hwdetect
 hwinfo
 inetutils
@@ -104,6 +106,7 @@ kdeconnect
 kimageformats
 kio-admin
 kio-extras
+kio-fuse
 lazygit
 less
 lib32-nvidia-utils
@@ -160,7 +163,6 @@ nvidia-utils
 obsidian
 obs-studio
 okular
-openai-codex
 opencl-nvidia
 opencode
 opensc
@@ -185,6 +187,8 @@ pv
 python
 python-defusedxml
 python-packaging
+python-pillow
+python-reportlab
 qbittorrent
 qt6-tools
 rclone
@@ -195,10 +199,13 @@ rio
 ripgrep
 rsync
 rust
+sane
+sane-airscan
 sddm
 sg3_utils
 shelly
 shelly-flatpak-backend
+skanpage
 smartmontools
 s-nail
 snapper

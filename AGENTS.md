@@ -45,6 +45,8 @@ Guidance for work in this home directory.
 - Centralized MCP configuration is managed in `~/Documents/my-mcps` (CLI symlinked at `~/.local/bin/my-mcps`), deploying to Antigravity CLI (`~/.gemini/config/mcp_config.json` with symlink at `~/.gemini/antigravity-cli/mcp_config.json`), OpenCode (`~/.config/opencode/opencode.json`), Codex (`~/.codex/config.toml`), Cursor (`~/.cursor/mcp.json`), Claude Desktop (`~/.config/Claude/claude_desktop_config.json`), and Claude Code (`~/.claude.json`).
 - Agent skills collection is managed in `~/Documents/my-skills` (CLI symlinked at `~/.local/bin/my-skills`), deploying vendor and custom skills across Antigravity, OpenCode, Codex, Cursor, Claude Code, and universal `~/.agents/skills` targets.
 - Mobile MCP (`mobile-mcp` entry, `@mobilenext/mobile-mcp@latest` via `bunx`) is deployed through `~/Documents/my-mcps` for Android/iOS device and emulator automation (accessibility snapshots, screenshots, taps, swipes, app lifecycle, logcat). Anonymous telemetry is disabled (`MOBILEMCP_DISABLE_TELEMETRY=1`) in all deployed configs; it uses the system `adb` and becomes available to an agent only after a fresh session start.
+- Network shares / SMB: Remote Windows desktop `DESKTOP-CNRKSBM` is reachable on the LAN at `desktop-cnrksbm.local` (IPv4 `192.168.1.5`). Dolphin accesses it via `smb://desktop-cnrksbm.local/` (shares include `E`, `Users`). `kio-fuse` is installed and managed by `kio-fuse.service` to bridge KIO URLs into `/run/user/1000/kio-fuse-*/` so non-KDE desktop applications (like PdfCraft, VS Code) can open remote files directly without failing.
+- Printing & Scanning: Local USB multifunction hardware is an HP LaserJet Pro MFP M125nw (`03f0:222a` on Bus 001); remote network share hosts an HP LaserJet 1020 on `DESKTOP-CNRKSBM`. Both printers require the proprietary HP binary plugin (`hplip-plugin` from AUR or `hp-plugin -i`). The stack relies on `cups` (`cups.service`) + `cups-filters` + `hplip`, `sane` + `sane-airscan` for the scanner backend, and `skanpage` (KDE) or `simple-scan` for scanning.
 
 ## Privileged operations
 
@@ -243,10 +245,11 @@ Guidance for work in this home directory.
   x86_64-only acquisition instruction deliberately does not fetch ARM64; do
   not claim that it completes the static evidence pipeline.
 
-### ChatGPT desktop installation (2026-09-30)
+### ChatGPT desktop installation (2026-09-30, historical)
 
-- Installed CachyOS `chatgpt-desktop-bin` version `26.917.71314-1` with pacman;
-  launcher is `/usr/bin/chatgpt`, desktop entry is `chatgpt.desktop`.
+- Historical: `chatgpt-desktop-bin` is no longer installed on this machine as of 2026-10-14. No `~/.config/ChatGPT`, `~/.local/share/ChatGPT`, `~/.cache/ChatGPT` or `chatgpt.desktop` remains. Only the Codex CLI is wanted here.
+- Originally installed CachyOS `chatgpt-desktop-bin` version `26.917.71314-1` with pacman;
+  launcher was `/usr/bin/chatgpt`, desktop entry `chatgpt.desktop`.
 - Shelly failed handing off the prepared download. After its Chromium process
   exited and released the database lock, pacman encountered a mirror 404 for
   the detached signature. Recovered `%PGPSIG%` from the local CachyOS sync
@@ -394,6 +397,7 @@ Guidance for work in this home directory.
 - One enabled user timer, `mise-upgrade.timer`, runs daily with persistence and up to 30 minutes of jitter. Its service runs `/usr/bin/mise -C %h -y upgrade` without a tool whitelist, covering global/home configuration and future globally added tools. Project-only configurations elsewhere require their own explicit upgrade. Failed runs retry after five minutes, with three starts per hour.
 - Gridcraft, PDFcraft, Wordcraft, Photocraft and Deckcraft are configured as GitHub tools tracking Linux x86_64 tarballs. Mise owns installations under `~/.local/share/mise/installs`; keep binaries, extracted releases, generated caches and integration state out of chezmoi. Release-age exceptions for these five tools do not restrict the upgrade scope.
 - The service's `~/.local/libexec/mise-craft-integrate` helper only links the existing five GUI apps' executables, launchers, icons, MIME files, metainfo and docs through mise's stable `latest` aliases; it never downloads updates. Inventory is `~/.local/state/mise-craft/links.json`. Other GUI tools may need desktop integration separately; CLI tools use mise normally.
+- CLI tool `github:openai/codex` (see the 2026-10-14 entry) is also mise-managed and needs no integration helper: it resolves through the `~/.local/share/mise/shims/codex` shim, which `mise activate fish` in `~/.config/fish/conf.d/10-mise.fish` puts ahead of `/usr/bin` for interactive sessions.
 - Chezmoi tracks the mise configuration, service/timer and enablement link, and executable integration helper. Restore instructions are in the dotfiles README. The retired tar updater, wrappers, manifest, units and VERSION/SOURCE markers are removed; retain only this mise update mechanism.
 - Validate with `mise ls`, the integration helper's `--check`, `systemd-analyze --user verify`, and the service result/logs. Keep mise's default integrity checks enabled; do not describe same-release checksums as independent publisher authentication.
 
@@ -407,3 +411,29 @@ Guidance for work in this home directory.
 
 - Installed `github:storytold/deckcraft` 0.4.0 (Linux x86_64 tarball, `deckcraft-*-linux-x86_64.tar.gz`, same layout as the other crafts) following the existing mise pattern: entry + `minimum_release_age_excludes` in `~/.config/mise/config.toml`, `mise install`, then extended `~/.local/libexec/mise-craft-integrate` (`APPS` tuple plus four→five messaging) and ran it (118 links). Validated with `mise ls`, helper `--check`, and `deckcraft --version`.
 - Presentation defaults now → DeckCraft: `ppt`, `pptx`, `potx`, `ppsx`, `odp`. Full office set: Gridcraft (spreadsheets), Wordcraft (documents), Photocraft (images), Deckcraft (presentations), PDFcraft installed but PDF default stays Okular.
+
+
+### Fact-check report rendering (2026-10-14)
+
+- The skill at `~/Documents/my-skills/skills/fact-check` renders Markdown reports with `uv run scripts/render_report.py report.md`. Its declared `markdown-it-py` and `Jinja2` dependencies are cached in uv-managed isolated environments; optional argument maps reuse the existing Graphviz `dot` executable. No system packages or model weights were installed. Preview artifacts are in `~/.local/share/fact-check/reports/html-preview/`.
+
+### System update run (2026-10-14)
+
+- Laptop full upgrade through `pacman -Syu` (217 packages: KDE Frameworks/Plasma 6.30.0 → 6.31.0, GStreamer 1.28.7 → 1.28.8, VLC 3.0.23_2 → 3.0.24, `linux-cachyos` 7.2.9-1 → 7.2.9-2 with matching LTS headers, chromium 153 → 154, zed 1.23.2 → 1.23.3, zen-browser-bin, `uv` 0.13.0 → 0.13.1). Transaction was clean: zero errors or warnings. Snapper pre/post snapshots and `limine-snapper-sync` hooks ran normally.
+- `chatgpt-desktop-bin` 26.1002.52244 → 26.1007.21434 and `openai-codex` 0.162.0 → 0.162.1 came from this repo upgrade; both verified with `pacman -Qk` (0 missing files) and `--version`.
+- AUR side: only `visual-studio-code-bin` 1.140.0 → 1.141.1. Shelly paused for confirmation because the PKGBUILD uses dynamic command construction; verified before accepting that the tarball source is Microsoft's official CDN (`update.code.visualstudio.com`) and `package()` only extracts `data.tar.xz`, symlinks the license, fixes desktop entries and chmods `chrome-sandbox`. The warnings come from the standard `code-flags.conf` launcher and `tput` colours in the `.install` script. All 7 AUR/foreign packages are otherwise current.
+- mise tools were already current via the daily `mise-upgrade.timer` (deckcraft 0.6.1, gridcraft 0.6.1, pdfcraft 0.7.1, photocraft 0.8.2, wordcraft 0.6.1; older installs pruned).
+- Issue fixed: six stale `.pacnew` files removed after review. Every one was older than its live counterpart (`pacman.conf.pacnew` was the 2025-06 stock file versus the customized 2026-09-29 config, so merging would have reverted `ILoveCandy`, `VerbosePkgLists`, `ParallelDownloads = 10` and the enabled CachyOS/multilib repos). The mirrorlist `.pacnew` files were stock copies while the live files had been regenerated by `rate-mirrors` that day. `/etc` is now free of `.pacnew`/`.pacsave`.
+- `pacman -Qkk` warnings for `bind`, `cups`, `audit` and `dbus` are permission/checksum noise on root-owned runtime files, not corruption. No failed user or system units. `/` has 390 GiB free; `/boot` 2.6 GiB free. Pacman cache is 13 GiB if trimming is ever wanted (`paccache -rk2` saves about 600 MiB).
+- Six orphans (`adw-gtk-theme`, `cachyos-alacritty-config`, `capitaine-cursors`, `dms-shell`, `niri`, `noctalia`) were deliberately left installed: all are in active use by the DMS/Niri desktop, so `pacman -Rns` on them would break the session.
+- Elevation path for non-interactive agent runs: `pkexec` works through the DMS polkit agent, but its authorization expires quickly, so a long `pacman` run can stall on an unseen dialog. For scripted root work prefer a short-lived `SUDO_ASKPASS` helper under `/tmp/opencode` created with `umask 077`, then `shred -u` it. Do not persist the password or enable `NOPASSWD`.
+- Because `checkupdates` syncs its own database copy it can report a package the main database considers current; confirm with `pacman -Syu` rather than `pacman -S --needed <pkg>` alone.
+- A reboot is required to boot `linux-cachyos` 7.2.9-2. `qt6-base` stayed at 6.12.0, so the `qt6ct-kde` platform-theme incompatibility and the `xdgdesktopportal` workaround are unchanged. `niri validate` still reports the config valid after the KDE bump.
+
+### 2026-10-14 — Codex CLI moved to mise
+- User asked for the CLI only. Added `github:openai/codex` to `~/.config/mise/config.toml` under a `[tools]` CLI comment, using `asset_pattern = "codex-package-x86_64-unknown-linux-musl.tar.gz"`, `strip_components = "0"`, `bin_path = "bin"`. Upstream tags carry a `rust-v` prefix and the asset name has no version, so an explicit asset pattern is required; mise resolves the version to `rust-v0.162.1`.
+- Installed via `mise install` under `~/.local/share/mise/installs/github-openai-codex/rust-v0.162.1`. Verified `codex --version` returns `codex-cli 0.162.1` and `codex --help` works through the static musl binary.
+- Removed repo package `openai-codex 0.162.1-1.1` (326 MiB) with `pkexec /usr/bin/pacman -R --noconfirm openai-codex`; snapper pre/post snapshots ran. Deliberately no `-s`: all of its former dependencies (bubblewrap, bzip2, libcap, oniguruma, sqlite, xz, zstd, openssl, zlib-ng-compat) still have reverse dependencies, so nothing was orphaned.
+- `command -v codex` now resolves to the mise shim, which precedes `/usr/bin` because mise is activated in fish via `~/.config/fish/conf.d/10-mise.fish`. User data in `~/.codex` (1.5 GiB) was untouched.
+- `mise-upgrade.timer` already runs `/usr/bin/mise -C %h -y upgrade` with no tool whitelist, so codex upgrades automatically. `mise upgrade --dry-run` reported all tools current after the change. The `mise-craft-integrate` post-hook is irrelevant here; codex is a CLI resolved through shims.
+- `chatgpt-desktop-bin` is not installed on this machine and had no leftover config, cache or desktop entry, so nothing needed removing. The 2026-09-30 ChatGPT installation note is historical.
