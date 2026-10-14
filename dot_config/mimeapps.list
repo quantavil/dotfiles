@@ -65,7 +65,6 @@ audio/webm=org.fooyin.fooyin.desktop
 audio/x-flac=org.fooyin.fooyin.desktop
 x-scheme-handler/tg=userapp-AyuGram Desktop-XZEJW3.desktop
 x-scheme-handler/tonsite=userapp-AyuGram Desktop-MXVIW3.desktop
-x-scheme-handler/codex=chatgpt.desktop
 application/vnd.ms-excel=ai.storyteller.gridcraft.desktop
 application/vnd.ms-excel.sheet.macroEnabled.12=ai.storyteller.gridcraft.desktop
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=ai.storyteller.gridcraft.desktop

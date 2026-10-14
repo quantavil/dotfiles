@@ -247,7 +247,7 @@ Guidance for work in this home directory.
 
 ### ChatGPT desktop installation (2026-09-30, historical)
 
-- Historical: `chatgpt-desktop-bin` is no longer installed on this machine as of 2026-10-14. No `~/.config/ChatGPT`, `~/.local/share/ChatGPT`, `~/.cache/ChatGPT` or `chatgpt.desktop` remains. Only the Codex CLI is wanted here.
+- Historical: `chatgpt-desktop-bin` is no longer installed on this machine as of 2026-10-14. No `~/.config/ChatGPT`, `~/.local/share/ChatGPT`, `~/.cache/ChatGPT` or `chatgpt.desktop` remains. Only the Codex CLI is wanted here. A dead `x-scheme-handler/codex=chatgpt.desktop` MIME binding was also removed from `~/.config/mimeapps.list` and the chezmoi source on 2026-10-14, so `codex://` URLs now have no handler; mise's Codex CLI ships no `.desktop` file, so nothing replaces it.
 - Originally installed CachyOS `chatgpt-desktop-bin` version `26.917.71314-1` with pacman;
   launcher was `/usr/bin/chatgpt`, desktop entry `chatgpt.desktop`.
 - Shelly failed handing off the prepared download. After its Chromium process
