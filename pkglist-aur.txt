@@ -1,7 +1,5 @@
 android-apktool-bin
 dsearch-bin
 icu69-bin
-micyou-bin
 qt6ct-kde
 visual-studio-code-bin
-youwee-bin
