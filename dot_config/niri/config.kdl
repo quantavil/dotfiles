@@ -225,46 +225,33 @@ window-rule {
     default-floating-position x=10 y=10 relative-to="bottom-right"
     open-focused false
 }
-// Overall: increased translucency + very light blur for all apps (KDE + GNOME + others).
+// Default for all apps: opaque, no blur. Only the essential exceptions below are translucent.
 window-rule {
     draw-border-with-background false
-    opacity 0.88
+    opacity 1.0
     geometry-corner-radius 12
     clip-to-geometry true
-    background-effect {
-        blur true
-    }
-}
-// Fidelity/readability exclusions: these stay opaque (no glass).
-window-rule {
-    // Media: translucency washes out video and distorts photos.
-    match app-id="mpv"
-    match app-id=r#"^org\.kde\.gwenview$"#
-    match app-id=r#"^com\.obsproject\.Studio$"#
-    // Browsers and focus apps: reading and typing need full contrast.
-    match app-id="vivaldi"
-    match app-id="zen"
-    match app-id="Code"
-    match app-id="ONLYOFFICE"
-    match app-id="okular"
-    match app-id="kate"
-    match app-id="kwrite"
-    match app-id=r#"^org\.gnome\.Meld$"#
-    match app-id="md.obsidian.Obsidian"
-    // Auth prompts and system dialogs: tiny surfaces, must stay legible.
-    match app-id="gcr-prompter"
-    match app-id="signon-ui"
-    match app-id=r#"^org\.gnupg\.pinentry-qt$"#
-    match app-id="xdg-desktop-portal-gtk"
-    // Floating video overlays.
-    match title="^Picture-in-Picture$"
-    match title="^Picture in picture$"
-    opacity 1.0
     background-effect {
         blur false
     }
 }
-// PiP and calls float above tiling (companions to the opaque rule above).
+// Translucent by choice: terminal, file managers, utilities and DMS.
+// Browsers, editors, office/PDF/text, media and auth prompts stay opaque.
+window-rule {
+    match app-id="^rio$"
+    match app-id=r#"^org\.kde\.dolphin$"#
+    match app-id=r#"^org\.gnome\.Nautilus$"#
+    match app-id=r#"^org\.kde\.ark$"#
+    match app-id=r#"^org\.kde\.filelight$"#
+    match app-id=r#"^org\.pulseaudio\.pavucontrol$"#
+    match app-id=r#"^org\.fooyin\.fooyin$"#
+    match app-id=r#"^com\.danklinux\.dms$"#
+    opacity 0.88
+    background-effect {
+        blur true
+    }
+}
+// PiP and calls float above tiling.
 window-rule {
     match title="^Picture-in-Picture$"
     match title="^Picture in picture$"
