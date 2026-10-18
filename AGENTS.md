@@ -43,8 +43,9 @@ Guidance for work in this home directory.
 - UFW manages the host firewall. Add narrowly scoped rules only for features that are actually in use.
 - KDE Connect uses its standard firewall application profile and `kdeconnectd`; diagnose discovery before changing firewall policy.
 - Centralized MCP configuration is managed in `~/Documents/my-mcps` (CLI symlinked at `~/.local/bin/my-mcps`), deploying to Antigravity CLI (`~/.gemini/config/mcp_config.json` with symlink at `~/.gemini/antigravity-cli/mcp_config.json`), OpenCode (`~/.config/opencode/opencode.json`), Codex (`~/.codex/config.toml`), Cursor (`~/.cursor/mcp.json`), Claude Desktop (`~/.config/Claude/claude_desktop_config.json`), and Claude Code (`~/.claude.json`).
-- Agent skills collection is managed in `~/Documents/my-skills` (CLI symlinked at `~/.local/bin/my-skills`), deploying vendor and custom skills across Antigravity, OpenCode, Codex, Cursor, Claude Code, and universal `~/.agents/skills` targets.
-- Mobile MCP (`mobile-mcp` entry, `@mobilenext/mobile-mcp@latest` via `bunx`) is deployed through `~/Documents/my-mcps` for Android/iOS device and emulator automation (accessibility snapshots, screenshots, taps, swipes, app lifecycle, logcat). Anonymous telemetry is disabled (`MOBILEMCP_DISABLE_TELEMETRY=1`) in all deployed configs; it uses the system `adb` and becomes available to an agent only after a fresh session start.
+- Agent skills collection is managed in `~/Documents/my-skills` (run `bun index.ts`, or `./run.sh <command>`; the `~/.local/bin/my-skills` symlink is documented but not currently present). Commands: `add` (asks upstream, local or superskill), `remove`, `sync` (refuses to overwrite local edits unless `--force`), `set` (category, type, requires, `--accept`), `superskill`, `enable`/`disable` (per skill or superskill), `status`, `deploy`, `doctor`, `check`. Live superskills (one repo each, members hidden while on): `caveman-kit`, `engram`, `qt`, `office` (inline); `design-taste` (all 14 Leonxlnx/taste-skill skills, `--index` router, replaced the local design-taste skill on 2026-10-18) and `superpowers` (all 15 obra/superpowers skills, `--index`, 2026-10-18) (`--index` builds a router for big repos; `flutter-dart` and all flutter/agent-plugins skills were removed on 2026-10-18); `ditto` and six overlapping upstream skills (officecli, frontend-design, hallmark, algorithmic-art, theme-factory, canvas-design) were removed on 2026-10-18. `superskills/` is generated build output, gitignored and rebuilt by any command when missing; `skills.json` is committed and holds type, category, requires and the accepted folder hash; `skills.local.json` and `.active/` are per machine and ignored. Agents receive symlinks from the nine targets (Antigravity, Codex, Claude Code, OpenCode, Cursor and universal `~/.agents` / `~/.config/agents`); Gemini and OpenCode configs point at `.active/`, so disabled skills stay hidden. Upstream skills are vendored through the pinned `skills` devDependency, never a floating `bunx`.
+- Awwwards MCP (`awwwards` entry, `bunx awwwards-mcp` → npm `awwwards-mcp`) is deployed through `~/Documents/my-mcps` for design inspiration from awwwards.com: `search_sites`, `get_site_details`, `compare_sites`, `create_design_brief`, element/motion search, 3D pose capture and page-structure band maps (22 tools). No API key or account. Upstream requires Node ≥ 22.13 (installed Node is 26.11.1); it runs correctly under both `bunx` and `npx`. Its SQLite cache and CDN screenshot cache live in `~/.awwwards-mcp/` (owned by the package, not this repo). Browser-derived tools (`capture_live_site`, `analyze_page_structure`, `record_site_motion`, `capture_component`, `capture_pose_3d`) additionally need Playwright + Chromium, and motion recording needs `ffmpeg-static`; both are optional and deliberately **not installed** — the server still advertises all 22 tools but those capture tools fail until the extra install is opted into. The local sites index builds itself automatically in the background on a 7-day freshness gate (~198 tag pages at 1 req/s, a few minutes); the first manual build command is `npx -y -p awwwards-mcp awwwards-index` — note `bunx awwwards-index` fails, because the binary is a bin inside the `awwwards-mcp` package, not a package of that name. An active index run holds the `index:lock` row in `cache.db`; check `get_index_status` before assuming a lock is stale. Scraping is polite (1 req/s, robots.txt paths only, cached 7 days) and content stays Awwwards' property.
+- The Mobile MCP (`mobile-mcp` / Mobile Next) entry was removed from `~/Documents/my-mcps` on 2026-10-18 at the user's request and redeployed out of all six agent configs; it previously provided Android/iOS automation (accessibility snapshots, screenshots, taps, logcat) using the system `adb` with telemetry disabled. The Ditto emulator controller (`ditto-mobile-control`, which owns `manage_emulator`) and `ditto2` are unrelated and still deployed.
 - Network shares / SMB: Remote Windows desktop `DESKTOP-CNRKSBM` is reachable on the LAN at `desktop-cnrksbm.local` (IPv4 `192.168.1.5`). Dolphin accesses it via `smb://desktop-cnrksbm.local/` (shares include `E`, `Users`). `kio-fuse` is installed and managed by `kio-fuse.service` to bridge KIO URLs into `/run/user/1000/kio-fuse-*/` so non-KDE desktop applications (like PdfCraft, VS Code) can open remote files directly without failing.
 - Printing & Scanning: Local USB multifunction hardware is an HP LaserJet Pro MFP M125nw (`03f0:222a` on Bus 001); remote network share hosts an HP LaserJet 1020 on `DESKTOP-CNRKSBM`. Both printers require the proprietary HP binary plugin (`hplip-plugin` from AUR or `hp-plugin -i`). The stack relies on `cups` (`cups.service`) + `cups-filters` + `hplip`, `sane` + `sane-airscan` for the scanner backend, and `skanpage` (KDE) or `simple-scan` for scanning.
 
@@ -89,8 +90,7 @@ Guidance for work in this home directory.
 
 ### Ditto laptop parity workflow (2026-09-20)
 
-- Ditto is maintained at `~/Documents/my-skills/skills/ditto`; deployment uses
-  `bun run deploy` in that repository to sync configured AI-agent discovery.
+- Ditto (the old `skills/ditto` skill) was removed from `~/Documents/my-skills` on 2026-10-18; Ditto2 is the maintained evidence skill. Recover the old one from git history if needed. `bun run deploy` in that repository still syncs agent discovery.
 - Local AVD `floww_parity` is available on `emulator-5554` (Android 14,
   1080×2400, 420 dpi). Use the Ditto mobile MCP `manage_emulator` tool to reuse
   it and explicitly target the serial. Do not compare its captures directly
@@ -262,7 +262,7 @@ Guidance for work in this home directory.
 ### 2026-10-01 — Ditto2 dual-ABI deployment
 - Updated my-mcps/servers/ditto2 and my-skills/skills/ditto2; synced and deployed agent configurations/skill symlinks. Explicit split_paths describe complete delivery sets; ARM64 static and x86_64 runtime are linked by validated release/signers/content descriptors. Reuse checks installed APK bytes.
 - Seven MCP tools include semantic extraction and optional graph grouping. Finalized partial analyzer output is usable; .incomplete means interrupted collection.
-- Verification: 63 Ditto2 tests and 22 MCP CLI tests passed. Live baby-tracker x86_64 reuse captured two screens/transitions and 11 keys; matching ARM64 unavailable, JADX heap failure recorded. Evidence: ~/Documents/ditto2-dual-abi-validation/live/review.json. Reconnect MCP clients after deployment.
+- Verification: 63 Ditto2 tests and 22 MCP CLI tests passed. Live baby-tracker x86_64 reuse captured two screens/transitions and 11 keys; matching ARM64 unavailable, JADX heap failure recorded. Evidence was `~/Documents/ditto2-dual-abi-validation/live/review.json`; that directory no longer exists (removed after 2026-10-01), so the live-run figures above are retained here as the only record and the APKs/captures were never committed. Reconnect MCP clients after deployment. This work sat on the unmerged `ditto2-dual-abi` branch until 2026-10-18; see the 2026-10-18 entry for the merge and for the corrected deployment status.
 
 ### 2026-10-01 — Baby Tracker expanded Ditto2 validation
 - Evidence/report: ~/Documents/baby-tracker-clone/evidence/original-analysis/REPORT.md. Verified 2.9.0 / 20209000 x86_64 split delivery; two installed-byte reuse runs, 18/6 raw graph nodes and 31/10 edges, 37/9 reviewed actions retained separately. Main semantic extraction found 30 keys.
@@ -374,6 +374,26 @@ Guidance for work in this home directory.
   AyuGram IDs; full `chezmoi apply` would overwrite them with desktop IDs).
   Verified with `xdg-mime query default` + `gio mime text/markdown`.
 
+### PdfCraft prebuilt install (2026-10-08, laptop note)
+
+- Cancelled the AUR `pdfcraft 0.4.0-1` source build mid-`cargo build --release`
+  (670 crates, `opt-level=3` + thin LTO + `codegen-units=1`; heavy swap use).
+  No `pdfcraft-bin` exists on AUR (only `pdfcraft` source + `pdfcraft-git`).
+- Installed local `pdfcraft-bin 0.4.0-1` repackaged from the upstream prebuilt
+  `pdfcraft-0.4.0-linux-x86_64.tar.gz` (SHA-256 verified against `SHA256SUMS.txt`).
+  PKGBUILD lives in `~/Documents/pdfcraft-bin/PKGBUILD`; it provides/conflicts
+  `pdfcraft`/`printcraft` and installs `pdfcraft` + `pdfcraft-cli` to `/usr/bin`
+  with desktop, mime, metainfo, icons, and licenses.
+- To update: bump `pkgver` + `sha256sums` in that PKGBUILD for the new release
+  asset, run `makepkg -s`, then `pkexec pacman -U <pkgfile>`.
+- Uninstalled on user request (2026-10-08) via `pkexec pacman -Rns pdfcraft-bin`;
+  binaries and desktop entry confirmed gone. Fully removed afterwards:
+  `~/Documents/pdfcraft-bin/`, `/tmp/opencode` tarball/extract, and the
+  `~/.cache/Shelly/pdfcraft/` source-build cache (~2.1G reclaimed).
+- Laptop 2026-10-10: this section exists only on the laptop; the desktop
+  `29ce9eb` pull would have dropped it via `chezmoi apply`, so it is preserved
+  here. Desktop now uses mise-managed PDFcraft instead of this one-off package.
+
 ### MicYou and android-tools installation (2026-10-08)
 
 - Installed `micyou-bin` (v2.1.0-1, packaged from official upstream GitHub release `MicYou-Dev/MicYou` v2.1.0 Debian binary archive without source compiling, with pinned LICENSE and verified SHA-256 sums).
@@ -412,6 +432,97 @@ Guidance for work in this home directory.
 - Installed `github:storytold/deckcraft` 0.4.0 (Linux x86_64 tarball, `deckcraft-*-linux-x86_64.tar.gz`, same layout as the other crafts) following the existing mise pattern: entry + `minimum_release_age_excludes` in `~/.config/mise/config.toml`, `mise install`, then extended `~/.local/libexec/mise-craft-integrate` (`APPS` tuple plus four→five messaging) and ran it (118 links). Validated with `mise ls`, helper `--check`, and `deckcraft --version`.
 - Presentation defaults now → DeckCraft: `ppt`, `pptx`, `potx`, `ppsx`, `odp`. Full office set: Gridcraft (spreadsheets), Wordcraft (documents), Photocraft (images), Deckcraft (presentations), PDFcraft installed but PDF default stays Okular.
 
+### Laptop pull of desktop commits + selective apply (2026-10-10)
+
+- This machine is the laptop (`chassis_type=10`, `BAT0` present, Intel UHD,
+  no Nvidia, `~/.config/chezmoi/chezmoi.toml` role `laptop`,
+  `qt6-base 6.11.2` with matching `qt6ct-kde 0.11`, DMS `dms-shell 1.6.2`).
+- Pulled dotfiles `9939a84..29ce9eb` fast-forward (3 desktop commits:
+  `65f15c8` DMS template + OBS rule + MicYou docs, `d07c670` mise upgrades,
+  `29ce9eb` xdgdesktopportal Qt theme + DeckCraft + craft office defaults).
+  Backups of pre-pull home files in `/tmp/opencode/laptop-pull-2026-10-10/`.
+- Restored the laptop-only PdfCraft section above (a full `chezmoi apply`
+  would have deleted it); left the change uncommitted, per the 2026-10-06
+  practice. Doc discrepancies vs desktop to resolve later: shared
+  file/terminal-defaults line now says crafts + `code.desktop`, but on the
+  laptop OnlyOffice (`onlyoffice-bin 9.4.0-1`) is installed and working and
+  `xdg-mime query default text/markdown` returns `com.microsoft.VSCode.desktop`
+  (no `code.desktop` here); shared Windows-E paragraph was removed upstream
+  but laptop still has the `/etc/hosts` entry and `~/Windows-E` symlink
+  (mount offline at pull time).
+- Laptop-safe selective apply (NOT a full `chezmoi apply`):
+  - Applied: merged `AGENTS.md` (this file, synced to `~/AGENTS.md`),
+    new `~/.local/libexec/mise-craft-integrate` helper (inert until run),
+    new `mise-upgrade.service` + `mise-upgrade.timer` unit files (timer left
+    disabled on the laptop — no `timers.target.wants` symlink — until the
+    crafts opt-in below is decided, since the service's
+    `ExecStartPost=mise-craft-integrate` fails without mise crafts installed).
+  - Skipped on purpose: `QT_QPA_PLATFORMTHEME=xdgdesktopportal` (env + Niri) —
+    laptop Qt 6.11.2 loads `qt6ct-kde` 0.11 fine, kept `qt6ct`; Niri OBS opaque
+    rule (no `obs-studio` here); DMS `settings.json.tmpl` + `plugin_settings.json`
+    (template uses `clockwork`/`screenTime` bar IDs but laptop DMS 1.6.2 has
+    `dankClockwork`/`dankScreenTime`/`dankDictionary`/`dankTicker` custom plugins —
+    applying would break the bar; template needs version-aware widget IDs);
+    `mimeapps.list` office-to-crafts + desktop AyuGram IDs (laptop keeps
+    OnlyOffice defaults, working `onlyoffice-bin`, and laptop AyuGram
+    `6JXKV3`/`QT4KV3` handler IDs); `mise/config.toml` replacement (would drop
+    laptop `flutter`/`node`/`pnpm` tools; five crafts opt-in deferred);
+    `DITTO_GPU=host` (bash/zsh/fish — headless host-GPU risk on Intel iGPU,
+    keep unset/auto); `kdeglobals`/`shelly` runtime UI state
+    (`KFileDialog` section, window widths).
+- Validated after apply: `chezmoi status` shows only the intentionally skipped
+  files; `niri validate` clean (config untouched); `xdg-mime query default
+  x-scheme-handler/tg` still laptop `userapp-AyuGram Desktop-6JXKV3.desktop`;
+  `dms doctor -j` 0 errors.
+- Still to template by role (shared-repo follow-ups): `mimeapps.list`
+  AyuGram IDs + office defaults, DMS widget IDs (`dank*` vs renamed),
+  `QT_QPA_PLATFORMTHEME` per Qt version, `mise/config.toml` tool sets.
+
+### Laptop crafts install + OnlyOffice removal (2026-10-10)
+
+- Supersedes the deferred bullets in the laptop-pull entry above: user asked
+  to match the desktop (crafts via mise, mime to crafts, OnlyOffice gone).
+- `~/.config/mise/config.toml` (home only, repo file untouched so the desktop
+  does not gain `flutter`/`node`/`pnpm`): kept existing tools, appended the
+  five `github:storytold/*` craft entries + `minimum_release_age_excludes`.
+  `mise install` added gridcraft 0.4.0, pdfcraft 0.5.0, photocraft 0.6.0,
+  wordcraft 0.4.0, deckcraft 0.4.0 in ~90 s; existing flutter 3.47.4 /
+  node 24.15.0 / pnpm 12.6.0 untouched (used `install`, not `upgrade`).
+- Ran `~/.local/libexec/mise-craft-integrate` (118 links, `--check` clean),
+  `update-desktop-database` / `update-mime-database` / `gtk-update-icon-cache`;
+  `deckcraft --version` → 0.4.0, `gridcraft --version` → GridCraft 0.4.0.
+- `chezmoi apply --force .config/mimeapps.list` for the office-to-crafts map,
+  then restored laptop AyuGram Defaults (`6JXKV3`/`QT4KV3`) and de-duplicated
+  the Added Associations lines; re-applied office defaults via `xdg-mime
+  default` (Gridcraft/Wordcraft/Deckcraft) to refresh `mimeinfo.cache`.
+  Verified: xls/msword/ppt/ods → crafts, `text/csv` stays Zed,
+  `text/markdown` stays `com.microsoft.VSCode.desktop`, `tg` stays laptop
+  AyuGram. Zero `onlyoffice` refs in the file.
+- Uninstalled `onlyoffice-bin 9.4.0-1` last (no gap) via
+  `pkexec /usr/bin/pacman -Rns` (`Required By: None`); post-transaction hooks
+  (desktop MIME cache, snapper) clean, package gone.
+- Enabled `mise-upgrade.timer` now that crafts exist: applied the
+  `timers.target.wants` symlink, `daemon-reload`, `enable --now` (active).
+  Daily `mise upgrade` now covers all 8 home tools.
+- Remaining laptop-skipped items (unchanged): `xdgdesktopportal` Qt theme,
+  DMS `dank*` widget IDs, `DITTO_GPU=host`, `kdeglobals`/`shelly` UI state.
+  `mise/config.toml` and `mimeapps.list` AyuGram lines intentionally diverge
+  from the shared repo (machine-specific, same as before).
+
+### Craft launcher icons scare (2026-10-10, laptop)
+
+- Launcher showed a generic document icon for DeckCraft (and likely PhotoCraft).
+  Install was verified correct — NOT a bad/manual tar extraction: mise
+  extracted the official tarballs; only symlinks were created. All five
+  `Icon=ai.storyteller.<app>` desktop entries resolve to real linked PNGs
+  (grid 9021 B, pdf 52732 B, word 6388 B, photo 61803 B, deck 9327 B, valid
+  PNG headers, no broken symlinks, caches rebuilt).
+- False alarm path: `du -b`/`stat` on the icon symlinks report ~136–138 B
+  (the link-path length), not target size — misread as corrupt icons.
+- Actual cause: running DMS shell had cached the launcher entries; fix was
+  `update-desktop-database` + `gtk-update-icon-cache -f -t` re-run and
+  `systemctl --user restart dms.service` (active again, doctor 0 errors).
+  If an icon still looks generic, relogin so the full session reloads.
 
 ### Fact-check report rendering (2026-10-14)
 
@@ -441,3 +552,45 @@ Guidance for work in this home directory.
 - `~/Documents/Codex` (604,734,074 bytes, 5020 files) was also removed at the user's explicit request after being flagged as user documents. It held Codex scratch workspaces only: dated `2026-10-09` and `2026-10-14` session folders, 4827 WEBTOON panel `jpg` crops from the Manhwa recap work, and a `5-please-audit-questions-for-chatgpt` folder with `outputs/Mise-setup.md` and `outputs/craft-apps-before-mise.tar.gz`. Verified beforehand that the real project data lives in `~/Documents/Manhawa-yt` (4.4G) with its own `data/imports/` holding the same asset UUIDs, so nothing unique was lost. That project is unaffected. A `Documents/Codex` folder will reappear if future Codex sessions use it as a workspace.
 - Codex also keeps state outside `~/.codex` that was left in place: `~/.cache/codex-runtimes` (1.7G), `~/.cache/Codex` (885M), `~/.config/Codex` (187M), `~/.local/state/codex` (35M), `~/.local/state/openai-codex` (4K). These are regenerable, but deleting `~/.config/Codex` discards the installation id and makes Codex look like a new install.
 - Deliberate decision: the remaining chezmoi drift on this desktop (`.config/kdeglobals`, `.config/shelly/settings.json`, `.config/DankMaterialShell/settings.json`) is intentionally **not** committed. It is app-generated runtime state — KDE dropping a `[KFileDialog Settings]` group, shelly's window geometry (1528x812) and added/removed keys from newer app versions, DMS `matugenSmartMode` plus removed color fields. Committing it would push desktop-specific state into the repo shared with the laptop and would make a local `chezmoi apply` delete the freshly written KDE group. Leave `chezmoi status` reporting these; do not "fix" the drift without asking.
+
+### Laptop system update + dotfiles pull (2026-10-14)
+
+- Pulled dotfiles `29ce9eb..5171de3` (4 desktop commits: mise codex CLI, codex state-wipe docs, intentional-drift note, drop dead `codex://` handler). Laptop-only `AGENTS.md` sections stashed, fast-forwarded, then merged (tail conflict resolved by keeping laptop Oct-10 sections before upstream Oct-14 ones, still uncommitted); `~/AGENTS.md` synced. No full `chezmoi apply`.
+- Deliberately NOT applied to home: repo mime drops `x-scheme-handler/codex=chatgpt.desktop`, but the laptop keeps it (`chatgpt-desktop-bin` is still installed here, unlike the desktop); repo mise adds `github:openai/codex`, but home keeps flutter/node/pnpm + crafts without it (laptop runs standalone `~/.local/bin/codex` 0.162.1 with 5.9G of `~/.codex` state — migration to mise needs an explicit user decision, do not delete `~/.codex` unasked).
+- Shelly error diagnosed: the shelly CLI elevates via `sudo`, which fails without a TTY (`sudo: a terminal is required ... a password is required`, exit 0). Reproduced with `shelly sync standard` and `shelly upgrade aur`. Not a packaging bug — shelly works from a real terminal (Rio). For agent runs: short ops via `pkexec` (DMS polkit agent), long `pacman` runs via a transient `SUDO_ASKPASS` helper under `/tmp/opencode` (mode 700) + `shred -u`, per the desktop 2026-10-14 note. The chat-supplied password was never written to shell history or the repo.
+- Standard: `pkexec /usr/bin/pacman -Syu --noconfirm`, exit 0, 402 packages (KDE 6.30→6.31, GStreamer 1.28.8, VLC 3.0.24, `linux-cachyos` 7.2.9-2 + LTS 6.18.55-2, chromium 154, zed 1.23.3, `chatgpt-desktop-bin` 26.1007.21434, qt6 6.11.2→6.12.0, dms-shell 1.6.3). All 37 hooks clean, Limine redeployed, snapper snapshots ran.
+- AUR: `shelly upgrade aur` could not elevate (same sudo/TTY error, stayed 1.141.0). Built manually as user in `/tmp/opencode/aur-build` (PKGBUILD diff vs shelly cache: only `pkgver` 1.141.0→1.141.1 + rotated hashes; sources unchanged, Microsoft official CDN; sha256 validated), `makepkg` clean, installed via `sudo -A pacman -U` (transient askpass, shredded). Now 1.141.1-1; copilot prebuild dir-permission warnings are known noise. Build dir removed.
+- Flatpak: `flatpak update -y`, 3 runtimes (Mesa, Mesa Extra, Intel VAAPI), no auth needed.
+- `.pacnew`: all 7 reviewed (stock `pacman.conf` would revert `ILoveCandy`/`VerbosePkgLists`/`ParallelDownloads = 10`/CachyOS+multilib; mirrorlists stock vs Sep-27 rate-mirrors live; `resolv.conf` NM-generated; limine-sync CachyOS branding) — kept live, deleted all 7. `/etc` is free of `.pacnew`/`.pacsave`.
+- Qt follow-up fix caused by this upgrade: `qt6-base` is now 6.12.0 while `qt6ct-kde` 0.11-8 is built for 6.11.2 (verified in binary strings), so the desktop light-Dolphin incompatibility now applies here and the old "keep `qt6ct`" skip reason is gone. Switched `QT_QPA_PLATFORMTHEME`/`_QT6` to `xdgdesktopportal` in `~/.config/environment.d/90-dms.conf` + Niri env (`niri validate` clean). Relogin required for running apps. `environment.d` now matches repo; Niri still differs only by the desktop OBS opaque rule (no obs-studio here, left as is).
+- Verified: `shelly list-updates all` clean (0 standard/AUR/flatpak/appimage), no failed system/user units, niri valid, `dms doctor` 0 errors. 7 orphans left installed (3 theme/config + `ffmpeg4.4`, `libqalculate`, `sdbus-cpp`, `tomlplusplus` newly orphaned by the upgrade; removal risks breaking the session, same policy as desktop).
+- Reboot required: running kernel is still 7.2.7-1, installed 7.2.9-2 (plus LTS). Reboot to boot the new kernel.
+
+### 2026-10-17 — claude-desktop installation & system update
+- Diagnosed `shelly claude` failure (`libalpm (53): error invoking external downloader`, "prepared package is missing from the package cache"): Local ALPM database was last synchronized on 2026-10-14 and targeted `claude-desktop` 2.37337.1-1. Upstream CachyOS repository released 2.42304.0-1 on 2026-10-16 and purged the 2.37337 package and signature, returning 404 (and 418 anti-bot challenge on krfoss), which caused ALPM signature download failures.
+- Synchronized package databases (`pacman -Sy`) and executed clean system upgrade + installation via `pacman -Syu claude-desktop --noconfirm`.
+- `claude-desktop` 2.42304.0-1 installed with required dependencies (`qemu-system-x86`, `edk2-ovmf`, `virtiofsd`, `capstone`, `wolfssl`, `rdma-core`). Verified binary at `/usr/bin/claude-desktop` and desktop entry at `/usr/share/applications/com.anthropic.Claude.desktop`.
+- System updates applied: `pacman` 7.1.0, `shelly` 3.1.7-1, `claude-code` 2.1.301-1, `zed` 1.24.2-1, `vivaldi` 8.2.4133.89-1.1, `llvm`/`clang` 23.1.3-2, `qt6-base` 6.12.0-3.1, `rust` 1:1.99.0-3.
+- All post-transaction hooks completed cleanly (snapper post snapshot root 176). No passwords stored or persisted.
+
+
+### 2026-10-18 — Awwwards MCP, Mobile MCP removal, my-mcps history squash + dual-ABI merge
+- Installed `awwwards-mcp` through `~/Documents/my-mcps` (npm 1.9.0, `bunx awwwards-mcp`); 22 tools verified by a real stdio handshake plus a live `search_sites` call returning Awwwards CDN previews. Node 26.11.1 satisfies its `>=22.13` engine. Removed the `mobile-mcp` (Mobile Next) entry at the user's request; `ditto-mobile-control` and `ditto2` are unrelated and retained.
+- Squashed all 29 my-mcps commits into one root commit and force-pushed `origin/main` (`git@github.com:quantavil/my-mcps.git`). Used `--force-with-lease`, and first pushed a `backup/pre-squash-2026-10-18` branch to GitHub. That backup was deleted after confirming `ditto2-dual-abi` is a descendant of the old `main` tip and therefore already contains the full pre-squash lineage.
+- Discovered `origin/ditto2-dual-abi` (30 commits, 2026-10-01) had never been merged and that the deployed `ditto2` server was missing every dual-ABI symbol (`split_paths`, `install_mode`, `unsupported_abi`, `inputs.json`), so the 2026-10-01 AGENTS.md claim of deployment was inaccurate. The branch was merged into `main` as `ae8e6a5` (two-parent merge, `--allow-unrelated-histories`).
+- Conflict resolution rule for that merge: the 5 Ditto2 files took **theirs** (branch = old `main` + dual-ABI, strictly newer), while `mcp-servers.json` took **ours** (`main` = awwwards installed, mobile-mcp removed), because the branch predates both. All six were add/add conflicts from the unrelated roots. Verified no conflict markers in tracked files (the `.venv` hits are vendored libraries).
+- Ditto2 tests use stdlib `unittest`, not pytest — `uv --directory servers/ditto2 run --locked python -m unittest discover -s tests` runs all **63** passing, matching the branch's verification doc. `pytest` is not in the locked env and must not be added to it. MCP repo suite: 22 passing.
+- `origin/ditto2-dual-abi` is kept but is now fully merged; its `servers/ditto2/` tree is byte-identical to `main`, so the branch is safe to delete. The evidence path cited by the 2026-10-01 entry, `~/Documents/ditto2-dual-abi-validation/live/review.json`, no longer exists on disk.
+- Agents must reconnect to pick up the new dual-ABI Ditto2 tools; the deployed MCP configs themselves are unchanged by the merge.
+
+### 2026-10-18 — floris-dict-keyboard CI repair + repo rename
+- Upstream `DevEmperor/DictateKeyboard` v6.4.0 (issue #424) added on-device translation, so Gradle `:app:verifyBergamotLib` fails without `libdictate_bergamot.so` — which upstream neither commits nor publishes prebuilt (only `tools/bergamot/build-android.sh`). The weekly workflow fetched only sherpa-onnx, so both runs after v6.4.0 (Oct 11, Oct 18) failed. Fixed in the repo's `.github/workflows/release.yml`: build the lib with upstream's script (`arm64-v8a`), cached by `hashFiles('tools/bergamot/**', 'gradle/tools.versions.toml')`; NDK/CMake install now conditional (runner image already ships NDK 29.0.14206865 + CMake 4.1.2); jobs pinned to `ubuntu-24.04`; `actions/setup-java` and `gradle/actions/setup-gradle` bumped v4→v6; timeout 90 min. The arm64-only `abiFilters` narrowing and APK assertion are unchanged.
+- Verified with `gh workflow run`: run `39114671496` green in 15m29s, published `v6.4.0` (`floris-dict-keyboard-v6.4.0-arm64-v8a.apk`, 69,319,969 bytes; `lib/arm64-v8a/` only, includes `libdictate_bergamot.so`, signed CN=quantavil/OU=DictateKeyboard arm64 builds).
+- Renamed `quantavil/floris-dict-keyboard-arm64` → `quantavil/floris-dict-keyboard` (old URLs redirect; local clone still at `~/Documents/floris-dict-keyboard-arm64`, `origin` updated). Pushing workflow files over HTTPS needs `gh auth refresh -s workflow` — the current token lacks that scope; SSH (`git@github.com:quantavil/floris-dict-keyboard.git`) works.
+
+### 2026-10-18 — PDF default → PdfCraft; Okular removed (laptop)
+
+- `application/pdf` now opens with `ai.storyteller.pdfcraft.desktop` (mise-managed PdfCraft). Updated live `~/.config/mimeapps.list` and the shared `dot_config/mimeapps.list` source (desktop gets it at its next `chezmoi apply`; PdfCraft is installed there too). PdfCraft's desktop entry declares only `application/pdf`, so `application/x-pdf` stays unset and the epub/djvu defaults okular's desktop files used to provide are gone. Supersedes the 2026-10-10 "PDF default stays Okular" note.
+- Removed `okular` 26.08.2-1.1 with `shelly remove standard okular -n` (default cascade, 25.85 MiB total; also removed okular-only deps `threadweaver`, `phonon-qt6`, `phonon-qt6-vlc`, `libspectre`, `djvulibre`, `discount`; snapper 177→178; desktop MIME cache hook ran). Kept `~/.config/okularrc` + `okularpartrc` (view state + recent-files only) — remove manually if wanted.
+- Headless elevation recipe (shelly 3.1.7 elevates by re-executing itself as root via `sudo /usr/bin/shelly <args>`): a transient `/tmp/opencode/bin/sudo` PATH shim that only prepends `-A` to sudo's option region — never rewrites args after the command token, because shelly forwards its own options (its `-n`) — plus the mode-700 `SUDO_ASKPASS` helper. Both shredded after use; no password stored.
+- Committed + pushed to `origin/main`: this AGENTS.md sync (laptop sections + 2026-10-17/18 entries) and the mimeapps pdf line.
