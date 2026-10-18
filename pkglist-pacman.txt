@@ -157,7 +157,6 @@ nss-mdns
 ntfs-3g
 ntfsprogs
 obsidian
-okular
 opencl-mesa
 opencode
 opensc
