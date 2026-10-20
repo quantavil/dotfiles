@@ -1,5 +1,8 @@
 android-apktool-bin
 dsearch-bin
+hplip-plugin
 icu69-bin
+micyou-bin
 qt6ct-kde
 visual-studio-code-bin
+youwee-bin
