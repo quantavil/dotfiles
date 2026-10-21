@@ -106,11 +106,8 @@ iwd
 jadx
 jfsutils
 kate
-kde-cli-tools
 kdeconnect
 kimageformats
-kio-admin
-kio-extras
 lazygit
 less
 lib32-mesa
