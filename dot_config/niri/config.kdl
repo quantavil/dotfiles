@@ -239,10 +239,9 @@ window-rule {
 // Browsers, editors, office/PDF/text, media and auth prompts stay opaque.
 window-rule {
     match app-id="^rio$"
-    match app-id=r#"^org\.kde\.dolphin$"#
     match app-id=r#"^org\.gnome\.Nautilus$"#
-    match app-id=r#"^org\.kde\.ark$"#
-    match app-id=r#"^org\.kde\.filelight$"#
+    match app-id=r#"^org\.gnome\.baobab$"#
+    match app-id=r#"^org\.gnome\.FileRoller$"#
     match app-id=r#"^org\.pulseaudio\.pavucontrol$"#
     match app-id=r#"^org\.fooyin\.fooyin$"#
     match app-id=r#"^com\.danklinux\.dms$"#
