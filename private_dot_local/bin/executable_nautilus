@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Wrapper to restore the last visited directory if no arguments are passed
+LAST_DIR_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/nautilus/last-dir"
+
+if [ $# -eq 0 ] && [ -s "$LAST_DIR_FILE" ]; then
+    LAST_DIR=$(cat "$LAST_DIR_FILE" 2>/dev/null)
+    if [ -n "$LAST_DIR" ] && [ -d "$LAST_DIR" ]; then
+        exec /usr/bin/nautilus "$LAST_DIR"
+    fi
+fi
+
+exec /usr/bin/nautilus "$@"
