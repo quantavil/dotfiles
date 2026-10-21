@@ -62,8 +62,6 @@ diffutils
 dmidecode
 dmraid
 dnsmasq
-dolphin
-dolphin-plugins
 dosfstools
 dsearch-bin
 duf
@@ -76,6 +74,7 @@ f2fs-tools
 fastfetch
 ffmpegthumbnailer
 ffmpegthumbs
+file-roller
 flatpak
 fooyin
 fsarchiver
@@ -90,6 +89,10 @@ gst-plugin-pipewire
 gst-plugin-va
 gst-plugins-bad
 gst-plugins-ugly
+gvfs-gphoto2
+gvfs-mtp
+gvfs-smb
+gvfs-wsdd
 gwenview
 hdparm
 hwdetect
@@ -144,6 +147,10 @@ mpv
 mtools
 nano
 nano-syntax-highlighting
+nautilus-admin-gtk4
+nautilus-image-converter
+nautilus-open-any-terminal
+nautilus-python
 navi
 netctl
 networkmanager
@@ -201,6 +208,7 @@ smb4k
 snapper
 sof-firmware
 sudo
+sushi
 sysfsutils
 tesseract-data-eng
 texinfo

@@ -1,5 +1,7 @@
 android-apktool-bin
 dsearch-bin
 icu69-bin
+nautilus-admin-gtk4
+nautilus-open-any-terminal
 qt6ct-kde
 visual-studio-code-bin
