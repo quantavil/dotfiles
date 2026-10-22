@@ -78,7 +78,6 @@ ffmpegthumbnailer
 ffmpegthumbs
 file-roller
 flatpak
-fooyin
 fsarchiver
 fuse2
 ghidra
@@ -182,6 +181,7 @@ plymouth
 podman
 poppler-glib
 power-profiles-daemon
+prism-download-manager-bin
 proton-vpn-gtk-app
 pv
 python

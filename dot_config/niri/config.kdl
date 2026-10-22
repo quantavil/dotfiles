@@ -242,7 +242,6 @@ window-rule {
     match app-id=r#"^org\.gnome\.baobab$"#
     match app-id=r#"^org\.gnome\.FileRoller$"#
     match app-id=r#"^org\.pulseaudio\.pavucontrol$"#
-    match app-id=r#"^org\.fooyin\.fooyin$"#
     match app-id=r#"^com\.danklinux\.dms$"#
     opacity 0.88
     background-effect {
