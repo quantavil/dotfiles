@@ -107,7 +107,6 @@ intel-ucode
 iwd
 jadx
 jfsutils
-kdeconnect
 kimageformats
 lazygit
 less
