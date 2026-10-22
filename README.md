@@ -60,7 +60,7 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 - **Shells:** Fish, Zsh, Bash
 - **Shell Extensions & Themes:** DankMaterialShell settings & plugins
 - **Desktop & Theme Integration:** BeautyLine icons (KDE + Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs, `environment.d`, `xdg-terminals.list`
-- **Shims & Utilities:** `~/.local/bin/` (`default-browser`, `zedit`, `dms-ocr`)
+- **Shims & Utilities:** `~/.local/bin/` (`default-browser`, `dms-ocr`, `nautilus`)
 - **App Defaults:** Zed editor settings, MIME associations (`mimeapps.list`), MPV, Navi, Shelly
 - **Documentation & Rules:** `AGENTS.md`
 - **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (auto-synced)

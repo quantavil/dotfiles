@@ -72,6 +72,7 @@ ethtool
 exfatprogs
 f2fs-tools
 fastfetch
+ferrite-bin
 ffmpegthumbnailer
 ffmpegthumbs
 file-roller
@@ -238,7 +239,6 @@ xfsprogs
 xl2tpd
 yazi
 yt-dlp
-zed
 zen-browser-bin
 zenity
 zoxide

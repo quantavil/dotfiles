@@ -27,7 +27,7 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - Custom binds: `Mod+B` default browser, `Mod+E` Nautilus (files), `Mod+Z` VS Code, `Shift+Print` regional OCR (`~/.local/bin/dms-ocr`), `Mod+Alt+C` DMS color picker, `Mod+Shift+E` power menu (replaces the session-exit default).
 - DMS runs as `dms.service`; use DMS IPC for shell features and settings. Keyboard auto-detection needs `libinput-tools`.
 - Window rules: opaque by default; one `window-rule` adds `opacity 0.88` + blur for Rio, Nautilus, Baobab, File Roller, pavucontrol, Fooyin and `com.danklinux.dms` — add further translucent apps there. Global `blur { passes 1 offset 1.0 }`; image viewers (Loupe), browsers, editors, and OBS windows stay fully opaque.
-- Terminal: Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, `opacity = 1.0` + `unfocused-split-opacity = 1.0` so Niri alone controls translucency). CLI editor: Zed via `~/.local/bin/zedit` (`zeditor --wait`), exported as `EDITOR`/`VISUAL`.
+- Terminal: Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, `opacity = 1.0` + `unfocused-split-opacity = 1.0` so Niri alone controls translucency). Editor: Ferrite (Rust/egui, fast and lightweight), exported as `EDITOR`/`VISUAL`.
 
 ## Theme, fonts, environment
 
@@ -40,7 +40,7 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 
 - File Manager: Nautilus (GNOME Files). Features: `sushi` (Spacebar media previews), `nautilus-open-any-terminal` (opens Rio via `Ctrl+Alt+T`), `nautilus-admin-gtk4` (admin actions), and `~/.local/bin/nautilus` wrapper (auto-restores last visited directory tracked via `~/.local/share/nautilus-python/extensions/remember_last_dir.py`).
 - Terminal: Rio via `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list`.
-- Editor: Zed for ~35 code/text types (incl. `text/csv`, by choice). VS Code for `.ipynb`/`.code-workspace`/markdown (`com.microsoft.VSCode.desktop`).
+- Editor: Ferrite (`ferrite-bin` from AUR) for Markdown, structured formats (JSON/YAML/TOML) and general text/code files. VS Code for `.ipynb`/`.code-workspace` (`com.microsoft.VSCode.desktop`).
 - Media & Utilities: Images → Loupe (`org.gnome.Loupe.desktop`); Archives → File Roller GUI + `ouch` CLI; Disk Usage → Baobab GUI; Script dialogs → `gum` (TUI) & `zenity` (GUI); Office/PDF → craft suite (Gridcraft, Wordcraft, Photocraft, Deckcraft, PdfCraft).
 - Inspect defaults with `gio info <file> | grep content-type` and `xdg-mime query default <type>`; set defaults with `xdg-mime default`.
 
@@ -67,11 +67,7 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - mise owns release-managed tools (`~/.config/mise/config.toml`): the five crafts (gridcraft, pdfcraft, wordcraft, photocraft, deckcraft — GitHub Linux x86_64 tarballs, release-age-exempt), the Codex CLI (desktop), and Flutter/Node/pnpm (laptop). `mise-upgrade.timer` runs `mise -C %h -y upgrade` daily; do not add other update engines. `~/.local/libexec/mise-craft-integrate` links craft launchers/icons/MIME via mise `latest` aliases (state: `~/.local/state/mise-craft/links.json`); validate with `mise ls`, the helper's `--check`, and `systemd-analyze --user verify`.
 - Codex CLI: mise-managed on the desktop; standalone `~/.local/bin/codex` on the laptop with ~6 GB of `~/.codex` state (migrating needs an explicit user decision). Resolves through mise shims (`mise activate` in `~/.config/fish/conf.d/10-mise.fish`) ahead of `/usr/bin`.
 - Android: user-owned SDK `~/Android/Sdk` (`emulator`/`avdmanager` symlinked into `~/.local/bin`; `sdkmanager` there is an exec wrapper, since a symlink breaks its SDK-root detection; adb from `/usr/bin`). Start emulators as transient units (`systemd-run --user --collect --unit=ditto-emulator -- emulator -avd …`); target serials explicitly and don't share a device between two controllers during captures. The `ditto` skill's `scripts/download-play-apks.sh` pulls the installed delivery from the signed-in x86_64 AVD and rejects 32-bit native APKs.
-- Ditto: skill `~/Documents/my-skills/skills/ditto` (renamed from ditto2 on 2026-10-20) for cloning apps by functional reverse engineering: `inventory.py` (catalog from APK), `capture_state.py` (root data pull; decodes prefs, SQLite, Firestore cache), `experiment.py` (uiautomator2 golden traces via `uv run`), `diff.py` (original vs clone), `parity.py` (generates parity.md), `check_arm64.py` (verifies the required ARM64 copy; the ARM64 emulator cannot run on this x86_64 host, so it comes from a phone or APKMirror/APKPure/Uptodown). Analysis uses no MCP; clone builds use `dart` and `codebase-memory` MCPs. Tests: `python3 -I -m unittest discover -s tests` in skill dir (stdlib unittest, never pytest). Runs on the rooted Play AVD (scripts use Magisk `su`; default serial `emulator-5556`), because apps with Play automatic integrity protection refuse to run on `google_apis` images. Never patch the APK.
-- DroidBot: `~/.local/bin/droidbot` (isolated Python 3.13 uv tool, rev `cc4cc93cc5`; user-approved wheel build).
-- RE tools (desktop): `apktool`/`jadx` from pacman only. `vtracer` in `/usr/local/bin` (musl release tarball, checksum verified). Rust from CachyOS `rust` package for `~/Documents/linux-setup/agy-switch`.
-- Paperclip: `paperclipai`; run the cached instance with `npx --offline --yes paperclipai run` (loopback 3100; bundled PostgreSQL on 54329; system PostgreSQL is unused). After npm-cache changes, link `@paperclipai/db/node_modules/@embedded-postgres` to the cache's `@embedded-postgres`, or embedded `initdb` fails.
-- Fact-check skill: render reports from skill dir with `uv run scripts/render_report.py report.md` (previews in `~/.local/share/fact-check/reports/html-preview/`).
+
 
 ## Known pitfalls
 
@@ -89,9 +85,3 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - `niri validate -c ~/.config/niri/config.kdl`; `dms doctor -j` plus DMS IPC status; `journalctl --user -u <service>`; `journalctl -k`. After changes, confirm both configuration validity and the actual runtime state.
 
 ## Workspaces
-
-- `~/Documents/baby-tracker-clone` (desktop): faithful Baby Tracker rebuild; GitHub `quantavil/baby-tracker-clone` (`main` = clean snapshot; `evidence/` unpublished). ARM64-only APK release workflow on push; private signing material in `~/.local/share/baby-tracker-signing/` (never publish); Flutter SDK at `~/.local/share/baby-tracker-sdk/flutter`. Keep every feature free. Preview via transient `baby-tracker-preview.service` (127.0.0.1:8765); test the original app only with disposable isolated fixtures.
-- `~/Documents/Manhawa-yt` (desktop): Manhwa recap studio — uv-managed CPython + `.venv`, `gallery-dl` for imports; `data/imports/` is git-ignored. Transient `manhwa-recap-preview.service` on 127.0.0.1:8780 (stop it before reusing the port; never boot-enabled).
-- `~/Documents/ditto-localsend-test` (desktop): LocalSend Ditto2 evidence runs. Preview services are transient units (`systemd-run --user --collect`), not boot services.
-- `~/Documents/gitradar` (laptop): Svelte GitHub-trending SPA; GitHub `quantavil/gitradar`; storage ids `rr:prefs` + `repo-radar` are intentionally kept so saved/seen data survives. Verify with `bun run verify`.
-- `~/Documents/floris-dict-keyboard-arm64` (laptop): clone of `quantavil/floris-dict-keyboard`; releases are arm64-only, built by `.github/workflows/release.yml` (includes `libdictate_bergamot.so`); pushing workflow files over HTTPS needs a `workflow`-scoped token, SSH works.

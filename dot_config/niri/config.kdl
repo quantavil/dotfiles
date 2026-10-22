@@ -139,8 +139,8 @@ environment {
   XDG_MENU_PREFIX "arch-"
   QT_QPA_PLATFORMTHEME "xdgdesktopportal"
   QT_QPA_PLATFORMTHEME_QT6 "xdgdesktopportal"
-  EDITOR "zedit"
-  VISUAL "zedit"
+  EDITOR "ferrite"
+  VISUAL "ferrite"
 }
 hotkey-overlay {
     skip-at-startup
