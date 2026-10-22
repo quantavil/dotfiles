@@ -5,6 +5,7 @@ alacritty
 alsa-firmware
 alsa-plugins
 alsa-utils
+amberol
 android-apktool-bin
 archlinux-xdg-menu
 awesome-terminal-fonts
@@ -139,6 +140,7 @@ meld
 mesa-utils
 micro
 mise
+mission-center
 mkinitcpio
 modemmanager
 mpv
@@ -204,12 +206,14 @@ shelly
 shelly-flatpak-backend
 smartmontools
 snapper
+sniffnet
 sof-firmware
 sudo
 sushi
 sysfsutils
 tesseract-data-eng
 texinfo
+tokei
 ttf-bitstream-vera
 ttf-dejavu
 ttf-liberation
