@@ -1,9 +1,12 @@
 android-apktool-bin
 dsearch-bin
 ferrite-bin
+hplip-plugin
 icu69-bin
+micyou-bin
 nautilus-admin-gtk4
 nautilus-open-any-terminal
 prism-download-manager-bin
 qt6ct-kde
 visual-studio-code-bin
+youwee-bin
