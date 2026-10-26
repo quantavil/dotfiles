@@ -9,7 +9,6 @@ alsa-utils
 amberol
 android-tools
 archlinux-xdg-menu
-atkmm
 awesome-terminal-fonts
 ayugram-desktop
 baobab
