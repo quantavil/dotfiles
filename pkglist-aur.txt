@@ -1,5 +1,6 @@
 android-apktool-bin
 dsearch-bin
+dux-greeter-bin
 ferrite-bin
 icu69-bin
 nautilus-admin-gtk4

@@ -66,6 +66,7 @@ dosfstools
 dsearch-bin
 duf
 dux-gop
+dux-greeter-bin
 e2fsprogs
 efibootmgr
 efitools
@@ -85,6 +86,7 @@ git
 github-cli
 glances
 gpu-screen-recorder
+greetd
 gst-libav
 gst-plugin-pipewire
 gst-plugin-va
