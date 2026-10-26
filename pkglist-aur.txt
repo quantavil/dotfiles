@@ -1,4 +1,5 @@
 android-apktool-bin
+artcraft
 dsearch-bin
 ferrite-bin
 greetd-dms-greeter-bin
