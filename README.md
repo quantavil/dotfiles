@@ -57,17 +57,18 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 
 - **Compositor:** Niri (`~/.config/niri/config.kdl`) — catch-all glass (`opacity 0.88` + minimal blur) with opaque exclusions for media/PiP/browsers/focus apps/auth dialogs
 - **Default terminal:** Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity delegated to Niri); Alacritty config also tracked
-- **Shells:** Fish, Zsh, Bash
+- **Shell:** Fish (login shell; `.bashrc`/`.zshrc` no longer managed)
 - **Shell Extensions & Themes:** DankMaterialShell settings & plugins
 - **Desktop & Theme Integration:** BeautyLine icons (KDE + Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs, `environment.d`, `xdg-terminals.list`
 - **Shims & Utilities:** `~/.local/bin/` (`default-browser`, `dms-ocr`, `nautilus`)
-- **App Defaults:** Zed editor settings, MIME associations (`mimeapps.list`), MPV, Navi, Shelly
+- **App Defaults:** Zed editor settings, MIME defaults via `run_onchange` script (`mimeapps.list` itself is app-generated and untracked), MPV, Navi, Shelly
 - **Documentation & Rules:** `AGENTS.md`
 - **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (auto-synced)
 
 ## Mise release tools
 
-`~/.config/mise/config.toml` is the single tool inventory. Add a GitHub release
+`~/.config/mise/config.toml` is the single tool inventory, rendered from a role template
+(`flutter`/`node`/`pnpm` on the laptop, the Codex CLI on the desktop). Add a GitHub release
 with `mise use -g github:OWNER/REPO@latest` (some repositories need asset/layout
 options). Run `mise upgrade` to upgrade all configured tools, or
 `mise upgrade --dry-run` to check. Version ranges and exact pins are respected.

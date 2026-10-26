@@ -1,0 +1,122 @@
+#!/bin/sh
+# Re-apply hand-picked MIME defaults without managing ~/.config/mimeapps.list.
+#
+# That file is rewritten at runtime (xdg-mime, Telegram, ChatGPT/Claude URL
+# handlers) and userapp-*.desktop IDs are generated per installation, so a
+# committed copy always fights live state. This script is idempotent, skips
+# anything that is not installed, and discovers scheme handlers instead of
+# hardcoding their IDs.
+
+set -eu
+
+have_desktop() {
+    [ -f "/usr/share/applications/$1" ] || [ -f "$HOME/.local/share/applications/$1" ]
+}
+
+set_default() {
+    mime=$1
+    app=$2
+    have_desktop "$app" || return 0
+    xdg-mime default "$app" "$mime"
+}
+
+while IFS='=' read -r mime app; do
+    [ -n "$mime" ] || continue
+    set_default "$mime" "$app"
+done <<'MIMES'
+text/html={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+x-scheme-handler/http={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+x-scheme-handler/https={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+x-scheme-handler/about={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+x-scheme-handler/unknown={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+application/xhtml+xml={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+inode/directory=org.gnome.Nautilus.desktop
+application/pdf=ai.storyteller.pdfcraft.desktop
+x-scheme-handler/geo=google-maps-geo-handler.desktop
+application/x-shellscript=ferrite.desktop
+application/json=ferrite.desktop
+application/javascript=ferrite.desktop
+application/typescript=ferrite.desktop
+application/x-code-workspace=com.microsoft.VSCode.desktop
+application/x-ipynb+json=com.microsoft.VSCode.desktop
+application/x-jupyter-notebook=com.microsoft.VSCode.desktop
+application/yaml=ferrite.desktop
+application/toml=ferrite.desktop
+application/sql=ferrite.desktop
+application/xml=ferrite.desktop
+application/x-ruby=ferrite.desktop
+application/x-perl=ferrite.desktop
+application/x-php=ferrite.desktop
+application/vnd.dart=ferrite.desktop
+application/vnd.ms-excel=ai.storyteller.gridcraft.desktop
+application/vnd.ms-excel.sheet.macroEnabled.12=ai.storyteller.gridcraft.desktop
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet=ai.storyteller.gridcraft.desktop
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=ai.storyteller.wordcraft.desktop
+application/msword=ai.storyteller.wordcraft.desktop
+application/vnd.oasis.opendocument.spreadsheet=ai.storyteller.gridcraft.desktop
+application/vnd.openxmlformats-officedocument.presentationml.presentation=ai.storyteller.deckcraft.desktop
+application/vnd.openxmlformats-officedocument.presentationml.template=ai.storyteller.deckcraft.desktop
+application/vnd.openxmlformats-officedocument.presentationml.slideshow=ai.storyteller.deckcraft.desktop
+application/vnd.ms-powerpoint=ai.storyteller.deckcraft.desktop
+application/vnd.oasis.opendocument.presentation=ai.storyteller.deckcraft.desktop
+text/plain=ferrite.desktop
+text/markdown=ferrite.desktop
+text/x-markdown=ferrite.desktop
+text/csv=ferrite.desktop
+text/css=ferrite.desktop
+text/xml=ferrite.desktop
+text/tab-separated-values=ferrite.desktop
+text/javascript=ferrite.desktop
+text/english=ferrite.desktop
+text/x-makefile=ferrite.desktop
+text/x-moc=ferrite.desktop
+text/x-tcl=ferrite.desktop
+text/x-tex=ferrite.desktop
+text/x-c=ferrite.desktop
+text/x-c++=ferrite.desktop
+text/x-csharp=ferrite.desktop
+text/x-java=ferrite.desktop
+text/x-go=ferrite.desktop
+text/rust=ferrite.desktop
+text/x-kotlin=ferrite.desktop
+text/x-lua=ferrite.desktop
+text/x-scala=ferrite.desktop
+text/x-python=ferrite.desktop
+text/x-qml=ferrite.desktop
+text/x-patch=ferrite.desktop
+text/x-diff=ferrite.desktop
+text/x-dockerfile=ferrite.desktop
+image/avif=org.gnome.Loupe.desktop
+image/bmp=org.gnome.Loupe.desktop
+image/gif=org.gnome.Loupe.desktop
+image/heif=org.gnome.Loupe.desktop
+image/jpeg=org.gnome.Loupe.desktop
+image/png=org.gnome.Loupe.desktop
+image/svg+xml=org.gnome.Loupe.desktop
+image/webp=org.gnome.Loupe.desktop
+audio/aac=io.bassi.Amberol.desktop
+audio/mpeg=io.bassi.Amberol.desktop
+audio/ogg=io.bassi.Amberol.desktop
+audio/wav=io.bassi.Amberol.desktop
+audio/webm=io.bassi.Amberol.desktop
+audio/flac=io.bassi.Amberol.desktop
+audio/mp3=io.bassi.Amberol.desktop
+audio/opus=io.bassi.Amberol.desktop
+audio/x-flac=io.bassi.Amberol.desktop
+audio/x-m4a=io.bassi.Amberol.desktop
+audio/x-wav=io.bassi.Amberol.desktop
+audio/x-opus+ogg=io.bassi.Amberol.desktop
+MIMES
+
+# Telegram-style handlers come from install-generated desktop files.
+for scheme in tg tonsite; do
+    file=$(grep -l -m1 -- "x-scheme-handler/$scheme" \
+        "$HOME"/.local/share/applications/*.desktop \
+        /usr/share/applications/*.desktop 2>/dev/null | head -n 1 || true)
+    if [ -n "${file:-}" ]; then
+        xdg-mime default "$(basename "$file")" "x-scheme-handler/$scheme"
+    fi
+done
+
+# chatgpt-desktop-bin owns codex:// links where installed.
+set_default x-scheme-handler/codex chatgpt.desktop
