@@ -1,11 +1,13 @@
 android-apktool-bin
 dsearch-bin
 ferrite-bin
+greetd-dms-greeter-bin
 hplip-plugin
 icu69-bin
 micyou-bin
 nautilus-admin-gtk4
 nautilus-open-any-terminal
+penguin-mail-bin
 prism-download-manager-bin
 qt6ct-kde
 visual-studio-code-bin
