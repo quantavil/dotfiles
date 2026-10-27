@@ -26,6 +26,7 @@ btop
 btrfs-assistant
 btrfs-progs
 bun
+cachy-update
 cachyos-alacritty-config
 cachyos-fish-config
 cachyos-hello
@@ -44,7 +45,6 @@ cachyos-v3-mirrorlist
 cachyos-v4-mirrorlist
 cachyos-wallpapers
 cachyos-zsh-config
-cachy-update
 cantarell-fonts
 capitaine-cursors
 cava
@@ -91,9 +91,9 @@ glances
 greetd
 gst-libav
 gst-plugin-pipewire
+gst-plugin-va
 gst-plugins-bad
 gst-plugins-ugly
-gst-plugin-va
 gum
 gvfs-gphoto2
 gvfs-mtp
@@ -170,8 +170,8 @@ ntfs-3g
 ntfsprogs
 nvidia-settings
 nvidia-utils
-obsidian
 obs-studio
+obsidian
 openbsd-netcat
 opencl-nvidia
 opencode
@@ -204,6 +204,9 @@ python-pyqt5
 python-reportlab
 python-uv
 qbittorrent
+qemu-hw-usb-host
+qemu-img
+qemu-ui-gtk
 qt5-wayland
 qt6-tools
 rclone
@@ -215,6 +218,7 @@ ripgrep
 ripgrep-all
 rsync
 rust
+s-nail
 sane
 sane-airscan
 sddm
@@ -223,12 +227,12 @@ shelly
 shelly-flatpak-backend
 skanpage
 smartmontools
-s-nail
 snapper
 sniffnet
 sof-firmware
 sudo
 sushi
+swtpm
 sysfsutils
 tesseract-data-eng
 texinfo
