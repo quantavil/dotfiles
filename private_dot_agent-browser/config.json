@@ -1,6 +1,0 @@
-{
-  "$schema": "https://agent-browser.dev/schema.json",
-  "executablePath": "/home/quantavil/.local/bin/cloakbrowser-chrome",
-  "headed": true,
-  "args": "--fingerprint-platform=windows,--window-size=1920,947"
-}
