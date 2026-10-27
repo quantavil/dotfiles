@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=ICEGATE Batch Signer
+Comment=Sign PDFs and BE files from the local input folder
+Exec=icegate-batch-signer
+Icon=application-certificate
+Terminal=false
+Categories=Office;

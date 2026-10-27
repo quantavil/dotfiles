@@ -28,8 +28,10 @@ For eSanchit, the certificate must be registered to the ICEGATE user, and the up
 
 The token manager may keep running after its window closes; check with `pgrep -af HyperPKITokenManager`.
 
-A temporary desktop test ran the official nCode signer in a network namespace with `pasta` outbound access and `socat` forwarding to loopback only. A dedicated Chromium session temporarily allowed the bundled localhost certificate's public-key hash. The ICEGATE signing page produced a token-signed PDF; `pdfsig` reported a valid signature covering the whole document, but its local issuer trust check failed. ICEGATE eSanchit acceptance and a reusable signer launcher remain untested. No CA root certificate was installed or trusted for this test.
+A temporary desktop test ran the official nCode signer in a network namespace with `pasta` outbound access and `socat` forwarding to loopback only. A dedicated Chromium session temporarily allowed the bundled localhost certificate's public-key hash. The ICEGATE signing page produced a token-signed PDF; `pdfsig` reported a valid signature covering the whole document, but its local issuer trust check failed. ICEGATE eSanchit acceptance remains untested. No CA root certificate was installed or trusted for this test.
 
 The ICEGATE “Text or XML File Signing & Verification” page was also tested in the temporary Wine session with a `.be` file: nCode produced a separate signed file, and the user reported that the same utility verified it successfully. An actual XML-format file and ICEGATE submission have not yet been checked.
 
-The portable notes, token scripts and an nCode installer wrapper are in `~/Documents/ICEGATE-HyperPKI-Linux/`; the previous folder name was `HyperPKI-HYP2003-Linux`. They do not yet include a reusable nCode signer launcher.
+The portable notes, token scripts and an nCode installer wrapper are in `~/Documents/ICEGATE-HyperPKI-Linux/`; the previous folder name was `HyperPKI-HYP2003-Linux`. An experimental `icegate-batch-signer` calls the installed nCode functions directly for PDFs and ASCII BE/text; see its README for setup, verification limits and token prompts.
+
+Desktop app menu **ICEGATE Batch Signer** reads `~/Downloads/Signer/Input` and writes copies to `Input/Signed`. A batch may still require certificate selection and token PIN. No PIN is stored. PDF signature cryptographic verification does not establish issuer trust or ICEGATE submission acceptance.
