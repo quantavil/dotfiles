@@ -7,7 +7,7 @@ import re
 import sys
 
 cache = Path.home() / '.cloakbrowser'
-candidates = [p for p in cache.glob('chromium-*-pro/chrome') if p.is_file() and os.access(p, os.X_OK)]
+candidates = [p for p in cache.glob('chromium-*-pro/chrome') if p.is_file() and os.access(p, os.X_OK)] or [p for p in cache.glob('chromium-*/chrome') if p.is_file() and os.access(p, os.X_OK)]
 def version(path):
     return tuple(int(n) for n in re.findall(r'\d+', path.parent.name))
 if not candidates:
