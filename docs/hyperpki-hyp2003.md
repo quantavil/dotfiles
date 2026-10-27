@@ -1,11 +1,11 @@
 # Hypersecu HYP2003 token on CachyOS
 
-This is the opt-in Wine setup used for the Hypersecu HYP2003 token (USB ID `2ccf:080a`). The token manager and certificate login have been checked on the desktop. Signing a PDF and using the certificate with ICEGATE eSanchit have not yet been verified.
+This is the opt-in Wine setup used for the Hypersecu HYP2003 token (USB ID `2ccf:080a`). The token manager and certificate login were checked with Wine 10 and reported working after upgrading the desktop to Wine 11.20. The pre-upgrade prefix backup is `~/.local/share/icegate-wine-before-wine11`. Signing a PDF and using the certificate with ICEGATE eSanchit have not yet been verified.
 
 ## Set up another machine
 
 1. Apply these dotfiles on the laptop with chezmoi. The `hyperpki-setup` and `hyperpki-token-manager` commands and app-menu launcher come from the dotfiles; the Wine installation and the reader's system configuration are created separately on each machine.
-2. Install the dependencies on CachyOS using the normal package update procedure, for example `sudo pacman -Syu --needed wine-cachyos winetricks pcsclite ccid pcsc-tools`. Follow the machine's normal authentication process. On another Arch-based distribution, the Wine package name may differ.
+2. Install the dependencies on CachyOS using the normal package update procedure, for example `sudo pacman -Syu --needed wine winetricks pcsclite ccid pcsc-tools`. Follow the machine's normal authentication process. On another Arch-based distribution, the Wine package name may differ.
 3. Plug in the token. In Files, open its built-in `HyperPKI_230719` drive and locate `HyperPKI_HYP2003_Setup.exe`. Do not use an installer from an untrusted site.
 4. Run the setup command, replacing the example path with the actual installer path. Quote the path if it contains spaces:
 
