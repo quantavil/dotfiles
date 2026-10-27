@@ -9,6 +9,10 @@
 
 set -eu
 
+# Refresh handler cache so newly installed desktop entries are visible to MIME
+# lookups (CloakBrowser and friends ship as chezmoi-managed .desktop files).
+update-desktop-database "$HOME/.local/share/applications" >/dev/null 2>&1 || true
+
 have_desktop() {
     [ -f "/usr/share/applications/$1" ] || [ -f "$HOME/.local/share/applications/$1" ]
 }
