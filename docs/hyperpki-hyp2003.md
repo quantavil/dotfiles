@@ -1,6 +1,6 @@
 # Hypersecu HYP2003 token on CachyOS
 
-This is the opt-in Wine setup used for the Hypersecu HYP2003 token (USB ID `2ccf:080a`). The token manager and certificate login were checked with Wine 10 and reported working after upgrading the desktop to Wine 11.20. The pre-upgrade prefix backup is `~/.local/share/icegate-wine-before-wine11`. Signing a PDF and using the certificate with ICEGATE eSanchit have not yet been verified.
+This is the opt-in Wine setup used for the Hypersecu HYP2003 token (USB ID `2ccf:080a`). The token manager and certificate login were checked with Wine 10 and reported working after upgrading the desktop to Wine 11.20. The pre-upgrade prefix backup is `~/.local/share/icegate-wine-before-wine11`. A PDF signature was verified in an experimental Wine 11.20 signer session; ICEGATE eSanchit acceptance remains unverified.
 
 ## Set up another machine
 
@@ -24,8 +24,8 @@ hyperpki-setup --reader-only
 
 To check reader detection, run `pcsc_scan -r`; it should show `Hypersecu HYP2003`. If not, check that the token is plugged in and run `systemctl status pcscd.socket pcscd.service` and `journalctl -u pcscd.service`.
 
-For eSanchit, the certificate must be registered to the ICEGATE user, and the actual signing and upload flow must still be tested. This setup does not install Windows or a VM.
+For eSanchit, the certificate must be registered to the ICEGATE user, and the upload flow must still be tested. This setup does not install Windows or a VM.
 
-Diagnostic observation: Wine 11 Java certificate-store enumeration reached the token certificate and attempted to load the HyperPKI provider, then stalled during issuer-chain lookup. The logged CCA issuer URL over HTTP timed out; the CCA 2022 root downloaded over HTTPS from the official CCA website and the PantaSign CA and sub-CA certificates verified as a chain. This is evidence of a possible network/chain retrieval issue, not proof that signing works. No root certificate was installed or trusted. The token-manager window may close while its process continues in the background; check with `pgrep -af HyperPKITokenManager`. A longer Windows-MY listing completed and showed the token certificate as a PrivateKeyEntry; private-key signing is not yet verified. The nCode service also started under Wine 11.20 in a temporary network namespace and its HTTPS health endpoint responded; the isolated process was stopped afterwards. Browser access, certificate checks and signing through that isolation remain untested.
+The token manager may keep running after its window closes; check with `pgrep -af HyperPKITokenManager`.
 
-On the desktop, a temporary test used Wine 11.20 and the official nCode signer in a network namespace, with `pasta` outbound access and `socat` forwarding to 127.0.0.1 only. A dedicated Chromium test session temporarily allowed the public-key hash of the bundled localhost certificate. The ICEGATE page opened the nCode file and certificate dialogs and produced a signed PDF with the HYP2003 token; `pdfsig` reported a valid signature covering the whole document, while its local issuer trust check failed. ICEGATE eSanchit acceptance remains untested. This was an experimental temporary session, not a reusable launcher; the browser exception and signer must not be treated as an installed workflow.
+A temporary desktop test ran the official nCode signer in a network namespace with `pasta` outbound access and `socat` forwarding to loopback only. A dedicated Chromium session temporarily allowed the bundled localhost certificate's public-key hash. The ICEGATE signing page produced a token-signed PDF; `pdfsig` reported a valid signature covering the whole document, but its local issuer trust check failed. ICEGATE eSanchit acceptance and a reusable signer launcher remain untested. No CA root certificate was installed or trusted for this test.
