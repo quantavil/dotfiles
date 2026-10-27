@@ -79,6 +79,7 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - Network symlinks in `$HOME`: Never place symlinks pointing to network CIFS/NFS mounts directly inside `~` (e.g. `~/Windows-E -> /mnt/win_e`). Doing so causes GUI file managers to trigger kernel network probe timeouts on every directory listing when the host is asleep. Access remote shares via `smb://` in bookmarks or Network locations instead.
 - Dux Greeter status lies from a non-root shell: `/etc/greetd/config.toml` is mode 600 root-only and `/var/cache/dms-greeter` is `greeter`-group, so `dms-greeter status` reports "Greeter config not found" and "symlink not found" purely on permission errors — check with `sudo dms-greeter status` (expects `/root` paths there, so read the symlinks directly) or after re-login. Group membership added by `dms-greeter sync` only applies to new sessions.
 - Never run `dms-greeter install`/`sync` through `pkexec`: it resolves `$HOME` as `/root`, so the cache symlinks and per-user slot get linked to root's state. Run `sudo dms-greeter sync` as yourself (or `sudo -u <user> env HOME=/home/<user> dms-greeter sync`) and `dms-greeter sync --profile` for the per-user slot; remove a stray `/var/cache/dms-greeter/users/root`.
+- ISP IPv6 routing timeouts: ISP Wi-Fi (Airtel) can issue IPv6 routes with severe latency and packet loss causing curl, mise, and uv to time out against dual-stack endpoints (like pypi.org). Keep IPv4 precedence configured in `/etc/gai.conf` (`precedence ::ffff:0:0/96 100`).
 
 ## Storage and recovery
 
