@@ -28,7 +28,6 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - Custom binds: `Mod+B` default browser, `Mod+E` Nautilus (files), `Mod+Z` VS Code, `Shift+Print` regional OCR (`~/.local/bin/dms-ocr`), `Mod+Alt+C` DMS color picker, `Mod+Shift+E` power menu (replaces the session-exit default).
 - DMS runs as `dms.service`; use DMS IPC for shell features and settings. Keyboard auto-detection needs `libinput-tools`.
 - Window rules: opaque by default; one `window-rule` adds `opacity 0.88` + blur for Rio, Nautilus, Baobab, File Roller, pavucontrol and `com.danklinux.dms` — add further translucent apps there. Global `blur { passes 1 offset 1.0 }`; image viewers (Loupe), browsers, editors, and OBS windows stay fully opaque.
-- Terminal: Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, `opacity = 1.0` + `unfocused-split-opacity = 1.0` so Niri alone controls translucency). Editor: Ferrite (Rust/egui, fast and lightweight), exported as `EDITOR`/`VISUAL`.
 
 ## Theme, fonts, environment
 
@@ -40,11 +39,10 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 ## Core apps, files, terminals, defaults
 
 - File Manager: Nautilus (GNOME Files). Features: `sushi` (Spacebar media previews), `nautilus-open-any-terminal` (opens Rio via `Ctrl+Alt+T`), `nautilus-admin-gtk4` (admin actions), and `~/.local/bin/nautilus` wrapper (auto-restores last visited directory tracked via `~/.local/share/nautilus-python/extensions/remember_last_dir.py`).
-- Terminal: Rio via `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list`.
-- Editor: Ferrite (`ferrite-bin` from AUR) for Markdown, structured formats (JSON/YAML/TOML) and general text/code files. VS Code for `.ipynb`/`.code-workspace` (`com.microsoft.VSCode.desktop`).
+- Terminal: Rio via `~/.config/kdeglobals [General]` (`TerminalApplication=rio`, `TerminalService=rio.desktop`) + `~/.config/xdg-terminals.list`; `~/.config/rio/config.toml` uses MesloLGS Nerd Font Mono and `opacity = 1.0` + `unfocused-split-opacity = 1.0` so Niri alone controls translucency.
+- Editor: Ferrite (`ferrite-bin` from AUR) for Markdown, structured formats (JSON/YAML/TOML) and general text/code files, exported as `EDITOR`/`VISUAL`. VS Code for `.ipynb`/`.code-workspace` (`com.microsoft.VSCode.desktop`).
 - Media & Utilities: Audio → Amberol (`io.bassi.Amberol.desktop`); Downloads → Prism (`Prism.desktop`); Images → Loupe (`org.gnome.Loupe.desktop`); Task Manager → Mission Center (`io.missioncenter.MissionCenter.desktop`); Archives → File Roller GUI + `ouch` CLI; Disk Usage → Baobab GUI; Script dialogs → `gum` (TUI) & `zenity` (GUI); Network/Code analysis → Sniffnet GUI, `tokei` CLI; Office/PDF/Creative → craft suite (Gridcraft, Wordcraft, Photocraft, Deckcraft, PdfCraft).
-- Inspect defaults with `gio info <file> | grep content-type` and `xdg-mime query default <type>`; set defaults with `xdg-mime default`.
-- Shell config is fish-only (`~/.config/fish/`); `.bashrc`/`.zshrc` are not managed (fish is the login shell). MIME defaults come from `.chezmoiscripts/run_onchange_after_50-mime-defaults.sh.tmpl`, which sets only installed apps and discovers scheme handlers (Telegram `userapp-*`, chatgpt) at runtime; `~/.config/mimeapps.list` itself is app-generated, never commit it.
+- Shell config is fish-only (`~/.config/fish/`); `.bashrc`/`.zshrc` are not managed (fish is the login shell). MIME defaults come from `.chezmoiscripts/run_onchange_after_50-mime-defaults.sh.tmpl`, which sets only installed apps and discovers scheme handlers (Telegram `userapp-*`, chatgpt) at runtime. Inspect with `gio info <file> | grep content-type` / `xdg-mime query default <type>`, set one with `xdg-mime default`; `~/.config/mimeapps.list` itself is app-generated, never commit it.
 
 ## Services and integrations
 
@@ -52,7 +50,7 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - DankSearch backs DMS filesystem search (`dsearch index status`, `dsearch.service`).
 - Firewall: UFW, default-drop incoming; only narrow rules for features in use. Open: MicYou `8554/tcp` (control), `8555/udp` (audio), `8443/tcp` (web). Clients must target host's current DHCP address — never hardcode host IPs in device profiles.
 - Phone & LAN transfer: LocalSend for peer-to-peer file transfer.
-- MCP servers: centralized in `~/Documents/my-mcps`, deployed by `bun run deploy` to Antigravity, OpenCode, Codex, Cursor, Claude Desktop and Claude Code. The running Claude Desktop app can write back a stale `~/.config/Claude/claude_desktop_config.json`; after deploy, verify its `mcpServers` keys. Active entries: `filesystem`, `fetch`, `memory`, `github` (needs token), `firecrawl`, `context7`, `codebase-memory`, `dart`, `rea` (reverse engineering evidence: binaries, JS/Electron, .NET, APKs, firmware, captures, ADB), `icegate` (`bunx github:quantavil/icegate-mcp`; own repo, source in `~/Downloads/icegate-mcp`: ICEGATE public enquiries, import duty, exchange rates, CODES, GSTIN). Deployed entries are prefixed `managed-`.
+- MCP servers: centralized in `~/Documents/my-mcps`, deployed by `bun run deploy` to Antigravity, OpenCode, Codex, Cursor, Claude Desktop and Claude Code. The running Claude Desktop app can write back a stale `~/.config/Claude/claude_desktop_config.json`; after deploy, verify its `mcpServers` keys. Active entries: `filesystem`, `fetch`, `memory`, `github` (needs token), `firecrawl`, `context7`, `codebase-memory`, `dart`, `rea` (reverse engineering evidence: binaries, JS/Electron, .NET, APKs, firmware, captures, ADB), `icegate` (`bunx github:quantavil/icegate-mcp`; own repo, source in `~/Documents/icegate-mcp`: ICEGATE public enquiries, import duty, exchange rates, CODES, GSTIN). Deployed entries are prefixed `managed-`.
 - Skills: managed in `~/Documents/my-skills` (`bun index.ts` or `./run.sh <command>`: add/remove/sync/set/superskill/enable/disable/status/deploy/doctor/check). `skills.json` is committed; `superskills/` is generated; `.active/` + `skills.local.json` are per machine. Deploy installs symlinks for all agent targets; Gemini/OpenCode read `.active/`, so disabled skills stay hidden. Upstream skills come from the pinned `skills` devDependency — never a floating `bunx`. List current skills with `bun index.ts status`.
 - SMB (desktop): `DESKTOP-CNRKSBM` is at `desktop-cnrksbm.local` (192.168.1.5), shares `E`, `Users`; Nautilus accesses on-demand via `smb://desktop-cnrksbm.local/` (`gvfs-smb`, mounts under `/run/user/1000/gvfs/`).
 - Printing/scanning (desktop): HP LaserJet Pro MFP M125nw on USB + HP LaserJet 1020 on `DESKTOP-CNRKSBM`; both need the proprietary `hplip-plugin`; stack = `cups`/`cups-filters`/`hplip`, `sane`/`sane-airscan`, `skanpage`/`simple-scan` (USB queue uses `printer-error-policy=retry-job` to prevent CUPS from pausing on device wake delays).
@@ -70,7 +68,6 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 - Codex CLI: mise-managed on the desktop; standalone `~/.local/bin/codex` on the laptop with ~6 GB of `~/.codex` state (migrating needs an explicit user decision). Resolves through mise shims (`mise activate` in `~/.config/fish/conf.d/10-mise.fish`) ahead of `/usr/bin`.
 - Android: user-owned SDK `~/Android/Sdk` (`emulator`/`avdmanager` symlinked into `~/.local/bin`; `sdkmanager` there is an exec wrapper, since a symlink breaks its SDK-root detection; adb from `/usr/bin`). Start emulators as transient units (`systemd-run --user --collect --unit=ditto-emulator -- emulator -avd …`); target serials explicitly and don't share a device between two controllers during captures. The `ditto` skill's `scripts/download-play-apks.sh` pulls the installed delivery from the signed-in x86_64 AVD and rejects 32-bit native APKs.
 
-
 ## Known pitfalls
 
 - Android emulator root (Ditto): Play images refuse `adb root`; root them with rootAVD + current Magisk (rootAVD's bundled Magisk is old: its `su` rejected adb outright). `su: request rejected (2000)` in `logcat -s Magisk` with no prompt means Shell is switched off in Magisk › Superuser; switch it on. Magisk "Direct install" cannot update an emulator; re-patch the ramdisk with rootAVD instead. Snapshots taken before patching are invalid; cold-boot with `-no-snapshot-load`.
@@ -87,5 +84,3 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 ## Validation
 
 - `niri validate -c ~/.config/niri/config.kdl`; `dms doctor -j` plus DMS IPC status; `journalctl --user -u <service>`; `journalctl -k`. After changes, confirm both configuration validity and the actual runtime state.
-
-## Workspaces
