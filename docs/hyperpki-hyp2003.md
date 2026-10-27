@@ -29,3 +29,5 @@ For eSanchit, the certificate must be registered to the ICEGATE user, and the up
 The token manager may keep running after its window closes; check with `pgrep -af HyperPKITokenManager`.
 
 A temporary desktop test ran the official nCode signer in a network namespace with `pasta` outbound access and `socat` forwarding to loopback only. A dedicated Chromium session temporarily allowed the bundled localhost certificate's public-key hash. The ICEGATE signing page produced a token-signed PDF; `pdfsig` reported a valid signature covering the whole document, but its local issuer trust check failed. ICEGATE eSanchit acceptance and a reusable signer launcher remain untested. No CA root certificate was installed or trusted for this test.
+
+The ICEGATE “Text or XML File Signing & Verification” page was also tested in the temporary Wine session with a `.be` file: nCode produced a separate signed file, and the user reported that the same utility verified it successfully. An actual XML-format file and ICEGATE submission have not yet been checked.
