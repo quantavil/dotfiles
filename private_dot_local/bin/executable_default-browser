@@ -3,9 +3,6 @@
 BROWSER_DESKTOP="$(xdg-settings get default-web-browser 2>/dev/null)"
 
 case "$BROWSER_DESKTOP" in
-    vivaldi*)
-        exec /usr/bin/vivaldi-stable "$@"
-        ;;
     zen*)
         exec /usr/bin/zen-browser "$@"
         ;;
@@ -25,7 +22,7 @@ case "$BROWSER_DESKTOP" in
         if [ -n "$BROWSER_DESKTOP" ]; then
             exec /usr/bin/gtk-launch "$BROWSER_DESKTOP" "$@"
         else
-            exec /usr/bin/vivaldi-stable "$@"
+            exec /usr/bin/zen-browser "$@"
         fi
         ;;
 esac

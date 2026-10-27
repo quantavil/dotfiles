@@ -24,12 +24,12 @@ while IFS='=' read -r mime app; do
     [ -n "$mime" ] || continue
     set_default "$mime" "$app"
 done <<'MIMES'
-text/html={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
-x-scheme-handler/http={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
-x-scheme-handler/https={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
-x-scheme-handler/about={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
-x-scheme-handler/unknown={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
-application/xhtml+xml={{ if eq .role "laptop" }}zen.desktop{{ else }}vivaldi-stable.desktop{{ end }}
+text/html=zen.desktop
+x-scheme-handler/http=zen.desktop
+x-scheme-handler/https=zen.desktop
+x-scheme-handler/about=zen.desktop
+x-scheme-handler/unknown=zen.desktop
+application/xhtml+xml=zen.desktop
 inode/directory=org.gnome.Nautilus.desktop
 application/pdf=ai.storyteller.pdfcraft.desktop
 x-scheme-handler/geo=google-maps-geo-handler.desktop
