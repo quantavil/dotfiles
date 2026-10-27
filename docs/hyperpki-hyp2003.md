@@ -25,3 +25,5 @@ hyperpki-setup --reader-only
 To check reader detection, run `pcsc_scan -r`; it should show `Hypersecu HYP2003`. If not, check that the token is plugged in and run `systemctl status pcscd.socket pcscd.service` and `journalctl -u pcscd.service`.
 
 For eSanchit, the certificate must be registered to the ICEGATE user, and the actual signing and upload flow must still be tested. This setup does not install Windows or a VM.
+
+Diagnostic observation: Wine 11 Java certificate-store enumeration reached the token certificate and attempted to load the HyperPKI provider, then stalled during issuer-chain lookup. The logged CCA issuer URL over HTTP timed out; the CCA 2022 root downloaded over HTTPS from the official CCA website and the PantaSign CA and sub-CA certificates verified as a chain. This is evidence of a possible network/chain retrieval issue, not proof that signing works. No root certificate was installed or trusted. The token-manager window may close while its process continues in the background; check with `pgrep -af HyperPKITokenManager`.
