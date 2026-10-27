@@ -139,6 +139,9 @@ environment {
   XDG_MENU_PREFIX "arch-"
   QT_QPA_PLATFORMTHEME "xdgdesktopportal"
   QT_QPA_PLATFORMTHEME_QT6 "xdgdesktopportal"
+  CHROME_PATH "/home/quantavil/.local/bin/cloakbrowser-chrome"
+  ARCHIFY_CHROME "/home/quantavil/.local/bin/cloakbrowser-chrome"
+  AGENT_BROWSER_SKILLS_DIR "/home/quantavil/.local/share/mise/installs/github-vercel-labs-agent-browser/latest/skill-data"
   EDITOR "ferrite"
   VISUAL "ferrite"
 }
