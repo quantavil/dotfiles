@@ -1,0 +1,31 @@
+#!/usr/bin/python
+"""Show the system print dialog for one PDF selected in Files."""
+import sys
+import gi
+
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gio, GLib, Gtk
+
+app = Gtk.Application(application_id="io.github.quantavil.NautilusPrint")
+
+
+def activate(application):
+    application.hold()
+    dialog = Gtk.PrintDialog.new()
+    dialog.set_title("Print PDF")
+
+    def finished(dialog, result, _data):
+        try:
+            dialog.print_file_finish(result)
+        except GLib.Error as error:
+            if not error.matches(Gtk.dialog_error_quark(), Gtk.DialogError.DISMISSED):
+                print(f"Printing failed: {error.message}", file=sys.stderr)
+                import subprocess
+                subprocess.Popen(["zenity", "--error", "--text", f"Printing failed: {error.message}"])
+        application.release()
+
+    dialog.print_file(None, None, Gio.File.new_for_path(sys.argv[1]), None, finished, None)
+
+
+app.connect("activate", activate)
+app.run([sys.argv[0]])

@@ -226,7 +226,7 @@ sddm
 sg3_utils
 shelly
 shelly-flatpak-backend
-skanpage
+simple-scan
 smartmontools
 snapper
 sniffnet
@@ -259,7 +259,7 @@ vulkan-icd-loader
 vulkan-tools
 wget
 which
-wine-cachyos
+wine
 winetricks
 wireplumber
 wpa_supplicant
