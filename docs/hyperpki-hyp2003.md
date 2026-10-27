@@ -34,4 +34,4 @@ The ICEGATE “Text or XML File Signing & Verification” page was also tested i
 
 The portable notes, token scripts and an nCode installer wrapper are in `~/Documents/ICEGATE-HyperPKI-Linux/`; the previous folder name was `HyperPKI-HYP2003-Linux`. An experimental `icegate-batch-signer` calls the installed nCode functions directly for PDFs and ASCII BE/SB/text; see its README for setup, verification limits and token prompts.
 
-Desktop app menu **ICEGATE Batch Signer** reads `~/Downloads/Signer` and writes copies beside originals with ` [signed]` before the extension. A batch may still require certificate selection and token PIN. No PIN is stored. PDF signature cryptographic verification does not establish issuer trust or ICEGATE submission acceptance.
+Desktop app menu **ICEGATE Batch Signer** reads `~/Downloads/Signer` and writes copies beside originals with `[signed]` before the extension. A batch may still require certificate selection and token PIN. No PIN is stored. PDF signature cryptographic verification does not establish issuer trust or ICEGATE submission acceptance.
