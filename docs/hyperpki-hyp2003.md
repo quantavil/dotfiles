@@ -32,6 +32,6 @@ A temporary desktop test ran the official nCode signer in a network namespace wi
 
 The ICEGATE “Text or XML File Signing & Verification” page was also tested in the temporary Wine session with a `.be` file: nCode produced a separate signed file, and the user reported that the same utility verified it successfully. An actual XML-format file and ICEGATE submission have not yet been checked.
 
-The portable notes, token scripts and an nCode installer wrapper are in `~/Documents/ICEGATE-HyperPKI-Linux/`; the previous folder name was `HyperPKI-HYP2003-Linux`. An experimental `icegate-batch-signer` calls the installed nCode functions directly for PDFs and ASCII BE/text; see its README for setup, verification limits and token prompts.
+The portable notes, token scripts and an nCode installer wrapper are in `~/Documents/ICEGATE-HyperPKI-Linux/`; the previous folder name was `HyperPKI-HYP2003-Linux`. An experimental `icegate-batch-signer` calls the installed nCode functions directly for PDFs and ASCII BE/SB/text; see its README for setup, verification limits and token prompts.
 
-Desktop app menu **ICEGATE Batch Signer** reads `~/Downloads/Signer/Input` and writes copies beside originals with ` [signed]` before the extension. A batch may still require certificate selection and token PIN. No PIN is stored. PDF signature cryptographic verification does not establish issuer trust or ICEGATE submission acceptance.
+Desktop app menu **ICEGATE Batch Signer** reads `~/Downloads/Signer` and writes copies beside originals with ` [signed]` before the extension. A batch may still require certificate selection and token PIN. No PIN is stored. PDF signature cryptographic verification does not establish issuer trust or ICEGATE submission acceptance.
