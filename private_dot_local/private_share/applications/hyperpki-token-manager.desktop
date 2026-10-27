@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=HyperPKI Token Manager
+Comment=Manage the Hypersecu HYP2003 digital signing token
+Exec=/home/quantavil/.local/bin/hyperpki-token-manager
+Icon=security-high
+Terminal=false
+Categories=Utility;Security;

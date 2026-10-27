@@ -1,0 +1,4 @@
+#!/bin/sh
+export WINEPREFIX="$HOME/.local/share/icegate-wine"
+export WINEDEBUG=-all
+exec /usr/bin/wine 'C:\Program Files (x86)\HyperPKI\HyperPKI_HYP2003\HyperPKITokenManager_HYP2003.exe'

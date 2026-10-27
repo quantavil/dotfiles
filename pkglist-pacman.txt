@@ -52,6 +52,7 @@ ccid
 chezmoi
 chromium
 chwd
+claude-code
 claude-desktop
 cmake
 cpupower
