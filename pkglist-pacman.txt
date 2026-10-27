@@ -205,9 +205,6 @@ python-pyqt5
 python-reportlab
 python-uv
 qbittorrent
-qemu-hw-usb-host
-qemu-img
-qemu-ui-gtk
 qt5-wayland
 qt6-tools
 rclone
@@ -233,7 +230,6 @@ sniffnet
 sof-firmware
 sudo
 sushi
-swtpm
 sysfsutils
 tesseract-data-eng
 texinfo

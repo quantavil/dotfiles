@@ -6,9 +6,6 @@ if test -f /usr/share/cachyos-fish-config/cachyos-config.fish
     source /usr/share/cachyos-fish-config/cachyos-config.fish
 end
 
-# Canonical user binary path injection
-fish_add_path -g "$HOME/.local/bin"
-
 # ==============================================================================
 # NATIVE INTERACTIVE SHELL INITIALIZATION
 # ==============================================================================
