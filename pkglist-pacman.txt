@@ -50,6 +50,7 @@ capitaine-cursors
 cava
 ccid
 chezmoi
+chromium
 chwd
 claude-code
 claude-desktop
