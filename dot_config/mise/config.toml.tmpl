@@ -1,21 +1,15 @@
 [tools]
 "pipx:cloakbrowser" = "latest"
 "github:vercel-labs/agent-browser" = { version = "latest", asset_pattern = "agent-browser-linux-x64", postinstall = "$HOME/.local/libexec/agent-browser-skills-sync" }
-{{- if eq .role "laptop" }}
 flutter = { version = "latest", checksum_expr = '"sha256:" + filter(fromJSON(body).releases, { #.archive endsWith filename })[0].sha256', platforms = { linux-x64 = { checksum_url = "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json", url = "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_{{ "{{" }} version | trim_end(pat='-stable') {{ "}}" }}-stable.tar.xz" }, macos-arm64 = { checksum_url = "https://storage.googleapis.com/flutter_infra_release/releases/releases_macos.json", url = "https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_arm64_{{ "{{" }} version | trim_end(pat='-stable') {{ "}}" }}-stable.zip" }, macos-x64 = { checksum_url = "https://storage.googleapis.com/flutter_infra_release/releases/releases_macos.json", url = "https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_{{ "{{" }} version | trim_end(pat='-stable') {{ "}}" }}-stable.zip" }, windows-x64 = { checksum_url = "https://storage.googleapis.com/flutter_infra_release/releases/releases_windows.json", url = "https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_{{ "{{" }} version | trim_end(pat='-stable') {{ "}}" }}-stable.zip" } }, version_expr = 'fromJSON(body).releases | filter({ #.channel == "stable" }) | map({ replace(#.version, "-stable", "") }) | sortVersions()', version_list_url = "https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json" }
 node = "26.11.1"
 pnpm = "latest"
-{{- end }}
 "github:storytold/gridcraft" = { version = "latest", asset_pattern = "gridcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
 "github:storytold/pdfcraft" = { version = "latest", asset_pattern = "pdfcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
 "github:storytold/photocraft" = { version = "latest", asset_pattern = "photocraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
 "github:storytold/wordcraft" = { version = "latest", asset_pattern = "wordcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
 "github:storytold/deckcraft" = { version = "latest", asset_pattern = "deckcraft-*-linux-x86_64.tar.gz", strip_components = "1", bin_path = "bin" }
-{{- if eq .role "desktop" }}
-
-# CLI tools
 "github:openai/codex" = { version = "latest", asset_pattern = "codex-package-x86_64-unknown-linux-musl.tar.gz", strip_components = "0", bin_path = "bin" }
-{{- end }}
 
 [env]
 AGENT_BROWSER_SKILLS_DIR = "/home/quantavil/.local/share/mise/installs/github-vercel-labs-agent-browser/latest/skill-data"

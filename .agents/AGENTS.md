@@ -15,7 +15,17 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 
 ## Machine parity and strict hardware exceptions
 
-Both systems run **CachyOS with Niri + DankMaterialShell (DMS)**, managed by chezmoi from `quantavil/dotfiles`. All tools, keybindings, fonts, icons, terminal settings, shell configurations, scripts, and behaviors are identical **except for the following exhaustive whitelist of physical hardware/architecture differences**:
+Both systems run **CachyOS with Niri + DankMaterialShell (DMS)**, managed by chezmoi from `quantavil/dotfiles`. All tools, keybindings, fonts, icons, terminal settings, shell configurations, scripts, and behaviors are identical.
+
+### Unified Defaults Across Both Systems (No Machine Split)
+
+The following stacks are **default on both Desktop and Laptop**:
+- **Release Tools via Mise**: All tools in `~/.config/mise/config.toml` are unified for both machines: `flutter`, `node`, `pnpm`, `github:openai/codex`, `pipx:cloakbrowser`, `github:vercel-labs/agent-browser`, and the five Craft apps (gridcraft, pdfcraft, photocraft, wordcraft, deckcraft).
+- **Signing & Document Tools**: `icegate-sign` (and HYP2003 vendor driver paths), printing stack (`cups`, `hplip`, `sane`), and OBS Studio configurations are shared baselines so plugging peripherals into either machine works out of the box.
+
+### The Exhaustive Whitelist of Hardware/Physical Exceptions
+
+Only the following physical hardware differences are permitted to differ:
 
 1. **GPU & Graphics Drivers**:
    - **Desktop**: Intel i5-12400F (no iGPU) + Nvidia GeForce RTX 4060 (`nvidia-open`, `nvidia-utils`, `opencl-nvidia`, `lib32-nvidia-utils`).
@@ -26,22 +36,12 @@ Both systems run **CachyOS with Niri + DankMaterialShell (DMS)**, managed by che
 3. **Power & DMS Bar Widgets**:
    - **Desktop**: Wall AC power only (no battery in `/sys/class/power_supply/`). DMS bar has **no battery widget**. Network preference is `networkPreference: wired`.
    - **Laptop**: Battery powered. DMS bar **includes the battery widget** and monitors power via `power-profiles-daemon`. Network preference is `networkPreference: wifi`.
-4. **Physical Peripherals & Studio Hardware**:
-   - **ICEGATE USB Token**: Hypersecu HYP2003 USB token `2ccf:080a` is physically plugged into Desktop (`libcastle_v2.so.1.0.0` vendor driver + `icegate-sign`).
-   - **Printer**: HP LaserJet Pro MFP M125nw is wired via USB to Desktop.
-   - **OBS Studio NVENC & Virtual Cam**: Desktop uses RTX 4060 NVENC hardware encoding + `v4l2loopback` DKMS module and GNOME portal capture. Laptop does not use NVENC/v4l2loopback.
-5. **Android Emulators (Ditto)**:
+4. **Android Emulators (Ditto GPU Mode)**:
    - **Desktop**: `DITTO_GPU=host` (accelerated by RTX 4060 host GPU). AVD: `ditto2_play_x86_64` (Google Play Store signed in).
    - **Laptop**: `DITTO_GPU` must remain **unset/auto** (headless host-GPU on Intel UHD is unstable). AVDs: `floww_fresh`, `floww_light`, `floww_parity` (Play-free Google APIs).
-6. **Browser Automation & CloakBrowser**:
-   - **Both machines**: CloakBrowser pro 155 with `~/.local/bin/cloakbrowser-chrome` wrapper and persistent fingerprint seeds, mise-managed `agent-browser` and `pipx:cloakbrowser`. The free license allows **1 concurrent seat** shared between both machines.
-   - **Laptop**: Has a dedicated personal interactive profile at `~/.config/agent-browser/profiles/personal` and unpacked extensions in `~/.local/share/cloak-extensions/` (`bitwarden`, `violentmonkey`, `ublock-origin-lite`).
-   - **Desktop**: Ships secondary `chromium` for web compatibility testing; `cloakbrowser.desktop` registered as secondary MIME handler.
-7. **Codex CLI**:
-   - **Desktop**: Managed by `mise` (`github:openai/codex`).
-   - **Laptop**: Standalone `~/.local/bin/codex` with ~6 GB historical session cache in `~/.codex`.
-8. **Mobile Tooling in Mise**:
-   - **Laptop**: Adds `flutter`, `node`, and `pnpm` to `mise/config.toml.tmpl` for portable app development. Desktop uses system `node` and `bun`.
+5. **CloakBrowser Personal Interactive Profile**:
+   - **Both machines**: CloakBrowser pro 155 with `~/.local/bin/cloakbrowser-chrome` wrapper and persistent fingerprint seeds, mise-managed `agent-browser` and `pipx:cloakbrowser`. The free license allows **1 concurrent seat** shared between both machines. Desktop ships secondary `chromium` for compatibility testing; `cloakbrowser.desktop` registered as secondary MIME handler.
+   - **Laptop**: Adds a dedicated personal interactive profile at `~/.config/agent-browser/profiles/personal` and unpacked extensions in `~/.local/share/cloak-extensions/` (`bitwarden`, `violentmonkey`, `ublock-origin-lite`).
 
 ## Dotfiles and Git workflow rules (Mandatory for all agents)
 
@@ -101,8 +101,8 @@ Both systems run **CachyOS with Niri + DankMaterialShell (DMS)**, managed by che
 - ICEGATE draft automation: Google Apps Script project “ICEGATE shipment drafts” checks new ICEGATE LEO/eGatepass mail every minute, processing 10:00–22:00 Asia/Kolkata. It prepares Gmail reply drafts for review, checks for identical files already sent in the selected conversation, and never sends mail. Source and local tests live in `~/Documents/icegate-drafts` (public repo `quantavil/icegate-drafts`, MIT); a time-driven Apps Script trigger runs `checkIcegate`. The script uses Gmail full-access and external-request permissions; do not store credentials in dotfiles.
 - ICEGATE DSC: Hypersecu HYP2003 USB token `2ccf:080a` (Feitian ePass2003 family, `ENTERSAFE-ESPK` card layout that OpenSC cannot read), used on Linux through the vendor PKCS#11 library `libcastle_v2.so.1.0.0` (`~/Documents/hyp2003-linux-driver/`, proprietary, local only). The old Wine/nCode flow (prefix `~/.local/share/icegate-wine`, its backup and winetricks cache, HyperPKI/batch-signer launchers, `~/Documents/ICEGATE-HyperPKI-Linux`, the VM fallback with QEMU/swtpm, the custom pcscd reader list under `/etc` and `/usr/local/lib/icegate-ccid`, and the nCode installer zip) was removed once `icegate-sign` was accepted by ICEGATE. The `wine`/`winetricks` packages remain installed. Never store the token PIN; never pass physical Windows partitions to a VM.
 - `icegate-sign` (own repo `~/Documents/icegate-sign`, Python/uv, installed with `uv tool install ~/Documents/icegate-sign`, remove with `uv tool uninstall icegate-sign`; not yet published): Linux-native replacement for the Wine/nCode flow above. `icegate-sign doctor|certs|sign|verify`; signs BE/SB/TXT/XML (ICEGATE Text/XML format: SHA-1 DigestInfo over the SHA-256 of the trimmed file, tags appended — XML gets no XMLDSig) and PDFs (pyHanko, one detached CMS signature per page, compact box 5,8,185,52, name and date only) through a PKCS#11 module: the vendor `libcastle_v2.so.1.0.0` in `~/.local/lib/hyp2003/` or `~/Documents/hyp2003-linux-driver/` (proprietary, local only, not a repo; OpenSC cannot read this card: it uses Feitian ENTERSAFE-ESPK, not PKCS#15), falling back to OpenSC. Format was reverse engineered from `nCodePkiComponentV4.jar` and ICEGATE's `pkicomp.js` and checked against the official utility's real output; real-token PDF signing is verified with pdfsig and ICEGATE accepted a file signed this way (user-reported, 2026-10-27); `--pin-stdin` allows non-interactive signing; signed text/XML on a real token is still unverified. First real test: sign one `.be` and compare byte for byte with the old flow. Keep the Wine flow until then. Details in that repo's `AGENTS.md`.
-- mise owns release-managed tools (`~/.config/mise/config.toml`): the five crafts (gridcraft, pdfcraft, wordcraft, photocraft, deckcraft — GitHub Linux x86_64 tarballs, release-age-exempt), the Codex CLI (desktop), and Flutter/Node/pnpm (laptop). `mise-upgrade.timer` runs `mise -C %h -y upgrade` daily; do not add other update engines. `~/.local/libexec/mise-craft-integrate` links craft launchers/icons/MIME via mise `latest` aliases (state: `~/.local/state/mise-craft/links.json`); validate with `mise ls`, the helper's `--check`, and `systemd-analyze --user verify`.
-- Codex CLI: mise-managed on the desktop; standalone `~/.local/bin/codex` on the laptop with ~6 GB of `~/.codex` state (migrating needs an explicit user decision). Resolves through mise shims (`mise activate` in `~/.config/fish/conf.d/10-mise.fish`) ahead of `/usr/bin`.
+- mise owns release-managed tools (`~/.config/mise/config.toml`): the five crafts (gridcraft, pdfcraft, wordcraft, photocraft, deckcraft — GitHub Linux x86_64 tarballs, release-age-exempt), Codex CLI, Flutter, Node, and pnpm on both systems. `mise-upgrade.timer` runs `mise -C %h -y upgrade` daily; do not add other update engines. `~/.local/libexec/mise-craft-integrate` links craft launchers/icons/MIME via mise `latest` aliases (state: `~/.local/state/mise-craft/links.json`); validate with `mise ls`, the helper's `--check`, and `systemd-analyze --user verify`.
+- Codex CLI: mise-managed on both machines (`github:openai/codex`). Resolves through mise shims (`mise activate` in `~/.config/fish/conf.d/10-mise.fish`) ahead of `/usr/bin`.
 - Android: user-owned SDK `~/Android/Sdk` (`emulator`/`avdmanager` symlinked into `~/.local/bin`; `sdkmanager` there is an exec wrapper, since a symlink breaks its SDK-root detection; adb from `/usr/bin`). Start emulators as transient units (`systemd-run --user --collect --unit=ditto-emulator -- emulator -avd …`); target serials explicitly and don't share a device between two controllers during captures. The `ditto` skill's `scripts/download-play-apks.sh` pulls the installed delivery from the signed-in x86_64 AVD and rejects 32-bit native APKs.
 
 ## Known pitfalls
