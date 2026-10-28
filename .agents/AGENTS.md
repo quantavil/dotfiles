@@ -7,19 +7,50 @@ This is the single shared copy: `~/AGENTS.md` is a symlink to `.agents/AGENTS.md
 ## General practice
 
 - Inspect current state before changing it; preserve unrelated user changes.
+- Principle: **100% Mirroring by default**. Both machines (Desktop and Laptop) must mimic each other in every config, shell bind, theme, window rule, tool, and script. Never delete or strip a tool or config simply because it is not actively used on the current machine.
 - Prefer application settings and supported commands over hand-editing managed/generated files.
 - Make the smallest useful change, then validate the affected service or configuration.
 - Treat optional or hardware-dependent features as opt-in; keep the system lean and bloat-free.
 - Never store passwords or weaken authentication policy to make automation easier.
 
-## Machines and dotfiles
+## Machine parity and strict hardware exceptions
 
-- Dotfiles and system config are managed by chezmoi from `quantavil/dotfiles`. Replicate a new machine with: CachyOS + Niri, `chezmoi init --apply quantavil`, then `sudo pacman -S --needed - < ~/.local/share/chezmoi/pkglist-pacman.txt`. Maintain `pkglist-pacman.txt`/`pkglist-aur.txt` deliberately; do not overwrite the shared lists from one machine’s installed packages on every commit.
-- Detect machine from hardware, never hostname: `cat /sys/class/dmi/id/chassis_type` (3 = desktop, 9/10 = laptop), `ls /sys/class/power_supply/` (no `BAT*` = desktop), `lspci | grep -qi nvidia` (desktop). Each machine keeps an untracked `~/.config/chezmoi/chezmoi.toml` with `[data] role = "desktop"`/`"laptop"`; templates check `{{ eq .role "desktop" }}`.
-- Desktop: i5-12400F (no iGPU) + RTX 4060 (nvidia-open), single LG ULTRAGEAR 1920x1080@144 on HDMI-A-2; DMS `networkPreference=wired`, no battery widget. OBS Studio + browser plugin (NVENC via RTX 4060; PipeWire capture through `xdg-desktop-portal-gnome`); virtual camera via `v4l2loopback` DKMS module (autoloads via `/etc/modules-load.d/v4l2loopback.conf`). AVD `ditto2_play_x86_64` (Play x86_64 + ARM64 translation, signed into Google Play — keep it): run with `-port 5556 -gpu host`; `DITTO_GPU=host` is verified.
-- Laptop: Intel UHD (no Nvidia), battery. Keep `DITTO_GPU` unset/auto here (headless host-GPU on the Intel iGPU is unreliable). AVDs `floww_fresh`, `floww_light`, `floww_parity` (Android 34 `google_apis` x86_64, no Play Store).
-- Accepted machine differences live in role-templated source files (`{{ if eq .role "laptop" }}` style conditionals), never in per-machine commits: `mise/config.toml.tmpl` (laptop adds `flutter`/`node`/`pnpm`; desktop adds the Codex CLI), `fish/conf.d/ditto.fish.tmpl` (`DITTO_GPU=host` on the desktop only). The laptop also runs a standalone Codex CLI and `chatgpt-desktop-bin` (owns `x-scheme-handler/codex`); AyuGram `x-scheme-handler/tg` ids (`6JXKV3`/`QT4KV3` here) are discovered at runtime, never hardcoded.
-- Intentional chezmoi drift — app-generated runtime state; do not commit or "fix" without asking: `.config/kdeglobals`, `.config/shelly/settings.json`, `.config/DankMaterialShell/*.json`.
+Both systems run **CachyOS with Niri + DankMaterialShell (DMS)**, managed by chezmoi from `quantavil/dotfiles`. All tools, keybindings, fonts, icons, terminal settings, shell configurations, scripts, and behaviors are identical **except for the following exhaustive whitelist of physical hardware/architecture differences**:
+
+1. **GPU & Graphics Drivers**:
+   - **Desktop**: Intel i5-12400F (no iGPU) + Nvidia GeForce RTX 4060 (`nvidia-open`, `nvidia-utils`, `opencl-nvidia`, `lib32-nvidia-utils`).
+   - **Laptop**: Intel UHD integrated graphics (`mesa`, `intel-media-driver` for VAAPI, no Nvidia drivers).
+2. **Displays & Backlight**:
+   - **Desktop**: External LG ULTRAGEAR 1920x1080@144Hz on HDMI-A-2 (no sysfs backlight).
+   - **Laptop**: Built-in `eDP-1` display with hardware backlight controls via `/sys/class/backlight`. Display outputs are managed per-machine by DMS-generated `dms/outputs.kdl`.
+3. **Power & DMS Bar Widgets**:
+   - **Desktop**: Wall AC power only (no battery in `/sys/class/power_supply/`). DMS bar has **no battery widget**. Network preference is `networkPreference: wired`.
+   - **Laptop**: Battery powered. DMS bar **includes the battery widget** and monitors power via `power-profiles-daemon`. Network preference is `networkPreference: wifi`.
+4. **Physical Peripherals & Studio Hardware**:
+   - **ICEGATE USB Token**: Hypersecu HYP2003 USB token `2ccf:080a` is physically plugged into Desktop (`libcastle_v2.so.1.0.0` vendor driver + `icegate-sign`).
+   - **Printer**: HP LaserJet Pro MFP M125nw is wired via USB to Desktop.
+   - **OBS Studio NVENC & Virtual Cam**: Desktop uses RTX 4060 NVENC hardware encoding + `v4l2loopback` DKMS module and GNOME portal capture. Laptop does not use NVENC/v4l2loopback.
+5. **Android Emulators (Ditto)**:
+   - **Desktop**: `DITTO_GPU=host` (accelerated by RTX 4060 host GPU). AVD: `ditto2_play_x86_64` (Google Play Store signed in).
+   - **Laptop**: `DITTO_GPU` must remain **unset/auto** (headless host-GPU on Intel UHD is unstable). AVDs: `floww_fresh`, `floww_light`, `floww_parity` (Play-free Google APIs).
+6. **Browser Automation & CloakBrowser**:
+   - **Both machines**: CloakBrowser pro 155 with `~/.local/bin/cloakbrowser-chrome` wrapper and persistent fingerprint seeds, mise-managed `agent-browser` and `pipx:cloakbrowser`. The free license allows **1 concurrent seat** shared between both machines.
+   - **Laptop**: Has a dedicated personal interactive profile at `~/.config/agent-browser/profiles/personal` and unpacked extensions in `~/.local/share/cloak-extensions/` (`bitwarden`, `violentmonkey`, `ublock-origin-lite`).
+   - **Desktop**: Ships secondary `chromium` for web compatibility testing; `cloakbrowser.desktop` registered as secondary MIME handler.
+7. **Codex CLI**:
+   - **Desktop**: Managed by `mise` (`github:openai/codex`).
+   - **Laptop**: Standalone `~/.local/bin/codex` with ~6 GB historical session cache in `~/.codex`.
+8. **Mobile Tooling in Mise**:
+   - **Laptop**: Adds `flutter`, `node`, and `pnpm` to `mise/config.toml.tmpl` for portable app development. Desktop uses system `node` and `bun`.
+
+## Dotfiles and Git workflow rules (Mandatory for all agents)
+
+- **Always Sync Before Work**: Before starting any dotfile edits or creating commits, run `git pull --rebase` or `chezmoi update` to integrate remote changes cleanly and prevent divergence.
+- **Encapsulate Differences in Templates, Never Delete**: Any machine-specific difference MUST be placed inside Go templates (`{{ if eq .role "desktop" }}` / `{{ if eq .role "laptop" }}` in `.tmpl` files). Never `git rm` or strip shared tools, scripts, environment variables, or packages just because they are not currently active on the machine you are currently working on.
+- **Machine Role Detection**: Machine role is determined strictly by hardware (`cat /sys/class/dmi/id/chassis_type`: 3 = desktop, 9/10 = laptop; `ls /sys/class/power_supply/`: no `BAT*` = desktop; `lspci | grep -qi nvidia` = desktop). Each machine keeps an untracked `~/.config/chezmoi/chezmoi.toml` with `[data] role = "desktop"` or `"laptop"`. Never check or branch on hostname.
+- **Deliberate Package List Maintenance**: Never run automatic hooks or commands that dump `pacman -Qqe` into `pkglist-pacman.txt` or `pkglist-aur.txt`. Package lists are maintained deliberately for packages that belong in the system baseline.
+- **Intentional Drift (Do Not Commit)**: App-generated runtime state must NOT be committed or modified: `.config/kdeglobals`, `.config/shelly/settings.json`, and `.config/DankMaterialShell/*.json`.
+- **Validation**: After every dotfile change, run `niri validate -c ~/.config/niri/config.kdl` and `dms doctor -j` to verify both syntax validity and runtime health.
 
 ## Desktop session (Niri + DMS)
 
