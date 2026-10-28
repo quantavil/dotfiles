@@ -45,7 +45,7 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
   git commit -m "update configs"
   git push
   ```
-  *(Note: Package lists `pkglist-pacman.txt` and `pkglist-aur.txt` are automatically refreshed on every commit via pre-commit hook).*
+  Package lists are maintained deliberately; review machine-specific packages before changing them.
 - **Pull latest changes from GitHub:**
   ```bash
   chezmoi update
@@ -55,15 +55,16 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 
 ## What's Included
 
-- **Compositor:** Niri (`~/.config/niri/config.kdl`) — catch-all glass (`opacity 0.88` + minimal blur) with opaque exclusions for media/PiP/browsers/focus apps/auth dialogs
+- **Compositor:** Niri (`~/.config/niri/config.kdl`) — opaque windows by default, with selected apps using `opacity 0.88` and blur
 - **Default terminal:** Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity delegated to Niri); Alacritty config also tracked
 - **Shell:** Fish (login shell; `.bashrc`/`.zshrc` no longer managed)
 - **Shell Extensions & Themes:** DankMaterialShell settings & plugins
 - **Desktop & Theme Integration:** BeautyLine icons (KDE + Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs, `environment.d`, `xdg-terminals.list`
 - **Shims & Utilities:** `~/.local/bin/` (`default-browser`, `dms-ocr`, `nautilus`)
 - **App Defaults:** Zed editor settings, MIME defaults via `run_onchange` script (`mimeapps.list` itself is app-generated and untracked), MPV, Navi, Shelly
+- **CloakBrowser (laptop):** Local profile at `~/.config/agent-browser/profiles/personal`; unpacked Bitwarden, Violentmonkey and uBlock Origin Lite are in `~/.local/share/cloak-extensions/` (also accessible via the `bitwarden-cloak` symlink). These local files are not included.
 - **Documentation & Rules:** `AGENTS.md`
-- **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (auto-synced)
+- **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (manually maintained)
 
 ## Mise release tools
 
@@ -76,7 +77,7 @@ options). Run `mise upgrade` to upgrade all configured tools, or
 The enabled `mise-upgrade.timer` runs the same unfiltered upgrade command daily
 from the home directory. Future globally configured tools are included;
 project-only configuration elsewhere is outside this timer's scope.
-The desktop helper refreshes the four existing Craft apps' menu/icon integration;
+The desktop helper refreshes the five Craft apps' menu/icon integration;
 it does not download or choose updates. Other GUI apps may need separate desktop
 integration.
 
