@@ -62,14 +62,14 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 - **Desktop & Theme Integration:** BeautyLine icons (KDE + Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs, `environment.d`, `xdg-terminals.list`
 - **Shims & Utilities:** `~/.local/bin/` (`default-browser`, `dms-ocr`, `nautilus`)
 - **App Defaults:** Zed editor settings, MIME defaults via `run_onchange` script (`mimeapps.list` itself is app-generated and untracked), MPV, Navi, Shelly
-- **CloakBrowser (laptop):** Local profile at `~/.config/agent-browser/profiles/personal`; unpacked Bitwarden, Violentmonkey and uBlock Origin Lite are in `~/.local/share/cloak-extensions/` (also accessible via the `bitwarden-cloak` symlink). These local files are not included.
+- **CloakBrowser (both machines):** Local profile at `~/.config/agent-browser/profiles/personal`; unpacked Bitwarden, Violentmonkey and uBlock Origin Lite are in `~/.local/share/cloak-extensions/` (also accessible via the `bitwarden-cloak` symlink). These local files are not included.
 - **Documentation & Rules:** `AGENTS.md`
-- **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (manually maintained)
+- **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (shared baseline) and `pkglist-gpu-nvidia.txt` and `pkglist-intel-igpu.txt` (GPU drivers, chosen by `pkg-sync` from `lspci`), all manually maintained
 
 ## Mise release tools
 
-`~/.config/mise/config.toml` is the single tool inventory, rendered from a role template
-(`flutter`/`node`/`pnpm` on the laptop, the Codex CLI on the desktop). Add a GitHub release
+`~/.config/mise/config.toml` is the single tool inventory, identical on both machines
+(`flutter`, `node`, `pnpm`, Codex CLI, CloakBrowser, agent-browser, five Craft apps). Add a GitHub release
 with `mise use -g github:OWNER/REPO@latest` (some repositories need asset/layout
 options). Run `mise upgrade` to upgrade all configured tools, or
 `mise upgrade --dry-run` to check. Version ranges and exact pins are respected.

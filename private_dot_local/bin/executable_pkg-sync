@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Install the shared package baseline plus the GPU package set that matches
+# the hardware actually present (never the hostname). Usage: pkg-sync [--dry-run]
+set -euo pipefail
+src="${CHEZMOI_SOURCE:-$HOME/.local/share/chezmoi}"
+lists=("$src/pkglist-pacman.txt")
+if lspci 2>/dev/null | grep -qi nvidia; then
+  lists+=("$src/pkglist-gpu-nvidia.txt")
+fi
+if lspci 2>/dev/null | grep -Ei 'vga|3d|display' | grep -qi intel; then
+  lists+=("$src/pkglist-intel-igpu.txt")
+fi
+pkgs=$(cat "${lists[@]}" | grep -v '^#' | sort -u)
+echo "Lists: ${lists[*]##*/}"
+if [ "${1:-}" = "--dry-run" ]; then
+  # Packages from the selected lists that are not installed yet.
+  # shellcheck disable=SC2086
+  pacman -T $pkgs || true
+  exit 0
+fi
+# shellcheck disable=SC2086
+sudo pacman -S --needed $pkgs

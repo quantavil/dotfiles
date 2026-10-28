@@ -114,14 +114,11 @@ kimageformats
 kio-fuse
 lazygit
 less
-lib32-nvidia-utils
-lib32-opencl-nvidia
 lib32-vulkan-icd-loader
 libdvdcss
 libgsf
 libinput-tools
 libopenraw
-libva-nvidia-driver
 limine
 limine-mkinitcpio-hook
 limine-snapper-sync
@@ -129,8 +126,6 @@ linux-cachyos
 linux-cachyos-headers
 linux-cachyos-lts
 linux-cachyos-lts-headers
-linux-cachyos-lts-nvidia-open
-linux-cachyos-nvidia-open
 linux-firmware
 localsend
 logrotate
@@ -169,12 +164,9 @@ noto-fonts-emoji
 nss-mdns
 ntfs-3g
 ntfsprogs
-nvidia-settings
-nvidia-utils
 obs-studio
 obsidian
 openbsd-netcat
-opencl-nvidia
 opencode
 opensc
 openssh

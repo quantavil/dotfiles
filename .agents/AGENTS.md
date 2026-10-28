@@ -16,7 +16,8 @@ Guidance for AI agents operating on CachyOS (Niri + DankMaterialShell), managed 
   - Laptop (`role = "laptop"`): Chassis type 9/10, `BAT*` present, Intel iGPU only.
   - Stored in untracked `~/.config/chezmoi/chezmoi.toml` (`[data] role = "..."`). Never branch on hostname.
 - **No Package List Dumps**: Never auto-generate `pkglist-*.txt` via hooks. Maintain baseline packages deliberately.
-- **Untracked Runtime Drift**: Do not commit or alter app-generated runtime state: `.config/kdeglobals`, `.config/shelly/settings.json`, and `.config/DankMaterialShell/*.json`.
+- **No Role Branching Elsewhere**: The only `.role` uses allowed are `networkPreference` and the battery widget in `dot_config/DankMaterialShell/settings.json.tmpl`. Anything optional that exists on only one machine is gated on presence (`stat`), never on role. Check with `grep -rn '\.role' ~/.local/share/chezmoi --exclude-dir=.git`.
+- **Untracked Runtime Drift**: Do not commit or alter app-generated runtime state: `.config/kdeglobals`, `.config/shelly/settings.json`, and DMS JSON other than the templated `settings.json.tmpl`. `chezmoi diff` noise on these is expected; never `chezmoi apply` them blindly.
 
 ---
 
@@ -26,7 +27,7 @@ Only three physical hardware realities differ between machines:
 
 | Component | Desktop (`desktop`) | Laptop (`laptop`) | Handling |
 |---|---|---|---|
-| **GPU & Drivers** | Intel i5-12400F + Nvidia RTX 4060 (`nvidia-open`, `nvidia-utils`, `opencl-nvidia`). | Intel UHD graphics (`mesa`, `intel-media-driver` for VAAPI). | Pacman driver baseline. |
+| **GPU & Drivers** | Intel i5-12400F + Nvidia RTX 4060 (`nvidia-open`, `nvidia-utils`, `opencl-nvidia`). | Intel UHD graphics (`mesa`, `intel-media-driver` for VAAPI). | `pkg-sync` picks `pkglist-gpu-nvidia.txt` / `pkglist-intel-igpu.txt` from `lspci`; `pkglist-pacman.txt` is shared. |
 | **Display & Brightness** | External LG 1080p@144Hz on `HDMI-A-2` (no sysfs backlight). | Built-in `eDP-1` with hardware backlight (`/sys/class/backlight`). | DMS auto-generates `dms/outputs.kdl`. |
 | **Power & Network** | Wall AC only, `networkPreference: wired`, no battery widget. | Battery powered, `networkPreference: wifi`, battery widget enabled. | Templated in `settings.json.tmpl`. |
 
@@ -74,7 +75,7 @@ Only three physical hardware realities differ between machines:
 - **Browser Automation (CloakBrowser Pro 155)**:
   - Executable wrapper: `~/.local/bin/cloakbrowser-chrome` (launches pro build with persistent fingerprint seed).
   - License: Free pro tier with **1 concurrent seat** shared between machines. Close sessions cleanly to release seat (leaked seat clears in ~4 min).
-  - Agent Browser: `~/.agent-browser/config.json` uses `cloakbrowser-chrome`, `--fingerprint-platform=windows`, and dynamically loads unpacked extensions (`bitwarden`, `violentmonkey`, `ublock-origin-lite` from `~/.local/share/bitwarden-cloak/`) when present.
+  - Agent Browser: `~/.agent-browser/config.json` uses `cloakbrowser-chrome`, `--fingerprint-platform=windows`, and loads unpacked extensions (`bitwarden`, `violentmonkey`, `ublock-origin-lite` from `~/.local/share/bitwarden-cloak/`) only when that directory exists (presence-gated, untracked data; missing on desktop until copied over).
 - **Android SDK & Emulators**:
   - SDK root: `~/Android/Sdk` (`adb` in `/usr/bin`, `emulator` in `~/.local/bin`, `sdkmanager` via exec wrapper).
   - Emulator GPU mode: `DITTO_GPU=auto` unified on both machines (auto-probes RTX 4060 on desktop; selects safe fallback on laptop).
