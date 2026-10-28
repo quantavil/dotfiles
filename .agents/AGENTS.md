@@ -22,6 +22,8 @@ Both systems run **CachyOS with Niri + DankMaterialShell (DMS)**, managed by che
 The following stacks are **default on both Desktop and Laptop**:
 - **Release Tools via Mise**: All tools in `~/.config/mise/config.toml` are unified for both machines: `flutter`, `node`, `pnpm`, `github:openai/codex`, `pipx:cloakbrowser`, `github:vercel-labs/agent-browser`, and the five Craft apps (gridcraft, pdfcraft, photocraft, wordcraft, deckcraft).
 - **Signing & Document Tools**: `icegate-sign` (and HYP2003 vendor driver paths), printing stack (`cups`, `hplip`, `sane`), and OBS Studio configurations are shared baselines so plugging peripherals into either machine works out of the box.
+- **Android Emulator GPU Mode**: `DITTO_GPU=auto` unified across both machines. The emulator auto-probes the RTX 4060 host GPU on desktop and safely selects compatible rendering on laptop without crashing.
+- **Browser Automation Platform**: CloakBrowser pro 155 with `~/.local/bin/cloakbrowser-chrome` wrapper, persistent fingerprint seeds, and dynamic extension loading (`bitwarden`, `violentmonkey`, `ublock-origin-lite` from `~/.local/share/bitwarden-cloak`) unified across both machines. Shared 1-seat concurrent license across machines.
 
 ### The Exhaustive Whitelist of Hardware/Physical Exceptions
 
@@ -36,12 +38,6 @@ Only the following physical hardware differences are permitted to differ:
 3. **Power & DMS Bar Widgets**:
    - **Desktop**: Wall AC power only (no battery in `/sys/class/power_supply/`). DMS bar has **no battery widget**. Network preference is `networkPreference: wired`.
    - **Laptop**: Battery powered. DMS bar **includes the battery widget** and monitors power via `power-profiles-daemon`. Network preference is `networkPreference: wifi`.
-4. **Android Emulators (Ditto GPU Mode)**:
-   - **Desktop**: `DITTO_GPU=host` (accelerated by RTX 4060 host GPU). AVD: `ditto2_play_x86_64` (Google Play Store signed in).
-   - **Laptop**: `DITTO_GPU` must remain **unset/auto** (headless host-GPU on Intel UHD is unstable). AVDs: `floww_fresh`, `floww_light`, `floww_parity` (Play-free Google APIs).
-5. **CloakBrowser Personal Interactive Profile**:
-   - **Both machines**: CloakBrowser pro 155 with `~/.local/bin/cloakbrowser-chrome` wrapper and persistent fingerprint seeds, mise-managed `agent-browser` and `pipx:cloakbrowser`. The free license allows **1 concurrent seat** shared between both machines. Desktop ships secondary `chromium` for compatibility testing; `cloakbrowser.desktop` registered as secondary MIME handler.
-   - **Laptop**: Adds a dedicated personal interactive profile at `~/.config/agent-browser/profiles/personal` and unpacked extensions in `~/.local/share/cloak-extensions/` (`bitwarden`, `violentmonkey`, `ublock-origin-lite`).
 
 ## Dotfiles and Git workflow rules (Mandatory for all agents)
 

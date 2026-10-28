@@ -1,6 +1,2 @@
-{{- if eq .role "desktop" -}}
-set -gx DITTO_GPU host
-{{- else -}}
-# DITTO_GPU intentionally unset here: the emulator auto-detects the GPU and
-# host-GPU mode is unreliable on the Intel iGPU.
-{{- end }}
+# Unified emulator GPU mode: auto-detects Nvidia host GPU on desktop and safe fallback on laptop
+set -gx DITTO_GPU auto

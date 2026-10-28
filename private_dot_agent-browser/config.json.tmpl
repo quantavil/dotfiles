@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-browser.dev/schema.json",
   "executablePath": "/home/quantavil/.local/bin/cloakbrowser-chrome",
-  "headed": true{{ if eq .role "desktop" }},
-  "args": "--fingerprint-platform=windows,--window-size=1920,947"{{ end }}{{ if eq .role "laptop" }},
+  "headed": true,
+  "args": "--fingerprint-platform=windows"{{ if or (eq .role "laptop") (stat (print .chezmoi.homeDir "/.local/share/bitwarden-cloak")) }},
   "extensions": [
     "/home/quantavil/.local/share/bitwarden-cloak/bitwarden",
     "/home/quantavil/.local/share/bitwarden-cloak/violentmonkey",
