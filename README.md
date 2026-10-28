@@ -64,7 +64,7 @@ cat ~/.local/share/chezmoi/pkglist-aur.txt
 - **App Defaults:** Zed editor settings, MIME defaults via `run_onchange` script (`mimeapps.list` itself is app-generated and untracked), MPV, Navi, Shelly
 - **CloakBrowser (both machines):** Local profile at `~/.config/agent-browser/profiles/personal`; unpacked Bitwarden, Violentmonkey and uBlock Origin Lite are in `~/.local/share/cloak-extensions/` (also accessible via the `bitwarden-cloak` symlink). These local files are not included.
 - **Documentation & Rules:** `AGENTS.md`
-- **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (shared baseline) and `pkglist-gpu-nvidia.txt` and `pkglist-intel-igpu.txt` (GPU drivers, chosen by `pkg-sync` from `lspci`), all manually maintained
+- **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (shared baseline) and `pkglist-gpu-nvidia.txt` and `pkglist-intel-igpu.txt` (GPU drivers, chosen by `pkg-sync` from `lspci`), plus `pkglist-flatpak.txt` and `pkglist-removed.txt` (tombstones); all manually maintained and applied by `pkg-sync` on `chezmoi update`
 
 ## Mise release tools
 

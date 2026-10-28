@@ -1,22 +1,64 @@
 #!/usr/bin/env bash
-# Install the shared package baseline plus the GPU package set that matches
-# the hardware actually present (never the hostname). Usage: pkg-sync [--dry-run]
-set -euo pipefail
+# Reconcile this machine with the package lists in the chezmoi source.
+#   pkg-sync            install missing, remove tombstoned
+#   pkg-sync --dry-run  show what would change
+#   pkg-sync --audit    show installed-but-unlisted packages (never writes lists)
+# Hardware lists are chosen from lspci, never the hostname. Root actions go
+# through pkexec; AUR through shelly. Failures are reported, never fatal.
+set -uo pipefail
 src="${CHEZMOI_SOURCE:-$HOME/.local/share/chezmoi}"
-lists=("$src/pkglist-pacman.txt")
-if lspci 2>/dev/null | grep -qi nvidia; then
-  lists+=("$src/pkglist-gpu-nvidia.txt")
-fi
-if lspci 2>/dev/null | grep -Ei 'vga|3d|display' | grep -qi intel; then
-  lists+=("$src/pkglist-intel-igpu.txt")
-fi
-pkgs=$(cat "${lists[@]}" | grep -v '^#' | sort -u)
-echo "Lists: ${lists[*]##*/}"
-if [ "${1:-}" = "--dry-run" ]; then
-  # Packages from the selected lists that are not installed yet.
-  # shellcheck disable=SC2086
-  pacman -T $pkgs || true
+mode="${1:-apply}"
+
+read_list() { for f in "$@"; do [ -f "$f" ] && grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$f"; done | sort -u; }
+
+native=("$src/pkglist-pacman.txt")
+lspci 2>/dev/null | grep -qi nvidia && native+=("$src/pkglist-gpu-nvidia.txt")
+lspci 2>/dev/null | grep -Ei 'vga|3d|display' | grep -qi intel && native+=("$src/pkglist-intel-igpu.txt")
+
+want_native=$(read_list "${native[@]}")
+want_aur=$(read_list "$src/pkglist-aur.txt")
+want_flatpak=$(read_list "$src/pkglist-flatpak.txt")
+removed=$(read_list "$src/pkglist-removed.txt")
+
+# Never both wanted and tombstoned: the tombstone wins.
+want_native=$(comm -23 <(echo "$want_native") <(echo "$removed"))
+want_aur=$(comm -23 <(echo "$want_aur") <(echo "$removed"))
+
+if [ "$mode" = "--audit" ]; then
+  echo "== explicit repo packages not in any list"
+  comm -13 <(echo "$want_native"; echo "$want_aur" | sort -u) <(pacman -Qqen | sort -u) | sort -u
+  echo "== foreign/AUR packages not in pkglist-aur.txt"
+  comm -13 <(echo "$want_aur") <(pacman -Qqem | sort -u)
+  echo "== listed but not installed"
+  { echo "$want_native"; echo "$want_aur"; } | xargs -r pacman -T 2>/dev/null
   exit 0
 fi
+
+repo_all=$(pacman -Slq | sort -u)
+repo_want=$(comm -12 <(echo "$want_native") <(echo "$repo_all"))
+unknown=$(comm -23 <(echo "$want_native") <(echo "$repo_all"))
+[ -n "$unknown" ] && echo "pkg-sync: not in repos (skipped): $(echo $unknown)" >&2
+
+missing=$(echo "$repo_want" | xargs -r pacman -T 2>/dev/null || true)
+aur_missing=$(echo "$want_aur" | xargs -r pacman -T 2>/dev/null || true)
+to_remove=$(echo "$removed" | xargs -r -n1 sh -c 'pacman -Qq "$0" >/dev/null 2>&1 && echo "$0"' || true)
+fp_missing=""
+if [ -n "$want_flatpak" ] && command -v flatpak >/dev/null; then
+  inst=$(flatpak list --app --columns=application 2>/dev/null | sort -u)
+  fp_missing=$(comm -23 <(echo "$want_flatpak") <(echo "$inst"))
+fi
+
+echo "install (repo):  ${missing:-none}"
+echo "install (AUR):   ${aur_missing:-none}"
+echo "install (flatpak): ${fp_missing:-none}"
+echo "remove:          ${to_remove:-none}"
+[ "$mode" = "--dry-run" ] && exit 0
+
 # shellcheck disable=SC2086
-sudo pacman -S --needed $pkgs
+[ -n "$missing" ] && { pkexec /usr/bin/pacman -S --needed --noconfirm $missing || echo "pkg-sync: repo install failed" >&2; }
+# shellcheck disable=SC2086
+[ -n "$aur_missing" ] && { shelly install aur --needed -n $aur_missing || echo "pkg-sync: AUR install failed" >&2; }
+for app in $fp_missing; do flatpak install --user -y "$app" || echo "pkg-sync: flatpak $app failed" >&2; done
+# shellcheck disable=SC2086
+[ -n "$to_remove" ] && { pkexec /usr/bin/pacman -Rns --noconfirm $to_remove || echo "pkg-sync: removal failed" >&2; }
+exit 0

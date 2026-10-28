@@ -1,0 +1,10 @@
+#!/bin/sh
+# Reconcile packages when any list changes (hash below triggers re-run).
+# pacman: {{ include "pkglist-pacman.txt" | sha256sum }}
+# aur: {{ include "pkglist-aur.txt" | sha256sum }}
+# nvidia: {{ include "pkglist-gpu-nvidia.txt" | sha256sum }}
+# intel: {{ include "pkglist-intel-igpu.txt" | sha256sum }}
+# flatpak: {{ include "pkglist-flatpak.txt" | sha256sum }}
+# removed: {{ include "pkglist-removed.txt" | sha256sum }}
+"$HOME/.local/bin/pkg-sync" || true
+exit 0
