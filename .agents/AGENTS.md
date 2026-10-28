@@ -83,6 +83,7 @@ Only three physical hardware realities differ between machines:
 - **ICEGATE Digital Signing (`icegate-sign`)**:
   - Repo: `~/Documents/icegate-sign` (installed via `uv tool install ~/Documents/icegate-sign`).
   - Supports: BE, SB, TXT, XML, and PDF signing via HYP2003 USB token (`2ccf:080a`) using vendor driver `libcastle_v2.so.1.0.0` (in `~/.local/lib/hyp2003/` or `~/Documents/hyp2003-linux-driver/`).
+  - Driver provisioning: `.chezmoiscripts/run_once_after_60-hyp2003-driver.sh` clones `quantavil/hyp2003-linux-driver` (HTTPS), verifies `SHA256SUMS`, and copies the library to `~/.local/lib/hyp2003/` only if absent. The vendor binary is never committed to dotfiles.
 - **ICEGATE Shipment Drafts**:
   - Google Apps Script automation in `~/Documents/icegate-drafts` (public `quantavil/icegate-drafts`, MIT). Time-driven Apps Script trigger `checkIcegate` scans new LEO/eGatepass mail every minute, processing 11:00–22:00 Asia/Kolkata. Prepares Gmail reply drafts on the latest non-draft message, skips files already sent in the thread, never sends. Uses Gmail full-access + external-request scopes; store no credentials in dotfiles.
 - **MCP Servers & Skills**:
