@@ -49,6 +49,7 @@ cantarell-fonts
 capitaine-cursors
 cava
 ccid
+chatgpt-desktop-bin
 chezmoi
 chromium
 chwd
