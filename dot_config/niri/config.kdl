@@ -301,3 +301,6 @@ binds {
     Mod+WheelScrollRight cooldown-ms=150 { focus-column-right; }
     Mod+WheelScrollLeft  cooldown-ms=150 { focus-column-left; }
 }
+
+// Mouse override, included after dms/input.kdl so it wins over DMS defaults.
+include "mouse.kdl"
