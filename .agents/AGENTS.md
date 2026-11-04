@@ -73,7 +73,7 @@ Only three physical hardware realities differ between machines:
   - `github:vercel-labs/agent-browser` (with skills sync hook)
   - Craft suite (5 apps)
   - Auto-updates daily via `mise-upgrade.timer`.
-- **Browser Automation (CloakBrowser Pro 155)**:
+- **Browser Automation (CloakBrowser Pro 156)**:
   - Executable wrapper: `~/.local/bin/cloakbrowser-chrome` (launches pro build with persistent fingerprint seed).
   - License: Free pro tier with **1 concurrent seat** shared between machines. Close sessions cleanly to release seat (leaked seat clears in ~4 min).
   - Agent Browser: `~/.agent-browser/config.json` uses `cloakbrowser-chrome`, `--fingerprint-platform=windows`, and loads unpacked extensions (`bitwarden`, `violentmonkey`, `ublock-origin-lite` from `~/.local/share/bitwarden-cloak/`) only when that directory exists (presence-gated, untracked data; missing on desktop until copied over).
