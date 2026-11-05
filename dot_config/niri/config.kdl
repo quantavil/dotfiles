@@ -213,16 +213,6 @@ window-rule {
     default-column-width { proportion 0.5; }
     open-floating false
 }
-// Storyteller Craft suite (GridCraft, WordCraft, DeckCraft, PdfCraft, PhotoCraft)
-// restores its own maximized state on launch, which makes it open as a
-// full-width column. Refuse maximize, ignore fullscreen requests and pin the
-// default half-width column so they always tile at 1/2.
-window-rule {
-    match app-id=r#"^ai\.storyteller\.(deckcraft|gridcraft|pdfcraft|photocraft|wordcraft)$"#
-    default-column-width { proportion 0.5; }
-    open-maximized false
-    open-fullscreen false
-}
 window-rule {
     match app-id=r#"^org\.gnome\.Calculator$"#
     match app-id=r#"^gnome-calculator$"#
@@ -314,3 +304,6 @@ binds {
 
 // Mouse override, included after dms/input.kdl so it wins over DMS defaults.
 include "mouse.kdl"
+
+// Per-application layout overrides, included last so they win.
+include optional=true "app-windowrules.kdl"
