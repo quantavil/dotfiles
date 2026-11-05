@@ -1,25 +1,21 @@
-// Per-application layout overrides, included last so they win.
+// Apps that always open as a normal 2/3-width tiled column instead of the
+// 0.5 global default. The Craft apps also restore their own maximized state on
+// launch, so maximize/fullscreen requests are refused for the whole list.
 // Add one `match app-id=` line per app; find the id with `niri msg windows`
-// while the app is open (field "App ID"). Keep regexes anchored to avoid
-// false matches. Each rule applies to every match line inside it (logical OR).
-
-// Storyteller Craft suite (GridCraft, WordCraft, DeckCraft, PdfCraft,
-// PhotoCraft and any future ai.storyteller.* app).
-// These restore their own maximized state on launch, so niri would honor the
-// maximize request. Refuse maximize/fullscreen and open as a normal
-// full-width (1x) tiled column instead of the global 0.5 default.
+// while the app is open (field "App ID"). Keep each pattern anchored to the
+// full id to avoid false matches. All match lines in a rule are a logical OR.
 window-rule {
-    match app-id=r#"^ai\.storyteller\."#
-    default-column-width { proportion 1.0; }
+    match app-id=r#"^ai\.storyteller\.deckcraft$"#
+    match app-id=r#"^ai\.storyteller\.gridcraft$"#
+    match app-id=r#"^ai\.storyteller\.pdfcraft$"#
+    match app-id=r#"^ai\.storyteller\.photocraft$"#
+    match app-id=r#"^ai\.storyteller\.wordcraft$"#
+    match app-id=r#"^md\.obsidian\.Obsidian$"#
+    match app-id=r#"^zen$"#
+    default-column-width { proportion 0.66667; }
     open-maximized false
     open-fullscreen false
 }
 
-// Add further apps below, one rule per group, for example:
-// window-rule {
+// Add further apps below as extra match lines in the rule above, for example:
 //     match app-id=r#"^org\.example\.app$"#
-//     match app-id=r#"^another\.app$"#
-//     default-column-width { proportion 1.0; }
-//     open-maximized false
-//     open-fullscreen false
-// }
