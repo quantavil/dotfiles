@@ -2,3 +2,5 @@
 # them (pacman -Rns) when installed. Only names listed here are ever removed.
 # One package per line.
 greetd-dms-greeter-bin
+vivaldi
+vivaldi-ffmpeg-codecs
