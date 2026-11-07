@@ -7,6 +7,19 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "telemetry": {
+    "diagnostics": true,
+    "metrics": false,
+    "anthropic_retention": false
+  },
+  "minimap": {
+    "show": "always"
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000
+    }
+  },
   "icon_theme": "Catppuccin Mocha",
   "session": {
     "trust_all_worktrees": true
@@ -17,11 +30,23 @@
     }
   },
   "base_keymap": "VSCode",
-  "ui_font_size": 16,
-  "buffer_font_size": 15,
+  "ui_font_size": 14,
+  "buffer_font_size": 14,
+  "project_panel": {
+    "dock": "left",
+    "default_width": 240
+  },
+  "theme_overrides": {
+    "One Dark": {
+      "editor.background": "#1e1e1e",
+      "background": "#252526",
+      "surface.background": "#252526",
+      "panel.background": "#252526"
+    }
+  },
   "theme": {
-    "mode": "system",
+    "mode": "dark",
     "light": "Ayu Light",
-    "dark": "Catppuccin Mocha",
+    "dark": "One Dark",
   },
 }
