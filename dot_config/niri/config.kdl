@@ -142,8 +142,8 @@ environment {
   CHROME_PATH "/home/quantavil/.local/bin/cloakbrowser-chrome"
   ARCHIFY_CHROME "/home/quantavil/.local/bin/cloakbrowser-chrome"
   AGENT_BROWSER_SKILLS_DIR "/home/quantavil/.local/share/mise/installs/github-vercel-labs-agent-browser/latest/skill-data"
-  EDITOR "ferrite"
-  VISUAL "ferrite"
+  EDITOR "micro"
+  VISUAL "micro"
 }
 hotkey-overlay {
     skip-at-startup

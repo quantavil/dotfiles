@@ -55,7 +55,7 @@ Only three physical hardware realities differ between machines:
 - **Terminal**: Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity handled by Niri).
 - **Default Apps**:
   - Browser: Zen (`zen-browser-bin`) default on both. Secondary: `chromium` and `cloakbrowser`.
-  - Editor: Ferrite (`ferrite-bin`, CLI/GUI `EDITOR`/`VISUAL`); VS Code for `.ipynb`/`.code-workspace`.
+  - Editor: Velotype (`velotype-bin`, GUI Markdown editor); Micro (`micro`, CLI `EDITOR`/`VISUAL`); VS Code for `.ipynb`/`.code-workspace` and code projects.
   - Media: Amberol (Audio), Loupe (Images), MPV (Video).
   - Utilities: Nautilus (GNOME Files), Mission Center (Task Manager), Baobab (Disk Usage), File Roller (Archives).
   - Office/Creative: Craft suite (Gridcraft, Wordcraft, Photocraft, Deckcraft, PdfCraft).

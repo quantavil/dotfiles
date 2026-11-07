@@ -1,7 +1,6 @@
 android-apktool-bin
 dsearch-bin
 dux-greeter-bin
-ferrite-bin
 hplip-plugin
 icu69-bin
 micyou-bin
@@ -10,5 +9,6 @@ nautilus-open-any-terminal
 penguin-mail-bin
 prism-download-manager-bin
 qt6ct-kde
+velotype-bin
 visual-studio-code-bin
 youwee-bin
