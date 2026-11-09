@@ -1,6 +1,7 @@
 # Tombstones: packages that must NOT exist on any machine. pkg-sync removes
 # them (pacman -Rns) when installed. Only names listed here are ever removed.
 # One package per line.
+copyparty
 ferrite-bin
 greetd-dms-greeter-bin
 qbittorrent

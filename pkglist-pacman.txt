@@ -56,7 +56,6 @@ chwd
 claude-code
 claude-desktop
 cmake
-copyparty
 cpupower
 cryptsetup
 cups
