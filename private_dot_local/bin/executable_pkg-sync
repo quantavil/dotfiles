@@ -26,7 +26,7 @@ want_aur=$(comm -23 <(echo "$want_aur") <(echo "$removed"))
 
 if [ "$mode" = "--audit" ]; then
   echo "== explicit repo packages not in any list"
-  comm -13 <(echo "$want_native"; echo "$want_aur" | sort -u) <(pacman -Qqen | sort -u) | sort -u
+  comm -13 <({ echo "$want_native"; echo "$want_aur"; } | sort -u) <(pacman -Qqen | sort -u) | sort -u
   echo "== foreign/AUR packages not in pkglist-aur.txt"
   comm -13 <(echo "$want_aur") <(pacman -Qqem | sort -u)
   echo "== listed but not installed"

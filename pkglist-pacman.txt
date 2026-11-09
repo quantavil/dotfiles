@@ -56,6 +56,7 @@ chwd
 claude-code
 claude-desktop
 cmake
+copyparty
 cpupower
 cryptsetup
 cups
@@ -71,6 +72,7 @@ dnsmasq
 dosfstools
 duf
 dux-gop
+dux-shell
 e2fsprogs
 efibootmgr
 efitools
@@ -90,6 +92,7 @@ ghidra
 git
 github-cli
 glances
+gpu-screen-recorder
 greetd
 gst-libav
 gst-plugin-pipewire
@@ -106,6 +109,7 @@ hplip
 hwdetect
 hwinfo
 inetutils
+innoextract
 intel-lpmd
 intel-ucode
 iwd
@@ -197,7 +201,6 @@ python-pyproject-hooks
 python-pyqt5
 python-reportlab
 python-uv
-qbittorrent
 qt5-wayland
 qt6-tools
 rclone
@@ -236,6 +239,7 @@ ufw
 ufw-extras
 unrar
 unzip
+upower
 usb_modeswitch
 usbutils
 uv
@@ -243,7 +247,6 @@ ventoy-bin
 vim
 vlc-plugins-all
 vulkan-icd-loader
-vulkan-tools
 wget
 which
 wine

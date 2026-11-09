@@ -1,4 +1,5 @@
 android-apktool-bin
+dnsglobe-bin
 dsearch-bin
 dux-greeter-bin
 hplip-plugin
@@ -6,6 +7,7 @@ icu69-bin
 micyou-bin
 nautilus-admin-gtk4
 nautilus-open-any-terminal
+openidea-bin
 penguin-mail-bin
 prism-download-manager-bin
 qt6ct-kde

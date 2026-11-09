@@ -1,3 +1,8 @@
 intel-media-driver
-vulkan-intel
+intel-media-sdk
+lib32-mesa
+lib32-opencl-mesa
+lib32-vulkan-intel
 mesa
+opencl-mesa
+vulkan-intel

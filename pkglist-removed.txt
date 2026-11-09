@@ -3,5 +3,6 @@
 # One package per line.
 ferrite-bin
 greetd-dms-greeter-bin
+qbittorrent
 vivaldi
 vivaldi-ffmpeg-codecs
