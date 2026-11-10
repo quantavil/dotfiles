@@ -89,7 +89,7 @@ Only three physical hardware realities differ between machines:
   - Google Apps Script automation in `~/Documents/icegate-drafts` (public `quantavil/icegate-drafts`, MIT). Time-driven Apps Script trigger `checkIcegate` scans new SB (export) LEO/eGatepass and BoE (import) first/Final OOC/eGatepass mail every minute, processing 11:00–22:00 Asia/Kolkata. Prepares Gmail reply drafts on the latest non-draft message, skips files already sent in the thread, never sends. Uses Gmail full-access + external-request scopes; store no credentials in dotfiles.
 - **MCP Servers & Skills**:
   - MCPs: `~/Documents/my-mcps/mcp-servers.json`, deployed via `./run.sh deploy`. `tier: core` servers (firecrawl, context7) load in every agent; `tier: gateway` servers hide behind `managed-gateway` (`search_tools` + `call_tool`). New task-specific servers go in the gateway tier. Never pin versions (`pkg@latest`).
-  - Skills in `~/Documents/my-skills`, deployed via `./run.sh deploy`. Same split: core skills are linked into every agent; `tier: gateway` skills (domain-specific: tax, DMS plugins, design, anime…) are reachable only through the generated `find-skill` skill (`./run.sh tier gateway <name> --summary "..."`). If no listed skill fits, check `find-skill` before saying none exists.
+  - Skills in `~/Documents/my-skills/bundles.json`: every entry is a bundle, a whole upstream repo (all its skills, never a subset) or a local skill in `skills/`. Run `./run.sh sync && ./run.sh deploy` to get the latest and link it (`vendor/` is per machine, not committed). `tier: core` bundles are linked into every agent; `tier: gateway` bundles are reached only through the generated `find-skill`. If no listed skill fits, check `find-skill` before saying none exists.
 
 ---
 
