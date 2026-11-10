@@ -88,7 +88,7 @@ Only three physical hardware realities differ between machines:
 - **ICEGATE Shipment Drafts**:
   - Google Apps Script automation in `~/Documents/icegate-drafts` (public `quantavil/icegate-drafts`, MIT). Time-driven Apps Script trigger `checkIcegate` scans new LEO/eGatepass mail every minute, processing 11:00–22:00 Asia/Kolkata. Prepares Gmail reply drafts on the latest non-draft message, skips files already sent in the thread, never sends. Uses Gmail full-access + external-request scopes; store no credentials in dotfiles.
 - **MCP Servers & Skills**:
-  - Centralized in `~/Documents/my-mcps`, deployed via `bun run deploy`.
+  - MCPs: `~/Documents/my-mcps/mcp-servers.json`, deployed via `./run.sh deploy`. `tier: core` servers (firecrawl, context7) load in every agent; `tier: gateway` servers hide behind `managed-gateway` (`search_tools` + `call_tool`). New task-specific servers go in the gateway tier. Never pin versions (`pkg@latest`).
   - Skills in `~/Documents/my-skills`, managed via `./run.sh <command>`.
 
 ---
