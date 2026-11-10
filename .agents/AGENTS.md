@@ -89,7 +89,7 @@ Only three physical hardware realities differ between machines:
   - Google Apps Script automation in `~/Documents/icegate-drafts` (public `quantavil/icegate-drafts`, MIT). Time-driven Apps Script trigger `checkIcegate` scans new SB (export) LEO/eGatepass and BoE (import) first/Final OOC/eGatepass mail every minute, processing 11:00–22:00 Asia/Kolkata. Prepares Gmail reply drafts on the latest non-draft message, skips files already sent in the thread, never sends. Uses Gmail full-access + external-request scopes; store no credentials in dotfiles.
 - **MCP Servers & Skills**:
   - MCPs: `~/Documents/my-mcps/mcp-servers.json`, deployed via `./run.sh deploy`. `tier: core` servers (firecrawl, context7) load in every agent; `tier: gateway` servers hide behind `managed-gateway` (`search_tools` + `call_tool`). New task-specific servers go in the gateway tier. Never pin versions (`pkg@latest`).
-  - Skills in `~/Documents/my-skills`, managed via `./run.sh <command>`.
+  - Skills in `~/Documents/my-skills`, deployed via `./run.sh deploy`. Same split: core skills are linked into every agent; `tier: gateway` skills (domain-specific: tax, ImpexCube, DMS plugins, design, anime…) are reachable only through the generated `find-skill` skill (`./run.sh tier gateway <name> --summary "..."`). If no listed skill fits, check `find-skill` before saying none exists.
 
 ---
 
