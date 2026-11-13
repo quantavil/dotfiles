@@ -17,5 +17,12 @@ window-rule {
     open-fullscreen false
 }
 
-// Add further apps below as extra match lines in the rule above, for example:
+// Chromium and CloakBrowser (the ImpexCube agent browser) both report app id chromium-browser.
+// They open full width, not the 0.5 global default.
+window-rule {
+    match app-id=r#"^chromium-browser$"#
+    default-column-width { proportion 1.0; }
+}
+
+// Add further 2/3-width apps as extra match lines in the first rule above, for example:
 //     match app-id=r#"^org\.example\.app$"#
