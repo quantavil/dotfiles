@@ -76,6 +76,7 @@ Only three physical hardware realities differ between machines:
 - **Browser Automation (CloakBrowser Pro 156)**:
   - Executable wrapper: `~/.local/bin/cloakbrowser-chrome` (launches pro build with persistent fingerprint seed).
   - License: Free pro tier with **1 concurrent seat** shared between machines. Close sessions cleanly to release seat (leaked seat clears in ~4 min).
+  - **Browser rule**: Drive browsers only through `agent-browser` with its configured profile (`~/Documents/ALWAYS-USE-PROFILE`). Never launch `chromium`/`chrome` directly (headless included) or use another `--user-data-dir`; subagents must be told the same and must report failure instead of falling back. Run `agent-browser close` when finished.
   - Agent Browser: `~/.agent-browser/config.json` uses `cloakbrowser-chrome`, `--fingerprint-platform=windows`, and loads unpacked extensions (`bitwarden`, `violentmonkey`, `ublock-origin-lite` from `~/.local/share/bitwarden-cloak/`) only when that directory exists (presence-gated, untracked data; missing on desktop until copied over).
 - **Android SDK & Emulators**:
   - SDK root: `~/Android/Sdk` (`adb` in `/usr/bin`, `emulator` in `~/.local/bin`, `sdkmanager` via exec wrapper).
