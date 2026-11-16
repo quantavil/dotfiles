@@ -11,6 +11,5 @@ openidea-bin
 penguin-mail-bin
 prism-download-manager-bin
 qt6ct-kde
-velotype-bin
 visual-studio-code-bin
 youwee-bin

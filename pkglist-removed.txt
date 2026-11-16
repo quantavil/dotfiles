@@ -5,5 +5,6 @@ copyparty
 ferrite-bin
 greetd-dms-greeter-bin
 qbittorrent
+velotype-bin
 vivaldi
 vivaldi-ffmpeg-codecs
