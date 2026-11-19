@@ -1,6 +1,5 @@
 7zip
 accountsservice
-adguardhome
 adw-gtk-theme
 alacritty
 alsa-firmware
@@ -16,7 +15,6 @@ base
 base-devel
 bash-completion
 beautyline
-bind
 bluez
 bluez-hid2hci
 bluez-libs
@@ -51,7 +49,6 @@ cava
 ccid
 chatgpt-desktop-bin
 chezmoi
-chromium
 chwd
 claude-code
 claude-desktop
@@ -66,8 +63,6 @@ device-mapper
 diffutils
 dmidecode
 dmraid
-dms-shell
-dnsmasq
 dosfstools
 duf
 dux-gop
@@ -83,7 +78,6 @@ fastfetch
 ffmpegthumbnailer
 ffmpegthumbs
 file-roller
-firefox
 flatpak
 fsarchiver
 fuse2
@@ -161,7 +155,6 @@ networkmanager-openvpn
 nfs-utils
 nilfs-utils
 niri
-noctalia
 noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
@@ -188,7 +181,6 @@ plocate
 plymouth
 podman
 poppler-glib
-postgresql
 power-profiles-daemon
 proton-vpn-gtk-app
 pv
@@ -214,7 +206,6 @@ rust
 s-nail
 sane
 sane-airscan
-sddm
 sg3_utils
 shelly
 shelly-flatpak-backend
@@ -244,7 +235,6 @@ usbutils
 uv
 ventoy-bin
 vim
-vlc-plugins-all
 vulkan-icd-loader
 wget
 which
