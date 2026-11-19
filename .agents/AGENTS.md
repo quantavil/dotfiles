@@ -2,111 +2,73 @@
 
 Guidance for AI agents operating on CachyOS (Niri + DankMaterialShell), managed via chezmoi (`quantavil/dotfiles`) across two mirrored machines: Desktop and Laptop.
 
-`~/AGENTS.md` is a symlink to `.agents/AGENTS.md` in the chezmoi source (`~/.local/share/chezmoi`). Changes must be committed here.
+`~/AGENTS.md` symlinks to `.agents/AGENTS.md` in the chezmoi source (`~/.local/share/chezmoi`). Commit changes here.
 
 ---
 
 ## 1. Core Operating Principles
 
-- **100% Mirroring by Default**: Both machines share identical configs, shell binds, themes, window rules, tools, and scripts. Never delete or unmanage a tool simply because it is not active on the current machine.
-- **Always Pre-Sync**: Run `git pull --rebase` or `chezmoi update` before starting any dotfile edits to avoid divergence.
-- **Templates Over Deletion**: Encapsulate unavoidable machine differences in Go templates (`{{ if eq .role "desktop" }}` / `{{ if eq .role "laptop" }}` in `.tmpl` files). Never `git rm` shared tools.
-- **Role Detection**: Detected strictly via hardware:
-  - Desktop (`role = "desktop"`): Chassis type 3 (`cat /sys/class/dmi/id/chassis_type`), no `BAT*` in `/sys/class/power_supply/`, Nvidia GPU present (`lspci | grep -qi nvidia`).
-  - Laptop (`role = "laptop"`): Chassis type 9/10, `BAT*` present, Intel iGPU only.
-  - Stored in untracked `~/.config/chezmoi/chezmoi.toml` (`[data] role = "..."`). Never branch on hostname.
-- **No Package List Dumps**: Never auto-generate `pkglist-*.txt` via hooks. Maintain baseline packages deliberately.
-- **Package Sync (agent workflow)**: Lists in the chezmoi source are the source of truth: `pkglist-pacman.txt`, `pkglist-aur.txt`, `pkglist-flatpak.txt`, hardware lists (`pkglist-gpu-nvidia.txt`, `pkglist-intel-igpu.txt`), and `pkglist-removed.txt` (tombstones). When you install an app or package for the user, add it to the matching list; when you uninstall one, delete it from its list **and** add it to `pkglist-removed.txt` so the other machine removes it too. Commit and push in the same task. `run_onchange_after_55-pkg-sync` applies lists on `chezmoi update` (root via `pkexec`, AUR via `shelly`). Only tombstoned names are ever removed. `pkg-sync --dry-run` previews; `pkg-sync --audit` shows installed-but-unlisted drift to review (never auto-write lists). Tombstone entries may be pruned once both machines have applied them.
-- **No Role Branching Elsewhere**: The only `.role` uses allowed are `networkPreference` and the battery widget in `dot_config/DankMaterialShell/settings.json.tmpl`. Anything optional that exists on only one machine is gated on presence (`stat`), never on role. Check with `grep -rn '\.role' ~/.local/share/chezmoi --exclude-dir=.git`.
-- **Untracked Runtime Drift**: Do not commit or alter app-generated runtime state: `.config/kdeglobals`, `.config/shelly/settings.json`, and DMS JSON other than the templated `settings.json.tmpl`. `chezmoi diff` noise on these is expected; never `chezmoi apply` them blindly.
+- **100% Mirroring**: Both machines share configs, keybinds, themes, window rules, tools, and scripts. Never delete or unmanage a tool because it is inactive on the current machine.
+- **Always Pre-Sync**: `git pull --rebase` or `chezmoi update` before any dotfile edit.
+- **Templates Over Deletion**: Machine differences go in Go templates (`.tmpl`, `{{ if eq .role "desktop" }}`). Never `git rm` shared tools. The only allowed `.role` uses are `networkPreference` and the battery widget in `dot_config/DankMaterialShell/settings.json.tmpl`; anything else optional is gated on presence (`stat`), never role. Audit with `grep -rn '\.role' ~/.local/share/chezmoi --exclude-dir=.git`.
+- **Role Detection**: Hardware only, never hostname. Desktop = chassis type 3, no `BAT*` in `/sys/class/power_supply/`, Nvidia GPU (`lspci | grep -qi nvidia`). Laptop = chassis 9/10, `BAT*` present, Intel iGPU only. Stored as `[data] role` in untracked `~/.config/chezmoi/chezmoi.toml`.
+- **Package Sync**: The chezmoi lists are the source of truth: `pkglist-pacman.txt`, `pkglist-aur.txt`, `pkglist-flatpak.txt`, hardware lists (`pkglist-gpu-nvidia.txt`, `pkglist-intel-igpu.txt`), and `pkglist-removed.txt` (tombstones). Install → add to the matching list. Uninstall → delete from its list **and** tombstone it so the other machine removes it. Commit and push in the same task. `run_onchange_after_55-pkg-sync` applies lists on `chezmoi update` (root via `pkexec`, AUR via `shelly`); only tombstoned names are ever removed. `pkg-sync --dry-run` previews, `pkg-sync --audit` shows installed-but-unlisted drift (never auto-write lists). Never auto-generate lists via hooks. Prune tombstones once both machines have applied them.
+- **Untracked Runtime Drift**: Never commit or alter app-generated state: `.config/kdeglobals`, `.config/shelly/settings.json`, and DMS JSON other than `settings.json.tmpl`. `chezmoi diff` noise here is expected; never `chezmoi apply` them blindly.
 
 ---
 
 ## 2. Hardware Exceptions (Only Permitted Differences)
 
-Only three physical hardware realities differ between machines:
-
-| Component | Desktop (`desktop`) | Laptop (`laptop`) | Handling |
+| Component | Desktop | Laptop | Handling |
 |---|---|---|---|
-| **GPU & Drivers** | Intel i5-12400F + Nvidia RTX 4060 (`nvidia-open`, `nvidia-utils`, `opencl-nvidia`). | Intel UHD graphics (`mesa`, `intel-media-driver` for VAAPI). | `pkg-sync` picks `pkglist-gpu-nvidia.txt` / `pkglist-intel-igpu.txt` from `lspci`; `pkglist-pacman.txt` is shared. |
-| **Display & Brightness** | External LG 1080p@144Hz on `HDMI-A-2` (no sysfs backlight). | Built-in `eDP-1` with hardware backlight (`/sys/class/backlight`). | DMS auto-generates `dms/outputs.kdl`. |
-| **Power & Network** | Wall AC only, `networkPreference: wired`, no battery widget. | Battery powered, `networkPreference: wifi`, battery widget enabled. | Templated in `settings.json.tmpl`. |
+| **GPU** | Nvidia RTX 4060 (`nvidia-open`, `nvidia-utils`, `opencl-nvidia`) | Intel UHD (`mesa`, `intel-media-driver` for VAAPI) | `pkg-sync` picks the Nvidia/iGPU list from `lspci`; `pkglist-pacman.txt` is shared |
+| **Display** | External LG 1080p@144Hz on `HDMI-A-2`, no sysfs backlight | Built-in `eDP-1` with `/sys/class/backlight` | DMS auto-generates `dms/outputs.kdl` |
+| **Power/Network** | AC only, `networkPreference: wired`, no battery widget | Battery, `networkPreference: wifi`, battery widget | Templated in `settings.json.tmpl` |
 
 ---
 
 ## 3. Desktop Session (Niri + DMS)
 
-- **Compositor**: Niri (`~/.config/niri/config.kdl`). Modular DMS includes are in `~/.config/niri/dms/` (auto-generated; do not hand-edit). User overrides go at the bottom of `config.kdl`.
-- **Window Rules**: Opaque by default. `opacity 0.88` + blur enabled for Rio, Nautilus, Baobab, File Roller, pavucontrol, and DMS. Browsers, image viewers (Loupe), editors, and OBS remain 100% opaque.
-- **Login / DM**: `greetd` + `dux-greeter-bin` (provides `dms-greeter`) on Niri (`/etc/greetd/config.toml`, `/etc/greetd/niri/`). Sync with `sudo -u <user> env HOME=/home/<user> dms-greeter sync`. Lock via DMS interface (PAM at `/etc/pam.d/dankshell`).
-- **Core Keybinds**:
-  - `Mod+B`: Browser (`default-browser`)
-  - `Mod+E`: Files (`nautilus`)
-  - `Mod+Z`: VS Code (`code`)
-  - `Shift+Print`: OCR (`~/.local/bin/dms-ocr`)
-  - `Mod+Alt+C`: DMS color picker
-  - `Mod+Shift+E`: Power menu
+- **Compositor**: Niri (`~/.config/niri/config.kdl`). `~/.config/niri/dms/` is generated — never hand-edit; user overrides go at the bottom of `config.kdl`.
+- **Window Rules**: Opaque by default; `opacity 0.88` + blur for Rio, Nautilus, Baobab, File Roller, pavucontrol, and DMS. Browsers, Loupe, editors, and OBS stay 100% opaque.
+- **Login**: `greetd` + `dux-greeter-bin` (`dms-greeter`) on Niri (`/etc/greetd/config.toml`, `/etc/greetd/niri/`). Sync with `sudo -u <user> env HOME=/home/<user> dms-greeter sync`, never via `pkexec`. Lock via DMS (PAM `/etc/pam.d/dankshell`).
+- **Keybinds**: `Mod+B` browser · `Mod+E` Nautilus · `Mod+Z` VS Code · `Shift+Print` OCR (`~/.local/bin/dms-ocr`) · `Mod+Alt+C` DMS color picker · `Mod+Shift+E` power menu.
 
 ---
 
-## 4. System Defaults & Environment
+## 4. System Defaults
 
-- **Shell**: Fish (`~/.config/fish/`). User binaries prepended via `conf.d/05-local-bin.fish`.
-- **Terminal**: Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity handled by Niri).
-- **Default Apps**:
-  - Browser: Zen (`zen-browser-bin`) default on both. Secondary: `chromium` and `cloakbrowser`.
-  - Editor: Micro (`micro`, CLI `EDITOR`/`VISUAL`); VS Code for `.ipynb`/`.code-workspace` and code projects.
-  - Media: Amberol (Audio), Loupe (Images), MPV (Video).
-  - Utilities: Nautilus (GNOME Files), Mission Center (Task Manager), Baobab (Disk Usage), File Roller (Archives).
-  - Office/Creative: Craft suite (Gridcraft, Wordcraft, Photocraft, Deckcraft, PdfCraft).
-- **Environment**: Set in `~/.config/environment.d/90-dms.conf` and Niri's `environment` block. Requires relogin.
-- **Theme**: BeautyLine icons, MesloLGS Nerd Font, Qt platform `xdgdesktopportal` (`qt6ct.conf` written by DMS).
+- **Shell/Terminal**: Fish (`~/.config/fish/`, user binaries via `conf.d/05-local-bin.fish`); Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity handled by Niri).
+- **Apps**: Zen (`zen-browser-bin`) is the browser; CloakBrowser is the automation browser. Micro is `EDITOR`/`VISUAL`; VS Code for `.ipynb`/`.code-workspace` and code projects. Amberol audio, Loupe images, MPV video. Nautilus, Mission Center, Baobab, File Roller. Craft suite (Gridcraft, Wordcraft, Photocraft, Deckcraft, PdfCraft).
+- **Environment/Theme**: `~/.config/environment.d/90-dms.conf` + Niri `environment` block (relogin required). BeautyLine icons, MesloLGS Nerd Font, Qt platform `xdgdesktopportal` (`qt6ct.conf` from DMS).
 
 ---
 
 ## 5. Development Tools & Runtimes
 
-- **Mise (`~/.config/mise/config.toml`)**: Universal tool inventory on both machines:
-  - `flutter`, `node`, `pnpm`
-  - `github:openai/codex`
-  - `pipx:cloakbrowser`
-  - `github:vercel-labs/agent-browser` (with skills sync hook)
-  - Craft suite (5 apps)
-  - Auto-updates daily via `mise-upgrade.timer`.
-- **Browser Automation (CloakBrowser Pro 156)**:
-  - Executable wrapper: `~/.local/bin/cloakbrowser-chrome` (launches pro build with persistent fingerprint seed).
-  - License: Free pro tier with **1 concurrent seat** shared between machines. Close sessions cleanly to release seat (leaked seat clears in ~4 min).
-  - **Browser rule**: Drive browsers only through `agent-browser` with its configured profile (`~/Documents/ALWAYS-USE-PROFILE`). Never launch `chromium`/`chrome` directly (headless included) or use another `--user-data-dir`; subagents must be told the same and must report failure instead of falling back. Run `agent-browser close` when finished.
-  - Agent Browser: `~/.agent-browser/config.json` uses `cloakbrowser-chrome`, `--fingerprint-platform=windows`, and loads unpacked extensions (`bitwarden`, `violentmonkey`, `ublock-origin-lite` from `~/.local/share/bitwarden-cloak/`) only when that directory exists (presence-gated, untracked data; missing on desktop until copied over).
-- **Android SDK & Emulators**:
-  - SDK root: `~/Android/Sdk` (`adb` in `/usr/bin`, `emulator` in `~/.local/bin`, `sdkmanager` via exec wrapper).
-  - Emulator GPU mode: `DITTO_GPU=auto` unified on both machines (auto-probes RTX 4060 on desktop; selects safe fallback on laptop).
-  - Run transient units: `systemd-run --user --collect --unit=ditto-emulator -- emulator -avd <name> ...`
-- **ICEGATE Digital Signing (`icegate-sign`)**:
-  - Repo: `~/Documents/icegate-sign` (installed via `uv tool install ~/Documents/icegate-sign`).
-  - Supports: BE, SB, TXT, XML, and PDF signing via HYP2003 USB token (`2ccf:080a`) using vendor driver `libcastle_v2.so.1.0.0` (in `~/.local/lib/hyp2003/` or `~/Documents/hyp2003-linux-driver/`).
-  - Driver provisioning: `.chezmoiscripts/run_once_after_60-hyp2003-driver.sh` clones `quantavil/hyp2003-linux-driver` (HTTPS), verifies `SHA256SUMS`, and copies the library to `~/.local/lib/hyp2003/` only if absent. The vendor binary is never committed to dotfiles.
-- **ICEGATE Shipment Drafts**:
-  - Google Apps Script automation in `~/Documents/icegate-drafts` (public `quantavil/icegate-drafts`, MIT). Time-driven Apps Script trigger `checkIcegate` scans new SB (export) LEO/eGatepass and BoE (import) first/Final OOC/eGatepass mail every minute, processing 11:00–22:00 Asia/Kolkata. Prepares Gmail reply drafts on the latest non-draft message, skips files already sent in the thread, never sends. Uses Gmail full-access + external-request scopes; store no credentials in dotfiles.
-- **MCP Servers & Skills**:
-  - MCPs: `~/Documents/my-mcps/mcp-servers.json`, deployed via `./run.sh deploy`. `tier: core` servers (firecrawl, context7) load in every agent; `tier: gateway` servers hide behind `managed-gateway` (`search_tools` + `call_tool`). New task-specific servers go in the gateway tier. Never pin versions (`pkg@latest`).
-  - Skills in `~/Documents/my-skills/bundles.json`: every entry is a bundle, a whole upstream repo (all its skills, never a subset) or a local skill in `skills/`. Run `./run.sh sync && ./run.sh deploy` to get the latest and link it (`vendor/` is per machine, not committed). `tier: core` bundles are linked into every agent; `tier: gateway` bundles are reached only through the generated `find-skill`. If no listed skill fits, check `find-skill` before saying none exists.
+- **Mise** (`~/.config/mise/config.toml`): `flutter`, `node`, `pnpm`, `github:openai/codex`, `pipx:cloakbrowser`, `github:vercel-labs/agent-browser` (skills sync hook), Craft suite (5 apps). Updates daily via `mise-upgrade.timer`.
+- **Browser Automation (CloakBrowser Pro 156)**: wrapper `~/.local/bin/cloakbrowser-chrome` runs the pro build with a persistent fingerprint seed. Free pro tier has **1 concurrent seat** shared by both machines; close sessions cleanly (a leaked seat clears in ~4 min). **Rule**: drive browsers only through `agent-browser` with its profile (`~/Documents/ALWAYS-USE-PROFILE`); never launch a browser binary directly (headless included) or with another `--user-data-dir`. Tell subagents the same; they must report failure instead of falling back. Run `agent-browser close` when finished. `~/.agent-browser/config.json` uses `cloakbrowser-chrome`, `--fingerprint-platform=windows`, and loads Bitwarden/Violentmonkey/uBlock Lite from `~/.local/share/bitwarden-cloak/` only when present.
+- **Android**: SDK at `~/Android/Sdk` (`adb` in `/usr/bin`, `emulator` in `~/.local/bin`, `sdkmanager` wrapper). `DITTO_GPU=auto` on both machines. Run with `systemd-run --user --collect --unit=ditto-emulator -- emulator -avd <name> ...`.
+- **ICEGATE Signing** (`icegate-sign`): repo `~/Documents/icegate-sign`, installed via `uv tool install ~/Documents/icegate-sign`. Signs BE, SB, TXT, XML, and PDF with the HYP2003 token (`2ccf:080a`) and vendor lib `libcastle_v2.so.1.0.0` in `~/.local/lib/hyp2003/`. `run_once_after_60-hyp2003-driver.sh` verifies `SHA256SUMS` and copies it only if absent; the vendor binary is never committed.
+- **ICEGATE Drafts**: Apps Script in `~/Documents/icegate-drafts` (`quantavil/icegate-drafts`, MIT). Trigger `checkIcegate` scans SB/BoE LEO/eGatepass mail every minute, 11:00–22:00 Asia/Kolkata, and prepares Gmail reply drafts on the latest non-draft message; skips files already sent, never sends. No credentials in dotfiles.
+- **MCPs & Skills**: MCPs from `~/Documents/my-mcps/mcp-servers.json`, deployed with `./run.sh deploy`. `tier: core` (firecrawl, context7) loads everywhere; `tier: gateway` sits behind `managed-gateway`. Task-specific servers go in the gateway tier; never pin versions (`pkg@latest`). Skills from `~/Documents/my-skills/bundles.json`: each entry is a whole upstream repo (never a subset) or a local skill in `skills/`. `./run.sh sync && ./run.sh deploy` (`vendor/` is per machine, untracked). `tier: core` links into every agent; `tier: gateway` only through `find-skill`, so check it before saying no skill exists.
 
 ---
 
-## 6. Critical Pitfalls & Privileged Operations
+## 6. Critical Pitfalls
 
-- **Privilege Elevation**: Use `pkexec` with full binary paths for short interactive actions; use mode-700 `SUDO_ASKPASS` under `/tmp/opencode` for long headless pacman commands. Never enable NOPASSWD or weaken Polkit.
-- **Dux Greeter Sync**: Never run `dms-greeter` through `pkexec` (resolves `$HOME` to `/root` and breaks cache). Run `sudo -u <user> env HOME=/home/<user> dms-greeter sync`.
-- **No Network Symlinks in `$HOME`**: Never place symlinks to CIFS/NFS mounts directly in `~` (e.g., `~/Windows-E -> /mnt/win_e`). Access remote shares via `smb://` in GVfs/Nautilus to prevent kernel freeze timeouts when hosts sleep.
-- **IPv6 Latency / Timeouts**: Airtel IPv6 routes can drop packets to PyPI/curl. Keep IPv4 precedence in `/etc/gai.conf` (`precedence ::ffff:0:0/96 100`).
-- **Chromium Ozone Warning**: Harmless `'--ozone-platform=wayland' is not compatible with Vulkan` on Nvidia; fallback to GL is normal.
+- **Privilege Elevation**: `pkexec` with full binary paths for short interactive actions; mode-700 `SUDO_ASKPASS` under `/tmp/opencode` for long headless pacman runs. Never NOPASSWD or weaker Polkit.
+- **Dux Greeter**: never `pkexec dms-greeter` (`$HOME` resolves to `/root` and breaks the cache).
+- **No Network Symlinks in `$HOME`**: no symlinks to CIFS/NFS mounts in `~` (e.g. `~/Windows-E`); use `smb://` in GVfs/Nautilus, or sleeping hosts freeze the kernel.
+- **IPv6**: Airtel IPv6 drops packets to PyPI/curl; keep IPv4 precedence in `/etc/gai.conf` (`precedence ::ffff:0:0/96 100`).
+- **Ozone Warning**: `'--ozone-platform=wayland' is not compatible with Vulkan` on Nvidia is harmless; GL fallback is normal.
 
 ---
 
-## 7. Validation Checklist
+## 7. Validation
 
-After any system or config change, run:
+After any system or config change:
+
 ```bash
 niri validate -c ~/.config/niri/config.kdl
 dms doctor -j
