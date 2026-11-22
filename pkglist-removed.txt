@@ -9,6 +9,7 @@ dnsmasq
 ferrite-bin
 firefox
 greetd-dms-greeter-bin
+kensaku-bin
 noctalia
 postgresql
 qbittorrent
