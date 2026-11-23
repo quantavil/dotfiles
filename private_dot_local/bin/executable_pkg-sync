@@ -44,6 +44,8 @@ aur_missing=$(echo "$want_aur" | xargs -r pacman -T 2>/dev/null || true)
 to_remove=$(echo "$removed" | xargs -r -n1 sh -c 'pacman -Qq "$0" >/dev/null 2>&1 && echo "$0"' || true)
 fp_missing=""
 if [ -n "$want_flatpak" ] && command -v flatpak >/dev/null; then
+  echo "$want_flatpak" | grep -qx "org.ladybird.Ladybird" && \
+    flatpak remote-add --user --if-not-exists ladybird https://flatpak.ladybird.org/ladybird.flatpakrepo 2>/dev/null || true
   inst=$(flatpak list --app --columns=application 2>/dev/null | sort -u)
   fp_missing=$(comm -23 <(echo "$want_flatpak") <(echo "$inst"))
 fi
