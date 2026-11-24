@@ -78,7 +78,6 @@ fastfetch
 ffmpegthumbnailer
 ffmpegthumbs
 file-roller
-firefox
 flatpak
 fsarchiver
 fuse2
