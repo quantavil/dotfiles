@@ -47,11 +47,9 @@ cantarell-fonts
 capitaine-cursors
 cava
 ccid
-chatgpt-desktop-bin
 chezmoi
 chwd
 claude-code
-claude-desktop
 cmake
 cpupower
 cryptsetup

@@ -3,7 +3,9 @@
 # One package per line.
 adguardhome
 bind
+chatgpt-desktop-bin
 chromium
+claude-desktop
 copyparty
 dnsmasq
 ferrite-bin
