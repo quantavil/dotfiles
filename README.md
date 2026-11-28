@@ -56,9 +56,9 @@ pkg-sync             # apply
 - **Default terminal:** Rio (`~/.config/rio/config.toml`, MesloLGS Nerd Font Mono, opacity delegated to Niri); Alacritty config also tracked
 - **Shell:** Fish (login shell; `.bashrc`/`.zshrc` no longer managed)
 - **Shell Extensions & Themes:** DankMaterialShell settings (`~/.config/dms/settings.json`)
-- **Desktop & Theme Integration:** BeautyLine icons (KDE + Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), KDE globals, XDG user dirs, `environment.d`, `xdg-terminals.list`
+- **Desktop & Theme Integration:** BeautyLine icons (Qt + GTK), MesloLGS Nerd Font (Qt + GTK), Qt6ct (`qt6ct.conf`), XDG user dirs, `environment.d`, `xdg-terminals.list`
 - **Shims & Utilities:** `~/.local/bin/` (`cloakbrowser-chrome`, `default-browser`, `dms-ocr`, `nautilus`, `nautilus-print-pdf`, `pkg-sync`)
-- **App Defaults:** Zed editor settings, MIME defaults via `run_onchange` script (`mimeapps.list` itself is app-generated and untracked), MPV, Navi
+- **App Defaults:** MIME defaults via `run_onchange` script (`mimeapps.list` itself is app-generated and untracked), MPV, Navi
 - **CloakBrowser (both machines):** Agent profile at `~/Documents/ALWAYS-USE-PROFILE`; unpacked Bitwarden, Violentmonkey and uBlock Origin Lite are in `~/.local/share/cloak-extensions/` (also accessible via the `bitwarden-cloak` symlink). These local files are not included.
 - **Documentation & Rules:** `AGENTS.md`
 - **Package Manifests:** `pkglist-pacman.txt`, `pkglist-aur.txt` (shared baseline) and `pkglist-gpu-nvidia.txt` and `pkglist-intel-igpu.txt` (GPU drivers, chosen by `pkg-sync` from `lspci`), plus `pkglist-flatpak.txt` and `pkglist-removed.txt` (tombstones); all manually maintained and applied by `pkg-sync` on `chezmoi update`

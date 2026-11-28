@@ -20,3 +20,4 @@ velotype-bin
 vivaldi
 vivaldi-ffmpeg-codecs
 vlc-plugins-all
+zed
