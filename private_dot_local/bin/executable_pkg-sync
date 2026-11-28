@@ -12,8 +12,10 @@ mode="${1:-apply}"
 read_list() { for f in "$@"; do [ -f "$f" ] && grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$f"; done | sort -u; }
 
 native=("$src/pkglist-pacman.txt")
-lspci 2>/dev/null | grep -qi nvidia && native+=("$src/pkglist-gpu-nvidia.txt")
-lspci 2>/dev/null | grep -Ei 'vga|3d|display' | grep -qi intel && native+=("$src/pkglist-intel-igpu.txt")
+# no `lspci | grep -q`: under pipefail the early exit of grep -q can fail the pipe
+gpus=$(lspci 2>/dev/null)
+grep -qi nvidia <<<"$gpus" && native+=("$src/pkglist-gpu-nvidia.txt")
+grep -qi intel <<<"$(grep -Ei 'vga|3d|display' <<<"$gpus")" && native+=("$src/pkglist-intel-igpu.txt")
 
 want_native=$(read_list "${native[@]}")
 want_aur=$(read_list "$src/pkglist-aur.txt")
@@ -44,8 +46,6 @@ aur_missing=$(echo "$want_aur" | xargs -r pacman -T 2>/dev/null || true)
 to_remove=$(echo "$removed" | xargs -r -n1 sh -c 'pacman -Qq "$0" >/dev/null 2>&1 && echo "$0"' || true)
 fp_missing=""
 if [ -n "$want_flatpak" ] && command -v flatpak >/dev/null; then
-  echo "$want_flatpak" | grep -qx "org.ladybird.Ladybird" && \
-    flatpak remote-add --user --if-not-exists ladybird https://flatpak.ladybird.org/ladybird.flatpakrepo 2>/dev/null || true
   inst=$(flatpak list --app --columns=application 2>/dev/null | sort -u)
   fp_missing=$(comm -23 <(echo "$want_flatpak") <(echo "$inst"))
 fi
@@ -55,6 +55,9 @@ echo "install (AUR):   ${aur_missing:-none}"
 echo "install (flatpak): ${fp_missing:-none}"
 echo "remove:          ${to_remove:-none}"
 [ "$mode" = "--dry-run" ] && exit 0
+
+grep -qx "org.ladybird.Ladybird" <<<"$fp_missing" && \
+  flatpak remote-add --user --if-not-exists ladybird https://flatpak.ladybird.org/ladybird.flatpakrepo 2>/dev/null
 
 # shellcheck disable=SC2086
 [ -n "$missing" ] && { pkexec /usr/bin/pacman -S --needed --noconfirm $missing || echo "pkg-sync: repo install failed" >&2; }

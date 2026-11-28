@@ -6,18 +6,6 @@ case "$BROWSER_DESKTOP" in
     zen*)
         exec /usr/bin/zen-browser "$@"
         ;;
-    firefox*)
-        exec /usr/bin/firefox "$@"
-        ;;
-    google-chrome*|chrome*)
-        exec /usr/bin/google-chrome-stable "$@"
-        ;;
-    chromium*)
-        exec /usr/bin/chromium "$@"
-        ;;
-    brave*)
-        exec /usr/bin/brave "$@"
-        ;;
     *)
         if [ -n "$BROWSER_DESKTOP" ]; then
             exec /usr/bin/gtk-launch "$BROWSER_DESKTOP" "$@"

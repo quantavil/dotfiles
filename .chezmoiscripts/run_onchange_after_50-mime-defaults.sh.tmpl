@@ -1,7 +1,7 @@
 #!/bin/sh
 # Re-apply hand-picked MIME defaults without managing ~/.config/mimeapps.list.
 #
-# That file is rewritten at runtime (xdg-mime, Telegram, ChatGPT/Claude URL
+# That file is rewritten at runtime (xdg-mime, Telegram URL
 # handlers) and userapp-*.desktop IDs are generated per installation, so a
 # committed copy always fights live state. This script is idempotent, skips
 # anything that is not installed, and discovers scheme handlers instead of
@@ -122,5 +122,3 @@ for scheme in tg tonsite; do
     fi
 done
 
-# chatgpt-desktop-bin owns codex:// links where installed.
-set_default x-scheme-handler/codex chatgpt.desktop
